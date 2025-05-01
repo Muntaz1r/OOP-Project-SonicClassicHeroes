@@ -6,8 +6,12 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 
+<<<<<<< HEAD:Src.cpp
 #include "Menu.h"
 #include "Menu.cpp"
+=======
+#include "game/Menu.h"
+>>>>>>> Saad:Src/Src.cpp
 
 using namespace sf;
 using namespace std;
