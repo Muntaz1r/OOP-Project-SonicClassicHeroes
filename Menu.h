@@ -11,18 +11,25 @@ const int STATE_MAIN = 0;
 const int STATE_OPTIONS = 1;
 const int STATE_NAME_INPUT = 2;
 const int STATE_LEADERBOARD = 3;
+const int STATE_EXIT = 4;
 
 class Menu {
 private:
+    int screen_x, screen_y;
+
     RenderWindow& window;
     Font font;
     Music& music;
 
     int currentState;
     int volume;
+    int prevVolume;
     int mainSelected;
 
-    string mainOptions[4] = {"New Game", "Options", "Continue", "LeaderBoard"};
+    bool isMuted;
+
+    const int menuItemCount = 5;
+    string mainOptions[5] = {"New Game", "Options", "Continue", "LeaderBoard", "Exit"};
 
     // Options
     Text volumeText;
@@ -34,16 +41,23 @@ private:
 
     // UI
     Text title;
-    Text menutext[4];
+    Text menuText[5];
+
+    // Background
+    Texture bgTexture;
+    Sprite bgSprite;
+
+    int bgWidth;
+    int bgHeight;
 
 public:
-    Menu(RenderWindow& window, Music & music);
+    Menu(RenderWindow& window, Music & music, int screen_x, int screen_y);
 
-    void handleInput(Event& event) {}
+    void handleInput(Event& event);
     void update();
     void draw();
 
-    bool shouldExit() const;
-    bool startGameTriggered() const;
+    //bool shouldExit() const;
+    //bool startGameTriggered() const;
     string getPlayerName() const;
 };
