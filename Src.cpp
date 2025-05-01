@@ -6,6 +6,9 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 
+#include "Menu.h"
+#include "Menu.cpp"
+
 using namespace sf;
 using namespace std;
 
@@ -54,6 +57,11 @@ int main()
 	lvlMus.setVolume(30);
 	lvlMus.play();
 	lvlMus.setLoop(true);
+
+
+	Menu menu(window, lvlMus, screen_x, screen_y);
+
+
 
 	lvl = new char* [height];
 	for (int i = 0; i < height; i += 1)
@@ -124,24 +132,25 @@ int main()
 				window.close();
 			}
 
-			if (ev.type == Event::KeyPressed)
-			{}
-
+			menu.handleInput(ev);
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			window.close();
-		}
+		menu.update();
+		menu.draw();
 
-		player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y,player_x,player_y,cell_size,Pheight,Pwidth);
+		// if (Keyboard::isKeyPressed(Keyboard::Escape))
+		// {
+		// 	window.close();
+		// }
 
-		window.clear();
+		// player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y,player_x,player_y,cell_size,Pheight,Pwidth);
 
-		display_level(window,height,width,lvl,wallSprite1,cell_size);
-		draw_player(window,LstillSprite,player_x,player_y);
+		// window.clear();
 
-		window.display();
+		// display_level(window,height,width,lvl,wallSprite1,cell_size);
+		// draw_player(window,LstillSprite,player_x,player_y);
+
+		// window.display();
 	}
 
 
