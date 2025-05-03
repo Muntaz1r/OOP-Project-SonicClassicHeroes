@@ -23,19 +23,39 @@ public:
         originalAcc = acc_x;
         originalMaxSpeed = ms;
 
-        if (!idleTexture.loadFromFile("Data/0right_still.png")) {
+        if (!idleRightTexture.loadFromFile("Data/0right_still.png")) {
             cout << "Failed to load 0right_still.png\n";
         }
-        if (!runTexture.loadFromFile("Data/0right.png")) {
+        if (!runRightTexture.loadFromFile("Data/0right.png")) {
             cout << "Failed to load 0right.png\n";
         }
+
+        if (!idleLeftTexture.loadFromFile("Data/0left_still.png")) {
+            cout << "Failed to load 0left_still.png" << endl; 
+        }
+
+        if (!runLeftTexture.loadFromFile("Data/0left.png")) {
+            cout << "Failed to load 0left.png" << endl;
+        }
+            
+        if (!jumpRightTexture.loadFromFile("Data/0upR.png")) {
+            cout << "Failed to load 0upR.png" << endl;
+        }
+
+        if (!jumpLeftTexture.loadFromFile("Data/0upL.png")) {
+            cout << "Failed to load 0upL.png" << endl;
+        }
         
-        sprite.setTexture(idleTexture);
+        sprite.setTexture(idleRightTexture); // start with idle right texture
         sprite.setTextureRect(IntRect(0, 0, 40, 40));
         sprite.setScale(2.0f, 2.0f);
         
         // Setup animation for running
-        runAnimation.initialize(&sprite, &runTexture, 40, 40, 12, 0.07f);
+        runRightAnimation.initialize(&sprite, &runRightTexture, 40, 40, 12, 0.07f);
+        runLeftAnimation.initialize(&sprite, &runLeftTexture, 40, 40, 12, 0.07f);
+        
+        jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
+        jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
     }
 
     float getBoostedAcc() const { return boostedAcc; }
