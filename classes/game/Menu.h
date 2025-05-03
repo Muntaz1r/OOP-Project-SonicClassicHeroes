@@ -27,6 +27,8 @@ private:
     int mainSelected;
 
     bool isMuted;
+    bool leaderboardRequested; // used to transfer control over to leaderboard in Game class
+    bool gameStarted;
 
     const int menuItemCount = 5;
     string mainOptions[5] = {"New Game", "Options", "Continue", "LeaderBoard", "Exit"};
@@ -57,7 +59,9 @@ public:
     void update();
     void draw();
 
-    //bool shouldExit() const;
-    //bool startGameTriggered() const;
+    bool isLeaderboardRequested() const;
+    void resetLeaderboardRequest();
+    bool hasGameStarted() const;
+    void resetGameStarted();
     string getPlayerName() const;
 };
