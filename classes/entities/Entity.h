@@ -17,10 +17,12 @@ public:
     Entity(float x=0, float y=0, int h=0, int w=0,sf::Texture* texture = nullptr): 
     pos_x(x), pos_y(y), height(h), width(w), texture(*texture){
         sprite.setTexture(this->texture);
-        sprite.setScale(
-            static_cast<float>(width) / this->texture.getSize().x,
-            static_cast<float>(height) / this->texture.getSize().y
-        );
+        // sprite.setScale(
+        //     static_cast<float>(width) / this->texture.getSize().x,
+        //     static_cast<float>(height) / this->texture.getSize().y
+        // );
+        sprite.setScale(2.0f, 2.0f);
+        sprite.setTextureRect(IntRect(0, 0, 40, 40));
     }
     // Getters
     float getPosX() const { return pos_x; }

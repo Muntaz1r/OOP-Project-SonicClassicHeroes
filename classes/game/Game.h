@@ -3,9 +3,9 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 
-#include "game/Menu.h"
-#include "game/Scoreboard.h"
-#include "game/Level.h"
+#include "Menu.h"
+#include "Scoreboard.h"
+#include "Level.h"
 
 using namespace sf;
 using namespace std;

@@ -29,17 +29,19 @@ Level1_Labyrinth::~Level1_Labyrinth() {
 void Level1_Labyrinth::initializeGrid() {
     for (int j = 0; j < width; j++) {
         grid[height - 3][j] = 'w'; // add floor
+        grid[height - 2][j] = 'w';
     }
 
-    for (int j = 10; j < 20; j++) {
-        grid[height - 6][j] = 'q'; // platform
+    for (int j = 10; j < 15; j++) {
+        grid[height - 8][j] = 'q'; // platform
+        grid[height - 7][j] = 'r';
     }
 
     grid[height - 4][12] = 'r'; // add rings
-    grid[height - 7][15] = 'r';
+    grid[height - 11][22] = 'r';
 
-    for (int j = 25; j < 35; j++) {
-        grid[height - 5][j] = 'q'; // another platform
+    for (int j = 15; j < 20; j++) {
+        grid[height - 12][j] = 'q'; // another platform
     }
 
     for (int j = 40; j < 55; j++) {
@@ -69,8 +71,8 @@ void Level1_Labyrinth::loadAssets() {
 
     wallSprite2.setTexture(wallTex2);
 
-    ringCount = 3;
-    ringFrameIndex = 0;
+    //ringCount = 3;
+    //ringFrameIndex = 0;
 
     if (!ringTex.loadFromFile("Data/ring.png")) {
         cout << "Failed to load ring.png" << endl;
@@ -78,6 +80,12 @@ void Level1_Labyrinth::loadAssets() {
 
     ringSprite.setTexture(ringTex);
     ringSprite.setScale(4.0f, 4.0f);
+
+    ringAnimation.initialize(&ringSprite, &ringTex, 16, 16, 4, 0.15f);
+
+    player = sonicMaker.createPlayer();
+
+
     // for (int i = 0; i < ringCount; i++) {
     //     ringSprites[i].setTexture(ringTex);
     //     ringSprites[i].setTextureRect(IntRect(0, 0, 16, 16));
@@ -105,18 +113,38 @@ void Level1_Labyrinth::loadAssets() {
 }
 
 void Level1_Labyrinth::update(float deltaTime) {
-    if (ringAnimationClock.getElapsedTime().asSeconds() > 0.15f) {
-        ringFrameIndex = (ringFrameIndex + 1) % 4;
-        ringAnimationClock.restart();
+    ringAnimation.update(deltaTime);
 
-        ringSprite.setTextureRect(IntRect(ringFrameIndex * 16, 0, 16, 16));
-
-        // for (int i = 0; i < ringCount; i++) {
-        //     if (!ringCollected[i]) {
-        //         ringSprites[i].setTextureRect(IntRect(ringFrameIndex * 16, 0, 16, 16));
-        //     }
-        // }
+    if (Keyboard::isKeyPressed(Keyboard::D)) {
+        player->moveRight();
     }
+    else if (Keyboard::isKeyPressed(Keyboard::A)) {
+        player->moveLeft();
+    }
+    
+    if (Keyboard::isKeyPressed(Keyboard::W) && player->isOnGround()) {
+        player->jump();
+    }
+    if (Keyboard::isKeyPressed(Keyboard::F) && player->isOnGround()) {
+        player->specialAbility();
+    }
+
+    player->update();
+
+
+
+    // if (ringAnimationClock.getElapsedTime().asSeconds() > 0.15f) {
+    //     ringFrameIndex = (ringFrameIndex + 1) % 4;
+    //     ringAnimationClock.restart();
+
+    //     ringSprite.setTextureRect(IntRect(ringFrameIndex * 16, 0, 16, 16));
+
+    //     // for (int i = 0; i < ringCount; i++) {
+    //     //     if (!ringCollected[i]) {
+    //     //         ringSprites[i].setTextureRect(IntRect(ringFrameIndex * 16, 0, 16, 16));
+    //     //     }
+    //     // }
+    // }
 }
 
 void Level1_Labyrinth::render(RenderWindow& window) {
@@ -145,6 +173,8 @@ void Level1_Labyrinth::render(RenderWindow& window) {
             // }
         }
     }
+
+    player->render(window);
 }
 
 
