@@ -20,6 +20,9 @@ protected:
     sf::Time invincibilityDuration = sf::seconds(1);
     const float friction;
     const float gravity;
+    bool moving = false;
+    Texture idleTexture;
+    Texture runTexture;
     
 public:
     Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
@@ -38,6 +41,7 @@ public:
     bool isMovingRight() const { return movingRight; }
     float getAccnX() const { return acc_x; }
     float getAccY() const { return acc_y; }
+    bool isMoving() const { return moving; }
 
     // Setters
     void setMaxSpeed(float speed) { maxSpeed = speed; }
@@ -81,7 +85,7 @@ public:
     }
    
     //Updating everything relevant 
-    virtual void update() override {
+    virtual void update(float deltaTime) override {
         
         // Updating position and velocities
         DynamicEntity::update();
@@ -107,6 +111,22 @@ public:
         }
         
         // Animation logic... maybe changing texture
+        if (isMoving()) {
+            // Switch to running texture if not already
+            if (sprite.getTexture() != &runTexture) {
+                sprite.setTexture(runTexture);
+            }
+            runAnimation.update(deltaTime);
+        }
+        else {
+            // Switch to idle texture if not already once
+            if (sprite.getTexture() != &idleTexture) {
+                sprite.setTexture(idleTexture);
+                sprite.setTextureRect(sf::IntRect(0, 0, 40, 40));
+            }
+
+            runAnimation.reset();
+        }
     }
     
     // Will be defined in children classes

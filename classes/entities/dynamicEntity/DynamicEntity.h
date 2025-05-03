@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include "Entity.h"
+#include "Animation.h"
 
 
 class DynamicEntity : public Entity {
@@ -10,6 +11,7 @@ protected:
     float velocity_x;
     float velocity_y;
     float terminal_velocity;
+    Animation runAnimation;
 public:
     DynamicEntity(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr, 
         float vx = 0, float vy = 0, float terminal = 0)
@@ -19,6 +21,8 @@ public:
     float getVelocityX() const { return velocity_x; }
     float getVelocityY() const { return velocity_y; }
     float getTerminalVelocity() const { return terminal_velocity; }
+    Animation& getAnimation() { return runAnimation; }
+    sf::Sprite& getSprite() { return sprite; }
 
     // Setters
     void setVelocityX(float vx) { velocity_x = vx; }
@@ -30,5 +34,15 @@ public:
         pos_y += velocity_y; 
     } 
     virtual ~DynamicEntity(){};
+
+    void updateAnimation(float deltaTime) {
+        runAnimation.update(deltaTime);
+    }
+
+    void resetAnimation() {
+        runAnimation.reset();
+    }
 };
+
+
     

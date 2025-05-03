@@ -129,7 +129,7 @@ void Level1_Labyrinth::update(float deltaTime) {
         player->specialAbility();
     }
 
-    player->update();
+    player->update(deltaTime);
 
 
 
