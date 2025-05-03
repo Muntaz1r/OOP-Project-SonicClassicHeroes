@@ -1,11 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <SFML/Graphics.hpp>
 #include <string>
+
 #include "Sonic.h"
 #include "Tails.h"
 #include "Knuckles.h"
-#include <iostream>
 
 using namespace std;
 
@@ -17,12 +18,18 @@ public:
 
 class SonicFactory : public PlayerFactory {
 public:
+    
     Player* createPlayer() const override {
+        sf::Texture *texture = new Texture;
+        if (!texture->loadFromFile("Data/0right.png")) {
+            cout << "Failed to load player texture\n";
+        }
         return new Sonic(
             50.0f,   // px
-            700.0f,   // py
+            750.0f,   // py
             64,      // height
             64,      // width
+            texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
             9.8f,    // terminal_velocity
@@ -31,9 +38,9 @@ public:
             false,   // invincible
             true,    // movingRight
             0.5f,    // acc_x
-            7.5f,     // acc_y
-            0.1f,    // friction
-            0.1f    //gravity
+            12.0f,     // acc_y
+            0.2f,    // friction
+            0.4f   //gravity
         );
     }
 };

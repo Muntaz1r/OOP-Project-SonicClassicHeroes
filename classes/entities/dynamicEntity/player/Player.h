@@ -22,11 +22,11 @@ protected:
     const float gravity;
     
 public:
-    Player(float px=0, float py=0, int h=0, int w = 0, 
+    Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0, 
         float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
         float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0)
-        : DynamicEntity(px, py, h, w, vx, vy, terminal), 
+        : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
         maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
         , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity) {}
 

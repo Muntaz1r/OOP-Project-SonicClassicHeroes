@@ -14,14 +14,12 @@ protected:
     sf::Texture texture;
     sf::Sprite sprite;
 public:
-    Entity(float x=0, float y=0, int h=0, int w=0): pos_x(x), pos_y(y), height(h), width(w){
-        if (!texture.loadFromFile("Data/0right.png")) {
-            std::cerr << "Failed to load player texture\n";
-        }
-        sprite.setTexture(texture);
+    Entity(float x=0, float y=0, int h=0, int w=0,sf::Texture* texture = nullptr): 
+    pos_x(x), pos_y(y), height(h), width(w), texture(*texture){
+        sprite.setTexture(this->texture);
         sprite.setScale(
-            static_cast<float>(width) / texture.getSize().x,
-            static_cast<float>(height) / texture.getSize().y
+            static_cast<float>(width) / this->texture.getSize().x,
+            static_cast<float>(height) / this->texture.getSize().y
         );
     }
     // Getters
