@@ -8,6 +8,8 @@
 
 #include "game/Menu.h"
 
+#include "PlayerFactory.h"
+
 using namespace sf;
 using namespace std;
 
@@ -119,6 +121,8 @@ int main()
 	LstillSprite.setScale(scale_x, scale_y);
 
 	////////////////////////////////////////////////////////
+	SonicFactory sonicMaker;
+	Player* sonic= sonicMaker.createPlayer();
 
 	Event ev;
 	while (window.isOpen())
@@ -130,12 +134,26 @@ int main()
 			{
 				window.close();
 			}
-
-			menu.handleInput(ev);
+			
+			//menu.handleInput(ev);
 		}
-
-		menu.update();
-		menu.draw();
+		
+		//menu.update();
+		//menu.draw();
+		if (Keyboard::isKeyPressed(Keyboard::D)) {
+			sonic->moveRight();
+		}
+		else if (Keyboard::isKeyPressed(Keyboard::A)) {
+			sonic->moveLeft();
+		}
+		
+		if (Keyboard::isKeyPressed(Keyboard::W) && sonic->isOnGround()) {
+			sonic->jump();
+		}
+		if (Keyboard::isKeyPressed(Keyboard::F) && sonic->isOnGround()) {
+			sonic->specialAbility();
+		}
+		sonic->update();
 
 		// if (Keyboard::isKeyPressed(Keyboard::Escape))
 		// {
@@ -144,12 +162,12 @@ int main()
 
 		// player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y,player_x,player_y,cell_size,Pheight,Pwidth);
 
-		// window.clear();
+		window.clear();
 
 		// display_level(window,height,width,lvl,wallSprite1,cell_size);
 		// draw_player(window,LstillSprite,player_x,player_y);
-
-		// window.display();
+		sonic->render(window);
+		window.display();
 	}
 
 
