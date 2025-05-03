@@ -11,6 +11,7 @@ protected:
     float originalMaxSpeed;
     sf::Clock boostClock;
     bool boosting = false;
+
 public:
     Sonic(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
           float vx = 0, float vy = 0, float terminal = 0,
@@ -21,6 +22,20 @@ public:
     {
         originalAcc = acc_x;
         originalMaxSpeed = ms;
+
+        if (!idleTexture.loadFromFile("Data/0right_still.png")) {
+            cout << "Failed to load 0right_still.png\n";
+        }
+        if (!runTexture.loadFromFile("Data/0right.png")) {
+            cout << "Failed to load 0right.png\n";
+        }
+        
+        sprite.setTexture(idleTexture);
+        sprite.setTextureRect(IntRect(0, 0, 40, 40));
+        sprite.setScale(2.0f, 2.0f);
+        
+        // Setup animation for running
+        runAnimation.initialize(&sprite, &runTexture, 40, 40, 12, 0.07f);
     }
 
     float getBoostedAcc() const { return boostedAcc; }
@@ -40,8 +55,8 @@ public:
             boosting = true;
         }
     }
-    virtual void update() override {
-        Player::update();
+    virtual void update(float deltaTime) override {
+        Player::update(deltaTime);
 
         // Stop boosting if boost time is done
         if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {
