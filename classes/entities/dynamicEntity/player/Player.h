@@ -20,7 +20,6 @@ protected:
     sf::Time invincibilityDuration = sf::seconds(1);
     const float friction;
     const float gravity;
-    bool moving = false;
     Texture idleTexture;
     Texture runTexture;
     
@@ -41,7 +40,6 @@ public:
     bool isMovingRight() const { return movingRight; }
     float getAccnX() const { return acc_x; }
     float getAccY() const { return acc_y; }
-    bool isMoving() const { return moving; }
 
     // Setters
     void setMaxSpeed(float speed) { maxSpeed = speed; }
@@ -92,8 +90,14 @@ public:
         if(onGround){
             if(velocity_x>0){ // friction
                 velocity_x -= friction;
+                if (velocity_x<0){
+                velocity_x = 0;
+                }
             }else if(velocity_x<0){
                 velocity_x += friction;
+                if (velocity_x>0){
+                    velocity_x = 0;
+                }
             }
         }
         
@@ -104,14 +108,14 @@ public:
         if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration) {
             invincible = false;
         }
-        if (pos_y >=  640) {
-            pos_y = 640; // Clamp to ground
+        if (pos_y >=  635) {
+            pos_y = 635; // Clamp to ground
             velocity_y = 0;
             onGround = true;
         }
         
         // Animation logic... maybe changing texture
-        if (isMoving()) {
+        if (velocity_x != 0) {
             // Switch to running texture if not already
             if (sprite.getTexture() != &runTexture) {
                 sprite.setTexture(runTexture);
