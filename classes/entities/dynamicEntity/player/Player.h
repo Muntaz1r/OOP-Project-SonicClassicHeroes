@@ -20,8 +20,13 @@ protected:
     sf::Time invincibilityDuration = sf::seconds(1);
     const float friction;
     const float gravity;
-    Texture idleTexture;
-    Texture runTexture;
+
+    Texture idleRightTexture;
+    Texture runRightTexture;
+    Texture idleLeftTexture;
+    Texture runLeftTexture;
+    Texture jumpRightTexture;
+    Texture jumpLeftTexture;
     
 public:
     Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
@@ -91,7 +96,7 @@ public:
             if(velocity_x>0){ // friction
                 velocity_x -= friction;
                 if (velocity_x<0){
-                velocity_x = 0;
+                    velocity_x = 0;
                 }
             }else if(velocity_x<0){
                 velocity_x += friction;
@@ -115,21 +120,56 @@ public:
         }
         
         // Animation logic... maybe changing texture
-        if (velocity_x != 0) {
-            // Switch to running texture if not already
-            if (sprite.getTexture() != &runTexture) {
-                sprite.setTexture(runTexture);
+        if (!onGround) { // Jumping
+            if (isMovingRight()) {
+                if (sprite.getTexture() != &jumpRightTexture) {
+                    sprite.setTexture(jumpRightTexture);
+                }
+                jumpRightAnimation.update(deltaTime);
             }
-            runAnimation.update(deltaTime);
+            else {
+                if (sprite.getTexture() != &jumpLeftTexture) {
+                    sprite.setTexture(jumpLeftTexture);
+                }
+                jumpLeftAnimation.update(deltaTime);
+            }
         }
-        else {
-            // Switch to idle texture if not already once
-            if (sprite.getTexture() != &idleTexture) {
-                sprite.setTexture(idleTexture);
-                sprite.setTextureRect(sf::IntRect(0, 0, 40, 40));
+        else if (velocity_x != 0) { // check if stationary
+            if (isMovingRight()) {
+                // Switch to running texture if not already
+                if (sprite.getTexture() != &runRightTexture) {
+                    sprite.setTexture(runRightTexture);
+                }
+                runRightAnimation.update(deltaTime);
             }
-
-            runAnimation.reset();
+            else {
+                if (sprite.getTexture() != &runLeftTexture) {
+                    sprite.setTexture(runLeftTexture);
+                }
+                runLeftAnimation.update(deltaTime);
+            }
+            
+        }
+        else { // for idle situations
+            if (isMovingRight()) {
+                // Switch to idle texture if not already once
+                if (sprite.getTexture() != &idleRightTexture) {
+                    sprite.setTexture(idleRightTexture);
+                    sprite.setTextureRect(sf::IntRect(0, 0, 40, 40));
+                }
+            }
+            else {
+                if (sprite.getTexture() != &idleLeftTexture) {
+                    sprite.setTexture(idleLeftTexture);
+                    sprite.setTextureRect(sf::IntRect(0, 0, 40, 40));
+                }
+            }
+            
+            // Reset to avoid overlap
+            runRightAnimation.reset();
+            runLeftAnimation.reset();
+            jumpRightAnimation.reset();
+            jumpLeftAnimation.reset();
         }
     }
     
