@@ -9,7 +9,7 @@
 class Player : public DynamicEntity
 {
 protected:
-    static int hp;
+    //static int hp;
     float maxSpeed;
     bool onGround;
     bool invincible;
@@ -34,7 +34,7 @@ public:
     float getMaxSpeed() const { return maxSpeed; }
     bool isOnGround() const { return onGround; }
     bool isInvincible() const { return invincible; }
-    static int getHP() { return hp; }
+    //static int getHP() { return hp; }
     bool isMovingRight() const { return movingRight; }
     float getAccnX() const { return acc_x; }
     float getAccY() const { return acc_y; }
@@ -43,7 +43,7 @@ public:
     void setMaxSpeed(float speed) { maxSpeed = speed; }
     void setOnGround(bool value) { onGround = value; }
     void setInvincible(bool value) { invincible = value; }
-    static void setHP(int value) { hp = value; }
+    //static void setHP(int value) { hp = value; }
     void setMovingRight(bool value) { movingRight = value; }
     void setAccX(float value) { acc_x = value; }
     void setAccY(float value) { acc_y = value; }
@@ -73,8 +73,8 @@ public:
 
     //Damage mechanics
     void takeDamage() {
-        if (!invincible && hp > 0) {
-            --hp;
+        if (!invincible /*&& hp > 0*/) {
+            //--hp;
             invincible = true;
             invincibilityClock.restart();
         }
@@ -100,8 +100,8 @@ public:
         if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration) {
             invincible = false;
         }
-        if (pos_y >=  750) {
-            pos_y = 750; // Clamp to ground
+        if (pos_y >=  640) {
+            pos_y = 640; // Clamp to ground
             velocity_y = 0;
             onGround = true;
         }
@@ -115,5 +115,5 @@ public:
     virtual ~Player(){};
 };
 // Initialize static member
-int Player::hp = 3;
+//int Player::hp = 3;
 

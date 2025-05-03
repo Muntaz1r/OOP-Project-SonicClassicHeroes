@@ -6,6 +6,9 @@
 using namespace sf;
 using namespace std;
 
+#include "Animation.h"
+#include "PlayerFactory.h"
+
 class Levels {
 public:
     virtual void loadAssets() = 0; // load level assets
@@ -43,16 +46,20 @@ private:
 
     Texture ringTex;
     Sprite ringSprite;
-    Sprite ringSprites[MAX_RINGS];
-    Position ringPositions[MAX_RINGS];
-    bool ringCollected[MAX_RINGS];
-    int ringCount;
+    //Sprite ringSprites[MAX_RINGS];
+    //Position ringPositions[MAX_RINGS];
+    //bool ringCollected[MAX_RINGS];
+    //int ringCount;
+    Animation ringAnimation;
 
     Texture bgTex;
     Sprite bgSprite;
 
-    int ringFrameIndex;
-    Clock ringAnimationClock;
+    SonicFactory sonicMaker;
+    Player* player;
+
+    // int ringFrameIndex;
+    // Clock ringAnimationClock;
 
     Music levelMusic;
 
