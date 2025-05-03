@@ -1,4 +1,3 @@
-// hello
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -6,7 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 
-#include "game/Menu.h"
+#include "game/Game.h"
 
 #include "PlayerFactory.h"
 
@@ -26,149 +25,137 @@ void display_level(RenderWindow& window, const int height, const int width, char
 int main()
 {
 
-	RenderWindow window(VideoMode(screen_x, screen_y), "Sonic the Hedgehog-OOP", Style::Close);
-	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(60);
-	/////////////////////////////////////////////////////////////////
-	// a cell is 64 by 64 pixels
+	// RenderWindow window(VideoMode(screen_x, screen_y), "Sonic the Hedgehog-OOP", Style::Close);
+	// window.setVerticalSyncEnabled(true);
+	// window.setFramerateLimit(60);
+	// /////////////////////////////////////////////////////////////////
+	// // a cell is 64 by 64 pixels
 
-	// 's' is regular space
-	// 'q' is wall1 or floor1
-	// 'w' is wall2 or floor2
-	// 'e' is wall3 or floor3
-	// 'b' is breakable wall
-	// 'z' is spring
+	// // 's' is regular space
+	// // 'q' is wall1 or floor1
+	// // 'w' is wall2 or floor2
+	// // 'e' is wall3 or floor3
+	// // 'b' is breakable wall
+	// // 'z' is spring
 
-	// Uppercase for not interactable background accessories
+	// // Uppercase for not interactable background accessories
 
-	// C is for crystals
+	// // C is for crystals
 
-	const int cell_size = 64;
-	const int height = 14;
-	const int width = 110;
+	// const int cell_size = 64;
+	// const int height = 14;
+	// const int width = 110;
 
-	char** lvl = NULL;
+	// char** lvl = NULL;
 
-	Texture wallTex1;
-	Sprite wallSprite1;
+	// Texture wallTex1;
+	// Sprite wallSprite1;
 
-	Music lvlMus;
+	// Music lvlMus;
 
-	lvlMus.openFromFile("Data/labrynth.ogg");
-	lvlMus.setVolume(30);
-	lvlMus.play();
-	lvlMus.setLoop(true);
-
-
-	Menu menu(window, lvlMus, screen_x, screen_y);
+	// lvlMus.openFromFile("Data/labrynth.ogg");
+	// lvlMus.setVolume(30);
+	// lvlMus.play();
+	// lvlMus.setLoop(true);
 
 
-
-	lvl = new char* [height];
-	for (int i = 0; i < height; i += 1)
-	{
-		lvl[i] = new char[width] {'\0'};
-	}
+	// Menu menu(window, lvlMus, screen_x, screen_y);
 
 
-	lvl[11][1] = 'w';
-	lvl[11][2] = 'w';
-	lvl[11][3] = 'w';
 
-	wallTex1.loadFromFile("Data/brick1.png");
-	wallSprite1.setTexture(wallTex1);
+	// lvl = new char* [height];
+	// for (int i = 0; i < height; i += 1)
+	// {
+	// 	lvl[i] = new char[width] {'\0'};
+	// }
+
+
+	// lvl[11][1] = 'w';
+	// lvl[11][2] = 'w';
+	// lvl[11][3] = 'w';
+
+	// wallTex1.loadFromFile("Data/brick1.png");
+	// wallSprite1.setTexture(wallTex1);
+	// ////////////////////////////////////////////////////////
+	// float player_x = 100;
+	// float player_y = 100;
+
+	// float max_speed = 15;
+
+	// float velocityX = 0;
+	// float velocityY = 0;
+
+	// float jumpStrength = -20; // Initial jump velocity
+	// float gravity = 1;  // Gravity acceleration
+
+	// Texture LstillTex;
+	// Sprite LstillSprite;
+
+	// bool onGround = false;
+
+	// float offset_x = 0;
+	// float offset_y = 0;
+
+	// float terminal_Velocity = 20;
+
+	// float acceleration = 0.2;
+
+	// float scale_x = 2.5;
+	// float scale_y = 2.5;
+
+	// ////////////////////////////
+	// int raw_img_x = 24;
+	// int raw_img_y = 35;
+
+	// int Pheight = raw_img_y * scale_y;
+	// int Pwidth = raw_img_x * scale_x;
+
+	// //only to adjust the player's hitbox
+
+	// int hit_box_factor_x = 8 * scale_x;
+	// int hit_box_factor_y = 5 * scale_y;
+
+	// LstillTex.loadFromFile("Data/0left_still.png");
+	// LstillSprite.setTexture(LstillTex);
+	// LstillSprite.setScale(scale_x, scale_y);
+
 	////////////////////////////////////////////////////////
-	float player_x = 100;
-	float player_y = 100;
 
-	float max_speed = 15;
+	// Event ev;
+	// while (window.isOpen())
+	// {
 
-	float velocityX = 0;
-	float velocityY = 0;
 
-	float jumpStrength = -20; // Initial jump velocity
-	float gravity = 1;  // Gravity acceleration
+	// 	while (window.pollEvent(ev))
+	// 	{
+	// 		if (ev.type == Event::Closed) 
+	// 		{
+	// 			window.close();
+	// 		}
 
-	Texture LstillTex;
-	Sprite LstillSprite;
 
-	bool onGround = false;
 
-	float offset_x = 0;
-	float offset_y = 0;
+	// 		menu.handleInput(ev);
+	// 	}
 
-	float terminal_Velocity = 20;
+	// 	menu.update();
+	// 	menu.draw();
 
-	float acceleration = 0.2;
+	// 	// if (Keyboard::isKeyPressed(Keyboard::Escape))
+	// 	// {
+	// 	// 	window.close();
+	// 	// }
 
-	float scale_x = 2.5;
-	float scale_y = 2.5;
 
-	////////////////////////////
-	int raw_img_x = 24;
-	int raw_img_y = 35;
+	// 	// player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y,player_x,player_y,cell_size,Pheight,Pwidth);
 
-	int Pheight = raw_img_y * scale_y;
-	int Pwidth = raw_img_x * scale_x;
+	// 	// window.clear();
 
-	//only to adjust the player's hitbox
+	// 	// display_level(window,height,width,lvl,wallSprite1,cell_size);
+	// 	// draw_player(window,LstillSprite,player_x,player_y);
 
-	int hit_box_factor_x = 8 * scale_x;
-	int hit_box_factor_y = 5 * scale_y;
-
-	LstillTex.loadFromFile("Data/0left_still.png");
-	LstillSprite.setTexture(LstillTex);
-	LstillSprite.setScale(scale_x, scale_y);
-
-	////////////////////////////////////////////////////////
-	SonicFactory sonicMaker;
-	Player* sonic= sonicMaker.createPlayer();
-
-	Event ev;
-	while (window.isOpen())
-	{
-
-		while (window.pollEvent(ev))
-		{
-			if (ev.type == Event::Closed) 
-			{
-				window.close();
-			}
-			
-			//menu.handleInput(ev);
-		}
-		
-		//menu.update();
-		//menu.draw();
-		if (Keyboard::isKeyPressed(Keyboard::D)) {
-			sonic->moveRight();
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::A)) {
-			sonic->moveLeft();
-		}
-		
-		if (Keyboard::isKeyPressed(Keyboard::W) && sonic->isOnGround()) {
-			sonic->jump();
-		}
-		if (Keyboard::isKeyPressed(Keyboard::F) && sonic->isOnGround()) {
-			sonic->specialAbility();
-		}
-		sonic->update();
-
-		// if (Keyboard::isKeyPressed(Keyboard::Escape))
-		// {
-		// 	window.close();
-		// }
-
-		// player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y,player_x,player_y,cell_size,Pheight,Pwidth);
-
-		window.clear();
-
-		// display_level(window,height,width,lvl,wallSprite1,cell_size);
-		// draw_player(window,LstillSprite,player_x,player_y);
-		sonic->render(window);
-		window.display();
-	}
+	// 	// window.display();
+	// }
 
 
 	return 0;

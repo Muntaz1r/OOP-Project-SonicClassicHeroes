@@ -6,6 +6,8 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
     mainSelected = 0;
     isMuted = false;
     prevVolume = volume;
+    leaderboardRequested = false;
+    gameStarted = false;
     
     font.loadFromFile("Data/Retro Gaming.ttf");
 
@@ -51,11 +53,8 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
     
     music.setVolume(volume);
     music.setLoop(true);
-    music.play();
-
-
+    //music.play();
 }
-
 
 void Menu::handleInput(Event& event) {
     if (currentState == STATE_MAIN) {
@@ -72,6 +71,7 @@ void Menu::handleInput(Event& event) {
                 if (mainSelected == 0) {
                     currentState = STATE_NAME_INPUT;
                     playerName.clear();
+                    
                 }
                 else if (mainSelected == 1) {
                     currentState = STATE_OPTIONS;
@@ -81,6 +81,8 @@ void Menu::handleInput(Event& event) {
                 }
                 else if (mainSelected == 3) {
                     currentState = STATE_LEADERBOARD;
+                    leaderboardRequested = true;
+                    cout << "Menu: Leaderboard selected" << endl;
                 }
                 else if(mainSelected == 4) {
                     currentState = STATE_EXIT;
@@ -132,7 +134,7 @@ void Menu::handleInput(Event& event) {
             if (event.text.unicode == '\b' && !playerName.empty()) { // backspace functionality
                 playerName.pop_back();
             }
-            else if (event.text.unicode >= 32 && event.text.unicode <= 126 && event.text.unicode != '\b') { // accept other characters between space and tilda
+            else if (event.text.unicode >= 32 && event.text.unicode <= 126) { // accept other characters between space and tilda
                 playerName += static_cast<char>(event.text.unicode);
             }
         }
@@ -140,18 +142,25 @@ void Menu::handleInput(Event& event) {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
             if (!playerName.empty()) {
                 cout << "Starting game as: " << playerName << endl;
-                window.close();
+                gameStarted = true;
             }
+        }
+
+        if (event.key.code == Keyboard::Escape) {
+            currentState = STATE_MAIN;
         }
     }
     else if (currentState == STATE_LEADERBOARD) {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
             currentState = STATE_MAIN;
+            leaderboardRequested = false;
+            cout << "Menu: Return to main from leaderboard" << endl;
         }
     }
     else if (currentState == STATE_EXIT) {
         window.close();
     }
+    
 }
 
 void Menu::update() {
@@ -182,18 +191,26 @@ void Menu::draw() {
         window.draw(namePrompt);
         window.draw(nameText);
     }
-    else if (currentState == STATE_LEADERBOARD) {
-        Text leaderboard;
-        leaderboard.setFont(font);
-        leaderboard.setString("Top 10 Scores: ");
-        leaderboard.setCharacterSize(26);
-        leaderboard.setPosition(100, 200);
-        window.draw(leaderboard);
-    }
     
-    window.display();
+    //window.display();
 }
 
 string Menu::getPlayerName() const {
     return playerName;
+}
+
+bool Menu::isLeaderboardRequested() const {
+    return leaderboardRequested;
+}
+
+void Menu::resetLeaderboardRequest() {
+    leaderboardRequested = false;
+}
+
+bool Menu::hasGameStarted() const {
+    return gameStarted;
+}
+
+void Menu::resetGameStarted() {
+    gameStarted = false;
 }
