@@ -7,6 +7,8 @@
 
 #include "game/Game.h"
 
+#include "PlayerFactory.h"
+
 using namespace sf;
 using namespace std;
 
@@ -118,11 +120,11 @@ int main()
 	// LstillSprite.setScale(scale_x, scale_y);
 
 	////////////////////////////////////////////////////////
-	Game game(screen_x, screen_y);
-	game.runGame();
+
 	// Event ev;
 	// while (window.isOpen())
 	// {
+
 
 	// 	while (window.pollEvent(ev))
 	// 	{
@@ -130,6 +132,8 @@ int main()
 	// 		{
 	// 			window.close();
 	// 		}
+
+
 
 	// 		menu.handleInput(ev);
 	// 	}
@@ -141,6 +145,7 @@ int main()
 	// 	// {
 	// 	// 	window.close();
 	// 	// }
+
 
 	// 	// player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y,player_x,player_y,cell_size,Pheight,Pwidth);
 

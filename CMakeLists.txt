@@ -3,11 +3,18 @@ project(SonicClassicHeroes)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Add 'classes' directory to the list of directories to search for header files
-include_directories(${PROJECT_SOURCE_DIR}/classes)
-include_directories(${PROJECT_SOURCE_DIR}/classes/game)
-include_directories(${PROJECT_SOURCE_DIR}/classes/entities)
-include_directories(${PROJECT_SOURCE_DIR}/classes/factories)
+# Add all relevant include directories
+include_directories(
+    ${PROJECT_SOURCE_DIR}/classes
+    ${PROJECT_SOURCE_DIR}/classes/entities
+    ${PROJECT_SOURCE_DIR}/classes/entities/dynamicEntity
+    ${PROJECT_SOURCE_DIR}/classes/entities/dynamicEntity/player
+    ${PROJECT_SOURCE_DIR}/classes/entities/dynamicEntity/enemy
+    ${PROJECT_SOURCE_DIR}/classes/entities/obstacle
+    ${PROJECT_SOURCE_DIR}/classes/entities/collectibles
+    ${PROJECT_SOURCE_DIR}/classes/factories
+    ${PROJECT_SOURCE_DIR}/classes/game
+)
 
 
 
