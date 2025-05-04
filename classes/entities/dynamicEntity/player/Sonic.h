@@ -54,6 +54,7 @@ public:
         runRightAnimation.initialize(&sprite, &runRightTexture, 40, 40, 12, 0.07f);
         runLeftAnimation.initialize(&sprite, &runLeftTexture, 40, 40, 12, 0.07f);
         
+        // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
     }

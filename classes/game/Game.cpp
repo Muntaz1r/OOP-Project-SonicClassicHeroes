@@ -19,6 +19,8 @@ Game::Game(int screen_x, int screen_y) : screen_x(screen_x), screen_y(screen_y),
     level = nullptr;
 
     currentState = GAME_STATE_MENU;
+
+    cameraOffsetX = 0.0f;
 }
 
 Game::~Game() {
@@ -104,6 +106,8 @@ void Game::runGame() {
             menu->update();
         }
 		
+        
+
         // Rendering
 		window.clear(Color::Black);
         
@@ -112,7 +116,23 @@ void Game::runGame() {
         }
         else if (currentState == GAME_STATE_PLAYING) {
             if (level != nullptr) {
-                level->render(window);
+                
+                // logic to calculate cameraOffsetX for horizontal scrolling
+                float playerCenterX = level->getPlayerX() + level->getPlayerWidth() / 2.0f;
+                float halfScreen = screen_x / 2.0f;
+                float levelWidthinPixels = level->getLevelWidthinTiles() * level->getCellSize();
+
+                if (playerCenterX <= halfScreen) {
+                    cameraOffsetX = 0; // lock camera to the left edge
+                }
+                else if (playerCenterX >= levelWidthinPixels - halfScreen) {
+                    cameraOffsetX = levelWidthinPixels - screen_x; // lock camera to the right edge
+                }
+                else {
+                    cameraOffsetX = playerCenterX - halfScreen; // follow and center the player
+                }
+
+                level->render(window, cameraOffsetX);
             }
         }
         else if (currentState == GAME_STATE_LEADERBOARD) {

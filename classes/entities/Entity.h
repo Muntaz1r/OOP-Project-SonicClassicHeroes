@@ -38,8 +38,8 @@ public:
 
     virtual void update(float deltaTime) = 0;
 
-    void render(sf::RenderWindow& window) { //render
-        sprite.setPosition(pos_x, pos_y); // pos_x, pos_y inherited from Entity
+    void render(sf::RenderWindow& window, float cameraOffsetX) { //render
+        sprite.setPosition(pos_x - cameraOffsetX, pos_y); // pos_x, pos_y inherited from Entity
         window.draw(sprite);
     }
 
