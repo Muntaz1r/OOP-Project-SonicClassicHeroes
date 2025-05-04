@@ -13,10 +13,15 @@ class Levels {
 public:
     virtual void loadAssets() = 0; // load level assets
     virtual void update(float deltaTime) = 0; // update logic per frame
-    virtual void render(RenderWindow& window) = 0; // Draw the level
+    virtual void render(RenderWindow& window, float cameraOffsetX) = 0; // Draw the level
     //virtual void reset() = 0;
     virtual bool isLevelComplete() const = 0;
     //virtual bool isFailed() const = 0;
+    // used for exposing the player details that Game needs, without violating encapsulation
+    virtual float getPlayerX() const = 0;
+    virtual int getPlayerWidth() const = 0;
+    virtual int getLevelWidthinTiles() const = 0;
+    virtual int getCellSize() const = 0;
     
     virtual ~Levels() {}
 };
@@ -34,6 +39,9 @@ private:
     static const int MAX_RINGS = 100;
 
     char** grid;
+
+    // int levelWidthInTiles = 14;
+    // int cellSize = 64;
 
     bool completed;
     bool failed;
@@ -71,8 +79,12 @@ public:
 
     void loadAssets() override;
     void update(float deltaTime) override;
-    void render(RenderWindow& window) override;
+    void render(RenderWindow& window, float cameraOffsetX) override;
     //void reset() override;
     bool isLevelComplete() const override;
     //bool isFailed() const override;
+    float getPlayerX() const override;
+    int getPlayerWidth() const override;
+    int getLevelWidthinTiles() const override;
+    int getCellSize() const override;
 };

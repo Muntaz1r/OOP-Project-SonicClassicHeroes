@@ -29,6 +29,9 @@ private:
     int screen_y;
 
     int currentState;
+
+    float cameraOffsetX; // used to store offset for horizontal scrolling
+
 public:
     Game(int screen_x, int screen_y);
     ~Game();

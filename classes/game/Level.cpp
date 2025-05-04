@@ -147,22 +147,25 @@ void Level1_Labyrinth::update(float deltaTime) {
     // }
 }
 
-void Level1_Labyrinth::render(RenderWindow& window) {
+void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
     window.draw(bgSprite);
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             char cell = grid[i][j];
+            float drawX = j * cellSize - cameraOffsetX;
+            float drawY = i * cellSize;
+
             if (cell == 'w') {
-                wallSprite1.setPosition(j * cellSize, i * cellSize);
+                wallSprite1.setPosition(drawX, drawY);
                 window.draw(wallSprite1);
             }
             else if (cell == 'q') {
-                wallSprite2.setPosition(j * cellSize, i * cellSize);
+                wallSprite2.setPosition(drawX, drawY);
                 window.draw(wallSprite2);
             }
             else if (cell == 'r') {
-                ringSprite.setPosition(j * cellSize, i * cellSize);
+                ringSprite.setPosition(drawX, drawY);
                 window.draw(ringSprite);
             }
             // for (int i = 0; i < ringCount; ++i) {
@@ -174,7 +177,7 @@ void Level1_Labyrinth::render(RenderWindow& window) {
         }
     }
 
-    player->render(window);
+    player->render(window, cameraOffsetX);
 }
 
 
@@ -187,6 +190,22 @@ bool Level1_Labyrinth::isLevelComplete() const {
         }
     }
     return true; // all rings collected
+}
+
+float Level1_Labyrinth::getPlayerX() const {
+    return player->getPosX();
+}
+
+int Level1_Labyrinth::getPlayerWidth() const {
+    return player->getWidth();
+}
+
+int Level1_Labyrinth::getLevelWidthinTiles() const {
+    return width;
+}
+
+int Level1_Labyrinth::getCellSize() const {
+    return cellSize;
 }
 
 
