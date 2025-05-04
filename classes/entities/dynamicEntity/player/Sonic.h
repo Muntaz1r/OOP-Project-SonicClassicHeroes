@@ -26,7 +26,7 @@ public:
         if (!idleRightTexture.loadFromFile("Data/0right_still.png")) {
             cout << "Failed to load 0right_still.png\n";
         }
-        if (!runRightTexture.loadFromFile("Data/0right.png")) {
+        if (!walkRightTexture.loadFromFile("Data/0right.png")) {
             cout << "Failed to load 0right.png\n";
         }
 
@@ -34,7 +34,7 @@ public:
             cout << "Failed to load 0left_still.png" << endl; 
         }
 
-        if (!runLeftTexture.loadFromFile("Data/0left.png")) {
+        if (!walkLeftTexture.loadFromFile("Data/0left.png")) {
             cout << "Failed to load 0left.png" << endl;
         }
             
@@ -50,9 +50,9 @@ public:
         sprite.setTextureRect(IntRect(0, 0, 40, 40));
         sprite.setScale(2.0f, 2.0f);
         
-        // Setup animation for running
-        runRightAnimation.initialize(&sprite, &runRightTexture, 40, 40, 12, 0.07f);
-        runLeftAnimation.initialize(&sprite, &runLeftTexture, 40, 40, 12, 0.07f);
+        // Setup animation for walking
+        runRightAnimation.initialize(&sprite, &walkRightTexture, 40, 40, 12, 0.07f);
+        runLeftAnimation.initialize(&sprite, &walkLeftTexture, 40, 40, 12, 0.07f);
         
         // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);

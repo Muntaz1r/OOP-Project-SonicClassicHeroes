@@ -22,11 +22,12 @@ protected:
     const float gravity;
 
     Texture idleRightTexture;
-    Texture runRightTexture;
     Texture idleLeftTexture;
-    Texture runLeftTexture;
+    Texture walkRightTexture;
+    Texture walkLeftTexture;
     Texture jumpRightTexture;
     Texture jumpLeftTexture;
+
     
 public:
     Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
@@ -137,14 +138,14 @@ public:
         else if (velocity_x != 0) { // check if stationary
             if (isMovingRight()) {
                 // Switch to running texture if not already
-                if (sprite.getTexture() != &runRightTexture) {
-                    sprite.setTexture(runRightTexture);
+                if (sprite.getTexture() != &walkRightTexture) {
+                    sprite.setTexture(walkRightTexture);
                 }
                 runRightAnimation.update(deltaTime);
             }
             else {
-                if (sprite.getTexture() != &runLeftTexture) {
-                    sprite.setTexture(runLeftTexture);
+                if (sprite.getTexture() != &walkLeftTexture) {
+                    sprite.setTexture(walkLeftTexture);
                 }
                 runLeftAnimation.update(deltaTime);
             }
