@@ -40,22 +40,69 @@ public:
             0.5f,    // acc_x
             12.0f,     // acc_y
             0.2f,    // friction
-            0.4f   //gravity
+            0.4f,   //gravity
+            7,  //special abillity duration
+            false // leader
         );
     }
 };
-/*class TailsFactory : public PlayerFactory {
-public:
-    Player* createPlayer() const override {
-        return new Tails();
-    }
+class TailsFactory : public PlayerFactory {
+    public:
+        Player* createPlayer() const override {
+            sf::Texture *texture = new Texture;
+            if (!texture->loadFromFile("Data/0right.png")) {
+                cout << "Failed to load player texture\n";
+            }
+            return new Tails(
+                10.0f,   // px
+                750.0f,   // py
+                64,      // height
+                64,      // width
+                texture,  // Texture pointer
+                0.0f,    // velocity_x
+                0.0f,    // velocity_y
+                9.8f,    // terminal_velocity
+                5.0f,    // maxSpeed
+                true,    // onGround
+                false,   // invincible
+                true,    // movingRight
+                0.47f,    // acc_x
+                12.0f,     // acc_y
+                0.2f,    // friction
+                0.4f,   //gravity
+                7, // specail abillity time
+                false //leader
+            );
+        }
 };
-
-// Knuckles Factory
-class KnucklesFactory : public PlayerFactory {
-public:
+    
+    // Knuckles Factory
+    class KnucklesFactory : public PlayerFactory {
+    public:
     Player* createPlayer() const override {
-        return new Knuckles();
+        sf::Texture *texture = new Texture;
+        if (!texture->loadFromFile("Data/0right.png")) {
+            cout << "Failed to load player texture\n";
+        }
+        return new Tails(
+            20.0f,   // px
+            750.0f,   // py
+            64,      // height
+            64,      // width
+            texture,  // Texture pointer
+            0.0f,    // velocity_x
+            0.0f,    // velocity_y
+            9.8f,    // terminal_velocity
+            5.0f,    // maxSpeed
+            true,    // onGround
+            false,   // invincible
+            true,    // movingRight
+            0.42f,    // acc_x
+            12.0f,     // acc_y
+            0.2f,    // friction
+            0.35f,   //gravity
+            7, // specail abillity time
+            false //leader
+        );
     }
-};
-*/
+    };

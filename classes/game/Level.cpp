@@ -84,6 +84,8 @@ void Level1_Labyrinth::loadAssets() {
     ringAnimation.initialize(&ringSprite, &ringTex, 16, 16, 4, 0.15f);
 
     player = sonicMaker.createPlayer();
+    player->setLeader(true);
+    player->setFollowers(tailsMaker.createPlayer(), knucklesMaker.createPlayer());
 
 
     // for (int i = 0; i < ringCount; i++) {
@@ -127,6 +129,17 @@ void Level1_Labyrinth::update(float deltaTime) {
     }
     if (Keyboard::isKeyPressed(Keyboard::F) && player->isOnGround()) {
         player->specialAbility();
+    }
+    if (Keyboard::isKeyPressed(Keyboard::Z)) {
+        Player* temp;
+        player->setLeader(false); // Old leader no longer leader
+       
+        temp = player;
+        player = temp->getFollower1();
+        player->setFollowers(temp->getFollower2(), temp);
+        player->setLeader(true);
+
+        temp->setFollowers(nullptr, nullptr); // Old leaders followers null
     }
 
     player->update(deltaTime);

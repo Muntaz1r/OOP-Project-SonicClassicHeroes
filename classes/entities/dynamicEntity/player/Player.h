@@ -20,6 +20,8 @@ protected:
     sf::Time invincibilityDuration = sf::seconds(1);
     const float friction;
     const float gravity;
+    bool leader;
+    Player* followers[2];
 
     Texture idleRightTexture;
     Texture runRightTexture;
@@ -32,10 +34,11 @@ public:
     Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0, 
         float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
-        float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0)
+        float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0, 
+        bool leader = false)
         : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
         maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
-        , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity) {}
+        , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {}
 
     // Getters
     float getMaxSpeed() const { return maxSpeed; }
@@ -45,6 +48,10 @@ public:
     bool isMovingRight() const { return movingRight; }
     float getAccnX() const { return acc_x; }
     float getAccY() const { return acc_y; }
+    bool getLeader() const {return leader;}
+    Player* getFollower1() const{return followers[0];}
+    Player* getFollower2() const{return followers[1];}
+
 
     // Setters
     void setMaxSpeed(float speed) { maxSpeed = speed; }
@@ -54,6 +61,11 @@ public:
     void setMovingRight(bool value) { movingRight = value; }
     void setAccX(float value) { acc_x = value; }
     void setAccY(float value) { acc_y = value; }
+    void setLeader(bool value) {leader = value;}
+    void setFollowers(Player* follower1, Player* follower2){
+        followers[0]=follower1;
+        followers[1]=follower2;
+    }
     
     // Movement
     void jump() {
@@ -61,12 +73,18 @@ public:
             velocity_y -= acc_y;
         }
         onGround = false;
+        if(leader){
+            for(int i=0; i<2; ++i) followers[i]->jump();
+        }
     }
     void moveLeft() {
         if(onGround){
             velocity_x -= acc_x;
             if (velocity_x < -maxSpeed) velocity_x = -maxSpeed;
             movingRight = false;
+        }
+        if(leader){
+            for(int i=0; i<2; ++i) followers[i]->moveLeft();
         }
     }
     
@@ -75,6 +93,9 @@ public:
             velocity_x += acc_x;
             if (velocity_x > maxSpeed) velocity_x = maxSpeed;
             movingRight = true;
+        }
+        if(leader){
+            for(int i=0; i<2; ++i) followers[i]->moveRight();
         }
     }
 
@@ -104,6 +125,7 @@ public:
                     velocity_x = 0;
                 }
             }
+            
         }
         
         if(abs(velocity_y) > 0){// going  up or down
@@ -119,7 +141,7 @@ public:
             onGround = true;
         }
         
-        // Animation logic... maybe changing texture
+        // Animation logic
         if (!onGround) { // Jumping
             if (isMovingRight()) {
                 if (sprite.getTexture() != &jumpRightTexture) {
@@ -170,6 +192,29 @@ public:
             runLeftAnimation.reset();
             jumpRightAnimation.reset();
             jumpLeftAnimation.reset();
+        }
+        if(leader){
+            for(int i=0; i<2; ++i) {
+                followers[i]->update(deltaTime);
+                
+                if(abs(pos_x - followers[i]->getPosX()) > 960){
+                    followers[i]->setPosY(0);
+                    followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
+                    followers[i]->setPosX(pos_x + 20*i);
+                }else if(pos_x - followers[i]->getPosX() > 100){
+                    followers[i]->setVelocityX(followers[i]->getMaxSpeed());
+                }else if(pos_x - followers[i]->getPosX() < -100){
+                    followers[i]->setVelocityX(-followers[i]->getMaxSpeed());
+                }
+            }
+        }
+    }
+    virtual void render(sf::RenderWindow& window, float cameraOffsetX) override {
+        Entity::render(window, cameraOffsetX);
+        if(leader){
+            for(int i=0; i<2; ++i) {
+                followers[i]->render(window, cameraOffsetX);
+            }
         }
     }
     
