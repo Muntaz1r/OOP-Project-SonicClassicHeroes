@@ -64,6 +64,8 @@ private:
     Sprite bgSprite;
 
     SonicFactory sonicMaker;
+    TailsFactory tailsMaker;
+    KnucklesFactory knucklesMaker;
     Player* player;
 
     // int ringFrameIndex;
