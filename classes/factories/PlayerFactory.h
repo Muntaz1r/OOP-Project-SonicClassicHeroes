@@ -26,13 +26,13 @@ public:
         }
         return new Sonic(
             50.0f,   // px
-            750.0f,   // py
+            800.0f,   // py
             64,      // height
             64,      // width
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            9.8f,    // terminal_velocity
+            4.5f,    // terminal_velocity
             5.0f,    // maxSpeed
             true,    // onGround
             false,   // invincible
@@ -55,13 +55,13 @@ class TailsFactory : public PlayerFactory {
             }
             return new Tails(
                 10.0f,   // px
-                750.0f,   // py
+                800.0f,   // py
                 64,      // height
                 64,      // width
                 texture,  // Texture pointer
                 0.0f,    // velocity_x
                 0.0f,    // velocity_y
-                9.8f,    // terminal_velocity
+                4.5f,    // terminal_velocity
                 5.0f,    // maxSpeed
                 true,    // onGround
                 false,   // invincible
@@ -76,9 +76,9 @@ class TailsFactory : public PlayerFactory {
         }
 };
     
-    // Knuckles Factory
-    class KnucklesFactory : public PlayerFactory {
-    public:
+// Knuckles Factory
+class KnucklesFactory : public PlayerFactory {
+public:
     Player* createPlayer() const override {
         sf::Texture *texture = new Texture;
         if (!texture->loadFromFile("Data/0right.png")) {
@@ -86,13 +86,13 @@ class TailsFactory : public PlayerFactory {
         }
         return new Knuckles(
             20.0f,   // px
-            750.0f,   // py
+            600.0f,   // py
             64,      // height
             64,      // width
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            9.8f,    // terminal_velocity
+            4.5f,    // terminal_velocity
             5.0f,    // maxSpeed
             true,    // onGround
             false,   // invincible
@@ -100,9 +100,9 @@ class TailsFactory : public PlayerFactory {
             0.42f,    // acc_x
             12.0f,     // acc_y
             0.2f,    // friction
-            0.35f,   //gravity
+            0.4f,   //gravity
             7, // specail abillity time
             false //leader
         );
     }
-    };
+};

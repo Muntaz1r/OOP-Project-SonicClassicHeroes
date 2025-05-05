@@ -115,6 +115,7 @@ void Level1_Labyrinth::loadAssets() {
     player = sonicMaker.createPlayer();
     player->setLeader(true);
     player->setFollowers(tailsMaker.createPlayer(), knucklesMaker.createPlayer());
+    player->setCollidingTiles(64, 14, 200, grid);
 
 
     // for (int i = 0; i < ringCount; i++) {
@@ -160,6 +161,9 @@ void Level1_Labyrinth::update(float deltaTime) {
         player->specialAbility();
     }
     if (Keyboard::isKeyPressed(Keyboard::Z)) {
+        if (switchCooldownClock.getElapsedTime().asSeconds() >= 5.0f){
+        switchCooldownClock.restart();
+        cout<<"Switch\n";
         Player* temp;
         player->setLeader(false); // Old leader no longer leader
        
@@ -169,8 +173,9 @@ void Level1_Labyrinth::update(float deltaTime) {
         player->setLeader(true);
 
         temp->setFollowers(nullptr, nullptr); // Old leaders followers null
+        }
     }
-
+    player->setCollidingTiles(64, 14, 200, grid);
     player->update(deltaTime);
 
 

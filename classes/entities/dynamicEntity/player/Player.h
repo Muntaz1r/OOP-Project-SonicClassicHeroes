@@ -6,6 +6,19 @@
 
 #include "DynamicEntity.h"
 
+struct CollidingTiles {
+    char aboveLeft;
+    char aboveRight;
+    char belowLeft;
+    char belowRight;
+    char leftTop;
+    char leftBottom;
+    char rightTop;
+    char rightBottom;
+    
+};
+
+
 class Player : public DynamicEntity
 {
 protected:
@@ -22,6 +35,7 @@ protected:
     const float gravity;
     bool leader;
     Player* followers[2];
+    CollidingTiles collidingTiles;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -68,6 +82,45 @@ public:
         followers[1]=follower2;
     }
     
+    char sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid) {
+        int col = static_cast<int>(x / tileSize);
+        int row = static_cast<int>(y / tileSize);
+        if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight)
+            return 'x';
+        return grid[row][col];
+    }
+    
+    
+    void setCollidingTiles(int tileSize, int levelHeight, int levelWidth, char** grid) {
+        float left   = pos_x;
+        float right  = pos_x + width;
+        float top    = pos_y;
+        float bottom = pos_y + height;
+    
+        // BELOW
+        collidingTiles.belowLeft  = sampleTile(left + 1.0f, bottom + 1.0f, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.belowRight = sampleTile(right - 1.0f, bottom + 1.0f, tileSize, levelHeight, levelWidth, grid);
+    
+        // ABOVE
+        collidingTiles.aboveLeft  = sampleTile(left + 1.0f, top - 1.0f, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.aboveRight = sampleTile(right - 1.0f, top - 1.0f, tileSize, levelHeight, levelWidth, grid);
+    
+        // LEFT
+        collidingTiles.leftTop    = sampleTile(left - 1.0f, top + 1.0f, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.leftBottom = sampleTile(left - 1.0f, bottom - 1.0f, tileSize, levelHeight, levelWidth, grid);
+    
+        // RIGHT
+        collidingTiles.rightTop   = sampleTile(right + 1.0f, top + 1.0f, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.rightBottom = sampleTile(right + 1.0f, bottom - 1.0f, tileSize, levelHeight, levelWidth, grid);
+    
+        // Followers
+        if (leader) {
+            for (int i = 0; i < 2; ++i)
+                followers[i]->setCollidingTiles(tileSize, levelHeight, levelWidth, grid);
+        }
+    }
+    
+    
     // Movement
     void jump() {
         if(onGround){
@@ -112,6 +165,8 @@ public:
    
     //Updating everything relevant 
     virtual void update(float deltaTime) override {
+        float previousX = pos_x;
+        float previousY = pos_y;
         
         // Updating position and velocities
         DynamicEntity::update();
@@ -137,11 +192,11 @@ public:
         if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration) {
             invincible = false;
         }
-        if (pos_y >=  750) {
-            pos_y = 750; // Clamp to ground
-            velocity_y = 0;
-            onGround = true;
-        }
+        // if (pos_y >=  635) {
+        //     pos_y = 635; // Clamp to ground
+        //     velocity_y = 0;
+        //     onGround = true;
+        // }
         
         // Animation logic
         if (!onGround) { // Jumping
@@ -203,14 +258,53 @@ public:
                     followers[i]->setPosY(0);
                     followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
                     followers[i]->setPosX(pos_x + 20*i);
-                }else if(pos_x - followers[i]->getPosX() > 100){
+                }else if(pos_x - followers[i]->getPosX() > 80){
                     followers[i]->setVelocityX(followers[i]->getMaxSpeed());
-                }else if(pos_x - followers[i]->getPosX() < -100){
+                }else if(pos_x - followers[i]->getPosX() < -80){
                     followers[i]->setVelocityX(-followers[i]->getMaxSpeed());
                 }
             }
         }
+        collisionHandle(previousX, previousY);
     }
+    void collisionHandle(float previousX, float previousY){
+        // Bottom collision or bottom out-of-bounds (falling)
+        if (pos_y >= previousY &&
+            (collidingTiles.belowLeft == 'x' || collidingTiles.belowRight == 'x'
+            || collidingTiles.belowLeft== 'q' || collidingTiles.belowRight== 'q')){
+            pos_y = previousY;
+            onGround = true;
+            velocity_y = 0;
+        }
+
+        // Top out-of-bounds (rising)
+        if (pos_y <= previousY && 
+            (collidingTiles.aboveLeft == 'x' || collidingTiles.aboveRight == 'x')) {
+           // velocity_y = terminal_velocity;
+            pos_y = previousY;
+            velocity_y = -velocity_y;
+        }
+
+        //Falling off platform
+        if (!(collidingTiles.belowLeft == 'x' || collidingTiles.belowRight == 'x'
+            || collidingTiles.belowLeft== 'q' || collidingTiles.belowRight== 'q') ){
+            if(onGround){
+            velocity_y += acc_y;
+            onGround = false;
+            }
+        }
+
+        // Left out-of-bounds (moving right)
+        if (pos_x < previousX && (collidingTiles.leftTop == 'x' || collidingTiles.leftBottom == 'x')) {
+            
+        }
+
+        // Right out-of-bounds (moving left)
+        if (pos_x > previousX && (collidingTiles.rightTop == 'x' || collidingTiles.rightBottom == 'x')) {
+            
+        }
+    }
+
     virtual void render(sf::RenderWindow& window, float cameraOffsetX) override {
         Entity::render(window, cameraOffsetX);
         if(leader){
@@ -225,6 +319,6 @@ public:
 
     virtual ~Player(){};
 };
-// Initialize static member
+//Initialize static member
 //int Player::hp = 3;
 
