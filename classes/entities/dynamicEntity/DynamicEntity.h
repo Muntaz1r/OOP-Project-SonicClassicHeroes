@@ -12,8 +12,8 @@ protected:
     float velocity_y;
     float terminal_velocity;
 
-    Animation runRightAnimation;
-    Animation runLeftAnimation;
+    Animation walkRightAnimation;
+    Animation walkLeftAnimation;
     Animation jumpRightAnimation;
     Animation jumpLeftAnimation;
     
@@ -41,11 +41,11 @@ public:
     virtual ~DynamicEntity(){};
 
     void updateAnimation(float deltaTime) {
-        runRightAnimation.update(deltaTime);
+        walkRightAnimation.update(deltaTime);
     }
 
     void resetAnimation() {
-        runRightAnimation.reset();
+        walkRightAnimation.reset();
     }
 };
 

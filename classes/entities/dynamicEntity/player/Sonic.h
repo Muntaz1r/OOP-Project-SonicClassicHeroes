@@ -54,8 +54,8 @@ public:
         sprite.setScale(2.0f, 2.0f);
         
         // Setup animation for walking
-        runRightAnimation.initialize(&sprite, &walkRightTexture, 40, 40, 12, 0.07f);
-        runLeftAnimation.initialize(&sprite, &walkLeftTexture, 40, 40, 12, 0.07f);
+        walkRightAnimation.initialize(&sprite, &walkRightTexture, 40, 40, 12, 0.07f);
+        walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 40, 40, 12, 0.07f);
         
         // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);

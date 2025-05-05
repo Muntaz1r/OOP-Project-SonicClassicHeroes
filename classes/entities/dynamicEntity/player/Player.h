@@ -163,13 +163,13 @@ public:
                 if (sprite.getTexture() != &walkRightTexture) {
                     sprite.setTexture(walkRightTexture);
                 }
-                runRightAnimation.update(deltaTime);
+                walkRightAnimation.update(deltaTime);
             }
             else {
                 if (sprite.getTexture() != &walkLeftTexture) {
                     sprite.setTexture(walkLeftTexture);
                 }
-                runLeftAnimation.update(deltaTime);
+                walkLeftAnimation.update(deltaTime);
             }
             
         }
@@ -189,8 +189,8 @@ public:
             }
             
             // Reset to avoid overlap
-            runRightAnimation.reset();
-            runLeftAnimation.reset();
+            walkRightAnimation.reset();
+            walkLeftAnimation.reset();
             jumpRightAnimation.reset();
             jumpLeftAnimation.reset();
         }

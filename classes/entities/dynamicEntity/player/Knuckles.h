@@ -19,36 +19,36 @@ public:
     : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
         moving_right, acc_x, acc_y, friction, gravity, leader), specialAbillityTime(specialAbillityTime)
     {
-        if (!idleRightTexture.loadFromFile("Data/0right_still.png")) {
-            cout << "Failed to load 0right_still.png\n";
+        if (!idleRightTexture.loadFromFile("Data/knuckles/0right_still.png")) {
+            cout << "Failed to load knuckles/0right_still.png\n";
         }
-        if (!runRightTexture.loadFromFile("Data/0right.png")) {
-            cout << "Failed to load 0right.png\n";
-        }
-
-        if (!idleLeftTexture.loadFromFile("Data/0left_still.png")) {
-            cout << "Failed to load 0left_still.png" << endl; 
+        if (!walkRightTexture.loadFromFile("Data/knuckles/0right.png")) {
+            cout << "Failed to load knuckles/0right.png\n";
         }
 
-        if (!runLeftTexture.loadFromFile("Data/0left.png")) {
-            cout << "Failed to load 0left.png" << endl;
+        if (!idleLeftTexture.loadFromFile("Data/knuckles/0left_still.png")) {
+            cout << "Failed to load knuckles/0left_still.png" << endl; 
+        }
+
+        if (!walkLeftTexture.loadFromFile("Data/knuckles/0left.png")) {
+            cout << "Failed to load knuckles/0left.png" << endl;
         }
             
-        if (!jumpRightTexture.loadFromFile("Data/0upR.png")) {
-            cout << "Failed to load 0upR.png" << endl;
+        if (!jumpRightTexture.loadFromFile("Data/knuckles/0upR.png")) {
+            cout << "Failed to load knuckles/0upR.png" << endl;
         }
 
-        if (!jumpLeftTexture.loadFromFile("Data/0upL.png")) {
-            cout << "Failed to load 0upL.png" << endl;
+        if (!jumpLeftTexture.loadFromFile("Data/knuckles/0upL.png")) {
+            cout << "Failed to load knuckles/0upL.png" << endl;
         }
         
         sprite.setTexture(idleRightTexture); // start with idle right texture
         sprite.setTextureRect(IntRect(0, 0, 40, 40));
         sprite.setScale(2.0f, 2.0f);
         
-        // Setup animation for running
-        runRightAnimation.initialize(&sprite, &runRightTexture, 40, 40, 12, 0.07f);
-        runLeftAnimation.initialize(&sprite, &runLeftTexture, 40, 40, 12, 0.07f);
+        // Setup animation for walking
+        walkRightAnimation.initialize(&sprite, &walkRightTexture, 40, 40, 12, 0.07f);
+        walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 40, 40, 12, 0.07f);
         
         // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
