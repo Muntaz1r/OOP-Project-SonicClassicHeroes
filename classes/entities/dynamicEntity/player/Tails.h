@@ -55,7 +55,7 @@ public:
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 6, 0.1f);
     }
     virtual void specialAbility() override {
-        cout<<"flying...";
+        cout << "Flying...\n";
         boostClock.restart();
         boosting = true;
     }
@@ -64,7 +64,7 @@ public:
 
         // Stop boosting if boost time is done
         if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {
-            cout << "Tials boost expired.\n";
+            cout << "Tails boost expired.\n";
             boosting = false;
         }
 

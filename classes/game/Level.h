@@ -46,14 +46,23 @@ private:
     bool completed;
     bool failed;
 
-    Texture wallTex1;
+    Texture wallTex1; // wall
     Sprite wallSprite1;
 
-    Texture wallTex2;
+    Texture wallTex2; // platform
     Sprite wallSprite2;
+
+    Texture wallTex3; // breakable wall
+    Sprite wallSprite3;
 
     Texture ringTex;
     Sprite ringSprite;
+
+    Texture spikeTex;
+    Sprite spikeSprite;
+
+    Texture crystalTex;
+    Sprite crystalSprite;
     //Sprite ringSprites[MAX_RINGS];
     //Position ringPositions[MAX_RINGS];
     //bool ringCollected[MAX_RINGS];
@@ -80,6 +89,7 @@ public:
     ~Level1_Labyrinth();
 
     void loadAssets() override;
+    bool loadFromFile(const string& filePath);
     void update(float deltaTime) override;
     void render(RenderWindow& window, float cameraOffsetX) override;
     //void reset() override;
