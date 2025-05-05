@@ -78,6 +78,7 @@ public:
             for(int i=0; i<2; ++i) followers[i]->jump();
         }
     }
+
     void moveLeft() {
         if(onGround){
             velocity_x -= acc_x;
@@ -136,8 +137,8 @@ public:
         if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration) {
             invincible = false;
         }
-        if (pos_y >=  635) {
-            pos_y = 635; // Clamp to ground
+        if (pos_y >=  750) {
+            pos_y = 750; // Clamp to ground
             velocity_y = 0;
             onGround = true;
         }

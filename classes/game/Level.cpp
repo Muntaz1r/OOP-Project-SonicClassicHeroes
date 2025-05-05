@@ -1,5 +1,6 @@
 #include "Level.h"
 #include <iostream>
+#include <fstream>
 
 Level1_Labyrinth::Level1_Labyrinth() {
     completed = false;
@@ -12,7 +13,7 @@ Level1_Labyrinth::Level1_Labyrinth() {
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            grid[i][j] = ' ';
+            grid[i][j] = 's';
         }
     }
 
@@ -26,30 +27,43 @@ Level1_Labyrinth::~Level1_Labyrinth() {
     delete[] grid;
 }
 
+bool Level1_Labyrinth::loadFromFile(const string& filePath) {
+    ifstream myFile(filePath);
+
+    if (!myFile.is_open()) {
+        cout << "Unable to open level layout file " << filePath << endl;
+        return false;
+    }
+
+    for (int i = 0; i < height; i++) {
+        string line;
+        
+        if (!getline(myFile, line)) {
+            cout << "Not enough lines to fill the level!" << endl;
+            return false;
+        }
+
+        for (int j = 0; j < width && j < line.length(); j++) {
+            grid[i][j] = line[j];
+        }
+    }
+
+    myFile.close();
+    return true;
+}
+
 void Level1_Labyrinth::initializeGrid() {
-    for (int j = 0; j < width; j++) {
-        grid[height - 3][j] = 'w'; // add floor
-        grid[height - 2][j] = 'w';
+    // 's' - space
+    // 'w' - wall1
+    // 'q' - platform
+    // 'b' - breakable wall
+    // 'x' - spike
+    // 'C' - crystal
+    // 'R' - ring
+
+    if (!loadFromFile("Data/Level1_Layout.txt")) {
+        cout << "Unable to load level layout file!" << endl;
     }
-
-    for (int j = 10; j < 15; j++) {
-        grid[height - 8][j] = 'q'; // platform
-        grid[height - 7][j] = 'r';
-    }
-
-    grid[height - 4][12] = 'r'; // add rings
-    grid[height - 11][22] = 'r';
-
-    for (int j = 15; j < 20; j++) {
-        grid[height - 12][j] = 'q'; // another platform
-    }
-
-    for (int j = 40; j < 55; j++) {
-        grid[height - 7][j] = 'q'; // higher platform
-    }
-
-    grid[height - 8][42] = 'r'; // ring on higher platform
-    grid[height - 6][28] = 'r'; // ring on middle platform
 }
 
 void Level1_Labyrinth::loadAssets() {
@@ -71,8 +85,23 @@ void Level1_Labyrinth::loadAssets() {
 
     wallSprite2.setTexture(wallTex2);
 
-    //ringCount = 3;
-    //ringFrameIndex = 0;
+    if (!wallTex3.loadFromFile("Data/brick3.png")) {
+        cout << "Failed to load brick3.png" << endl;
+    }
+
+    wallSprite3.setTexture(wallTex3);
+
+    if (!spikeTex.loadFromFile("Data/spike.png")) {
+        cout << "Failed to load spike.png" << endl;
+    }
+
+    spikeSprite.setTexture(spikeTex);
+
+    if (!crystalTex.loadFromFile("Data/crystal.png")) {
+        cout << "Failed to load crystal.png" << endl;
+    }
+
+    crystalSprite.setTexture(crystalTex);
 
     if (!ringTex.loadFromFile("Data/ring.png")) {
         cout << "Failed to load ring.png" << endl;
@@ -177,7 +206,19 @@ void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
                 wallSprite2.setPosition(drawX, drawY);
                 window.draw(wallSprite2);
             }
-            else if (cell == 'r') {
+            else if (cell == 'b') {
+                wallSprite3.setPosition(drawX, drawY);
+                window.draw(wallSprite3);
+            }
+            else if (cell == 'x') {
+                spikeSprite.setPosition(drawX, drawY);
+                window.draw(spikeSprite);
+            }
+            else if (cell == 'C') {
+                crystalSprite.setPosition(drawX, drawY);
+                window.draw(crystalSprite);
+            }
+            else if (cell == 'R') {
                 ringSprite.setPosition(drawX, drawY);
                 window.draw(ringSprite);
             }
@@ -197,7 +238,7 @@ void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
 bool Level1_Labyrinth::isLevelComplete() const {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (grid[i][j] == 'r') {
+            if (grid[i][j] == 'R') {
                 return false; // If any rings remain, level is not complete
             }
         }
