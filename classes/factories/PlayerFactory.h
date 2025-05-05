@@ -84,7 +84,7 @@ class TailsFactory : public PlayerFactory {
         if (!texture->loadFromFile("Data/0right.png")) {
             cout << "Failed to load player texture\n";
         }
-        return new Tails(
+        return new Knuckles(
             20.0f,   // px
             750.0f,   // py
             64,      // height
