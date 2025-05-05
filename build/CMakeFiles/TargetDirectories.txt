@@ -1,3 +1,0 @@
-/home/muntazir/Desktop/OOP Project/OOPP_Project_SonicClassicHeroes/build/CMakeFiles/SonicClassicHeroes.dir
-/home/muntazir/Desktop/OOP Project/OOPP_Project_SonicClassicHeroes/build/CMakeFiles/edit_cache.dir
-/home/muntazir/Desktop/OOP Project/OOPP_Project_SonicClassicHeroes/build/CMakeFiles/rebuild_cache.dir
