@@ -86,7 +86,7 @@ public:
         int col = static_cast<int>(x / tileSize);
         int row = static_cast<int>(y / tileSize);
         if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight)
-            return 'x';
+            return 'E';
         return grid[row][col];
     }
     
@@ -258,9 +258,9 @@ public:
                     followers[i]->setPosY(0);
                     followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
                     followers[i]->setPosX(pos_x + 20*i);
-                }else if(pos_x - followers[i]->getPosX() > 80){
+                }else if(pos_x - followers[i]->getPosX() > 100){
                     followers[i]->setVelocityX(followers[i]->getMaxSpeed());
-                }else if(pos_x - followers[i]->getPosX() < -80){
+                }else if(pos_x - followers[i]->getPosX() < -100){
                     followers[i]->setVelocityX(-followers[i]->getMaxSpeed());
                 }
             }
@@ -270,23 +270,45 @@ public:
     void collisionHandle(float previousX, float previousY){
         // Bottom collision or bottom out-of-bounds (falling)
         if (pos_y >= previousY &&
-            (collidingTiles.belowLeft == 'x' || collidingTiles.belowRight == 'x'
+            (collidingTiles.belowLeft == 'E' || collidingTiles.belowRight == 'E'
             || collidingTiles.belowLeft== 'q' || collidingTiles.belowRight== 'q')){
             pos_y = previousY;
             onGround = true;
             velocity_y = 0;
         }
 
+        //Ring collision
+        if(collidingTiles.belowLeft == 'R'||collidingTiles.aboveLeft == 'R'
+            ||collidingTiles.belowRight== 'R' || collidingTiles.belowLeft== 'R'||
+            collidingTiles.leftTop == 'R' || collidingTiles.leftBottom == 'R' ||
+            collidingTiles.rightTop == 'R' || collidingTiles.rightBottom == 'R'){
+                cout<<"Collect ring\n";
+        }
+
+        //Crystal collision
+        if(collidingTiles.belowLeft == 'C'||collidingTiles.aboveLeft == 'C'
+            ||collidingTiles.belowRight== 'C' || collidingTiles.belowLeft== 'C'||
+            collidingTiles.leftTop == 'C' || collidingTiles.leftBottom == 'C' ||
+            collidingTiles.rightTop == 'C' || collidingTiles.rightBottom == 'C'){
+                cout<<"Collect crystal\n";
+        }
+
+        //Spike collision
+         if (pos_y >= previousY &&
+            (collidingTiles.belowLeft == 'x' || collidingTiles.belowRight == 'x')){
+                cout<<"Spike hurt";
+        }
+
         // Top out-of-bounds (rising)
         if (pos_y <= previousY && 
-            (collidingTiles.aboveLeft == 'x' || collidingTiles.aboveRight == 'x')) {
+            (collidingTiles.aboveLeft == 'E' || collidingTiles.aboveRight == 'E')) {
            // velocity_y = terminal_velocity;
             pos_y = previousY;
             velocity_y = -velocity_y;
         }
 
         //Falling off platform
-        if (!(collidingTiles.belowLeft == 'x' || collidingTiles.belowRight == 'x'
+        if (!(collidingTiles.belowLeft == 'E' || collidingTiles.belowRight == 'E'
             || collidingTiles.belowLeft== 'q' || collidingTiles.belowRight== 'q') ){
             if(onGround){
             velocity_y += acc_y;
@@ -295,12 +317,14 @@ public:
         }
 
         // Left out-of-bounds (moving right)
-        if (pos_x < previousX && (collidingTiles.leftTop == 'x' || collidingTiles.leftBottom == 'x')) {
-            
+        if (pos_x < previousX && (collidingTiles.leftTop == 'E' || collidingTiles.leftBottom == 'E')) {
+           if(pos_x < 0){
+            pos_x = previousX;
+           } 
         }
 
         // Right out-of-bounds (moving left)
-        if (pos_x > previousX && (collidingTiles.rightTop == 'x' || collidingTiles.rightBottom == 'x')) {
+        if (pos_x > previousX && (collidingTiles.rightTop == 'E' || collidingTiles.rightBottom == 'E')) {
             
         }
     }

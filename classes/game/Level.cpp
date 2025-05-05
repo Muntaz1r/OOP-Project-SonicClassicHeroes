@@ -60,6 +60,7 @@ void Level1_Labyrinth::initializeGrid() {
     // 'x' - spike
     // 'C' - crystal
     // 'R' - ring
+    // 'E' - borders
 
     if (!loadFromFile("Data/Level1_Layout.txt")) {
         cout << "Unable to load level layout file!" << endl;

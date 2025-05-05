@@ -26,7 +26,7 @@ public:
         }
         return new Sonic(
             50.0f,   // px
-            800.0f,   // py
+            850.0f,   // py
             64,      // height
             64,      // width
             texture,  // Texture pointer
