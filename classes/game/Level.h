@@ -10,9 +10,11 @@ using namespace std;
 #include "PlayerFactory.h"
 
 class Levels {
+protected:
+    sf::Clock switchCooldownClock;
 public:
     virtual void loadAssets() = 0; // load level assets
-    virtual void update(float deltaTime) = 0; // update logic per frame
+    virtual void update(float deltaTime) =0; // update logic per frame
     virtual void render(RenderWindow& window, float cameraOffsetX) = 0; // Draw the level
     //virtual void reset() = 0;
     virtual bool isLevelComplete() const = 0;
