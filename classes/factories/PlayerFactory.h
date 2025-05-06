@@ -26,14 +26,14 @@ public:
         }
         return new Sonic(
             50.0f,   // px
-            850.0f,   // py
-            64,      // height
-            64,      // width
+            200.0f,   // py
+            80,      // height
+            80,      // width
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            4.5f,    // terminal_velocity
-            5.0f,    // maxSpeed
+            4.0f,    // terminal_velocity
+            4.5f,    // maxSpeed
             true,    // onGround
             false,   // invincible
             true,    // movingRight
@@ -55,14 +55,14 @@ class TailsFactory : public PlayerFactory {
             }
             return new Tails(
                 10.0f,   // px
-                800.0f,   // py
-                64,      // height
-                64,      // width
+                600.0f,   // py
+                80,      // height
+                80,      // width
                 texture,  // Texture pointer
                 0.0f,    // velocity_x
                 0.0f,    // velocity_y
-                4.5f,    // terminal_velocity
-                5.0f,    // maxSpeed
+                4.0f,    // terminal_velocity
+                4.5f,    // maxSpeed
                 true,    // onGround
                 false,   // invincible
                 true,    // movingRight
@@ -87,13 +87,13 @@ public:
         return new Knuckles(
             20.0f,   // px
             600.0f,   // py
-            64,      // height
-            64,      // width
+            80,      // height
+            80,      // width
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            4.5f,    // terminal_velocity
-            5.0f,    // maxSpeed
+            4.0f,    // terminal_velocity
+            4.5f,    // maxSpeed
             true,    // onGround
             false,   // invincible
             true,    // movingRight

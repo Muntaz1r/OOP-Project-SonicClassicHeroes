@@ -7,14 +7,14 @@
 #include "DynamicEntity.h"
 
 struct CollidingTiles {
-    char aboveLeft;
-    char aboveRight;
-    char belowLeft;
-    char belowRight;
-    char leftTop;
-    char leftBottom;
-    char rightTop;
-    char rightBottom;
+    char *aboveLeft;
+    char *aboveRight;
+    char *belowLeft;
+    char *belowRight;
+    char *leftTop;
+    char *leftBottom;
+    char *rightTop;
+    char *rightBottom;
     
 };
 
@@ -36,6 +36,7 @@ protected:
     bool leader;
     Player* followers[2];
     CollidingTiles collidingTiles;
+    char invalid = '\0';
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -82,14 +83,16 @@ public:
         followers[1]=follower2;
     }
     
-    char sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid) {
+    
+    
+    
+    char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid) {
         int col = static_cast<int>(x / tileSize);
         int row = static_cast<int>(y / tileSize);
         if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight)
-            return 'E';
-        return grid[row][col];
+            return &invalid;
+        return &grid[row][col];
     }
-    
     
     void setCollidingTiles(int tileSize, int levelHeight, int levelWidth, char** grid) {
         float left   = pos_x;
@@ -97,28 +100,33 @@ public:
         float top    = pos_y;
         float bottom = pos_y + height;
     
+        // Use separate buffers for better distinction between left/right and top/bottom
+        float bufferY = tileSize / 10.0f;  // Vertical buffer (for Y axis)
+        float bufferX = 0 /*-tileSize / 5.0*/;  // Horizontal buffer (for X axis)
+        
         // BELOW
-        collidingTiles.belowLeft  = sampleTile(left + 1.0f, bottom + 1.0f, tileSize, levelHeight, levelWidth, grid);
-        collidingTiles.belowRight = sampleTile(right - 1.0f, bottom + 1.0f, tileSize, levelHeight, levelWidth, grid);
-    
+        collidingTiles.belowLeft  = sampleTile(left + bufferX, bottom + bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.belowRight = sampleTile(right - bufferX, bottom + bufferY, tileSize, levelHeight, levelWidth, grid);
+        
         // ABOVE
-        collidingTiles.aboveLeft  = sampleTile(left + 1.0f, top - 1.0f, tileSize, levelHeight, levelWidth, grid);
-        collidingTiles.aboveRight = sampleTile(right - 1.0f, top - 1.0f, tileSize, levelHeight, levelWidth, grid);
-    
+        collidingTiles.aboveLeft  = sampleTile(left + bufferX, top - bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.aboveRight = sampleTile(right - bufferX, top - bufferY, tileSize, levelHeight, levelWidth, grid);
+        
         // LEFT
-        collidingTiles.leftTop    = sampleTile(left - 1.0f, top + 1.0f, tileSize, levelHeight, levelWidth, grid);
-        collidingTiles.leftBottom = sampleTile(left - 1.0f, bottom - 1.0f, tileSize, levelHeight, levelWidth, grid);
-    
+        collidingTiles.leftTop    = sampleTile(left - bufferX, top + bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.leftBottom = sampleTile(left - bufferX, bottom - bufferY, tileSize, levelHeight, levelWidth, grid);
+        
         // RIGHT
-        collidingTiles.rightTop   = sampleTile(right + 1.0f, top + 1.0f, tileSize, levelHeight, levelWidth, grid);
-        collidingTiles.rightBottom = sampleTile(right + 1.0f, bottom - 1.0f, tileSize, levelHeight, levelWidth, grid);
-    
+        collidingTiles.rightTop   = sampleTile(right + bufferX, top + bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.rightBottom = sampleTile(right + bufferX, bottom - bufferY, tileSize, levelHeight, levelWidth, grid);
+        
         // Followers
         if (leader) {
             for (int i = 0; i < 2; ++i)
                 followers[i]->setCollidingTiles(tileSize, levelHeight, levelWidth, grid);
         }
     }
+    
     
     
     // Movement
@@ -250,6 +258,7 @@ public:
             jumpRightAnimation.reset();
             jumpLeftAnimation.reset();
         }
+        collisionHandle(previousX, previousY);
         if(leader){
             for(int i=0; i<2; ++i) {
                 followers[i]->update(deltaTime);
@@ -265,67 +274,141 @@ public:
                 }
             }
         }
-        collisionHandle(previousX, previousY);
     }
+
+    //Tile Checkers
+    bool collidesBelow(char target) {
+        return *collidingTiles.belowLeft  == target ||
+               *collidingTiles.belowRight == target;
+    }
+    
+    bool collidesAbove(char target) {
+        return *collidingTiles.aboveLeft  == target ||
+               *collidingTiles.aboveRight == target;
+    }
+    
+    bool collidesLeft(char target) {
+        return *collidingTiles.leftTop    == target ||
+               *collidingTiles.leftBottom == target;
+    }
+    
+    bool collidesRight(char target) {
+        return *collidingTiles.rightTop    == target ||
+               *collidingTiles.rightBottom == target;
+    }
+
+    //Tile setters
+    void setBelow(char target) {
+        *collidingTiles.belowLeft  = target;
+        *collidingTiles.belowRight = target;
+    }
+    
+    void setAbove(char target) {
+        *collidingTiles.aboveLeft  = target;
+        *collidingTiles.aboveRight = target;
+    }
+    
+    void setLeft(char target) {
+        *collidingTiles.leftTop    = target;
+        *collidingTiles.leftBottom = target;
+    }
+    
+    void setRight(char target) {
+        *collidingTiles.rightTop    = target;
+        *collidingTiles.rightBottom = target;
+    }
+    
+    
+
     void collisionHandle(float previousX, float previousY){
-        // Bottom collision or bottom out-of-bounds (falling)
-        if (pos_y >= previousY &&
-            (collidingTiles.belowLeft == 'E' || collidingTiles.belowRight == 'E'
-            || collidingTiles.belowLeft== 'q' || collidingTiles.belowRight== 'q')){
-            pos_y = previousY;
+        //Below ther is : out-of-bounds, wall or platform
+        if (pos_y >= previousY && (collidesBelow('\0') || collidesBelow('w') 
+        || collidesBelow('q'))) {
+            if (pos_y - previousY > 64/5.0f) // when hit ground really hard
+                pos_y = previousY - velocity_y;
+            else   
+                pos_y = previousY;
             onGround = true;
             velocity_y = 0;
         }
 
-        //Ring collision
-        if(collidingTiles.belowLeft == 'R'||collidingTiles.aboveLeft == 'R'
-            ||collidingTiles.belowRight== 'R' || collidingTiles.belowLeft== 'R'||
-            collidingTiles.leftTop == 'R' || collidingTiles.leftBottom == 'R' ||
-            collidingTiles.rightTop == 'R' || collidingTiles.rightBottom == 'R'){
-                cout<<"Collect ring\n";
+        if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w')) && movingRight)) {
+            pos_x = previousX;  // Prevent movement if collided
+            velocity_x = 0;
         }
 
-        //Crystal collision
-        if(collidingTiles.belowLeft == 'C'||collidingTiles.aboveLeft == 'C'
-            ||collidingTiles.belowRight== 'C' || collidingTiles.belowLeft== 'C'||
-            collidingTiles.leftTop == 'C' || collidingTiles.leftBottom == 'C' ||
-            collidingTiles.rightTop == 'C' || collidingTiles.rightBottom == 'C'){
-                cout<<"Collect crystal\n";
+        // Left collision check (only when moving left)
+        if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || pos_x < 0) && !movingRight) {
+            pos_x = previousX;  // Prevent movement if collided
+            velocity_x = 0;
         }
-
-        //Spike collision
-         if (pos_y >= previousY &&
-            (collidingTiles.belowLeft == 'x' || collidingTiles.belowRight == 'x')){
-                cout<<"Spike hurt";
-        }
-
-        // Top out-of-bounds (rising)
-        if (pos_y <= previousY && 
-            (collidingTiles.aboveLeft == 'E' || collidingTiles.aboveRight == 'E')) {
-           // velocity_y = terminal_velocity;
+        
+        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w'))){
             pos_y = previousY;
             velocity_y = -velocity_y;
         }
+        
+        //Handling falling off
+        if (!(collidesBelow('\0')||collidesBelow('q') || collidesBelow('w'))) {
+            if (onGround) {
+                velocity_y += acc_y;
+                onGround = false;
+            }
+        }
+        
 
-        //Falling off platform
-        if (!(collidingTiles.belowLeft == 'E' || collidingTiles.belowRight == 'E'
-            || collidingTiles.belowLeft== 'q' || collidingTiles.belowRight== 'q') ){
-            if(onGround){
-            velocity_y += acc_y;
-            onGround = false;
+        //Ring collection
+        if (collidesBelow('R')) {
+            // Check both tiles (belowLeft and belowRight) and set to 's' only if they are 'R'
+            if (*collidingTiles.belowLeft == 'R') {
+                *collidingTiles.belowLeft = 's';  // Set only belowLeft to 's' if it's 'R'
+            }
+            if (*collidingTiles.belowRight == 'R') {
+                *collidingTiles.belowRight = 's';  // Set only belowRight to 's' if it's 'R'
+            }
+        }
+        
+        if (collidesAbove('R')) {
+            // Check both tiles (aboveLeft and aboveRight) and set to 's' only if they are 'R'
+            if (*collidingTiles.aboveLeft == 'R') {
+                *collidingTiles.aboveLeft = 's';  // Set only aboveLeft to 's' if it's 'R'
+            }
+            if (*collidingTiles.aboveRight == 'R') {
+                *collidingTiles.aboveRight = 's';  // Set only aboveRight to 's' if it's 'R'
             }
         }
 
-        // Left out-of-bounds (moving right)
-        if (pos_x < previousX && (collidingTiles.leftTop == 'E' || collidingTiles.leftBottom == 'E')) {
-           if(pos_x < 0){
-            pos_x = previousX;
-           } 
+        if (collidesRight('R')) {
+            // Collect right coins if they are 'R'
+            if (*collidingTiles.rightTop == 'R') {
+                *collidingTiles.rightTop = 's';  // Set to 's' if it's a coin
+            }
+            if (*collidingTiles.rightBottom == 'R') {
+                *collidingTiles.rightBottom = 's';  // Set to 's' if it's a coin
+            }
         }
-
-        // Right out-of-bounds (moving left)
-        if (pos_x > previousX && (collidingTiles.rightTop == 'E' || collidingTiles.rightBottom == 'E')) {
-            
+        
+        if (collidesLeft('R')) {
+            // Collect left coins if they are 'R'
+            if (*collidingTiles.leftTop == 'R') {
+                *collidingTiles.leftTop = 's';  // Set to 's' if it's a coin
+            }
+            if (*collidingTiles.leftBottom == 'R') {
+                *collidingTiles.leftBottom = 's';  // Set to 's' if it's a coin
+            }
+        }
+        
+    
+        
+        
+        
+        if (collidesBelow('C') || collidesAbove('C') || 
+            collidesLeft('C') || collidesRight('C')) {
+            cout << "Collect crystal\n";
+        }
+        
+        if (pos_y >= previousY && collidesBelow('x')) {
+            cout << "Spike hurt";
         }
     }
 
