@@ -5,6 +5,7 @@
 #include <string>
 
 #include "flyers/BatBrain.h"
+#include "flyers/BeeBot.h"
 
 using namespace std;
 
@@ -37,3 +38,27 @@ public:
         );
     }
 };
+
+class BeeBotFactory {
+    public:
+        BeeBot* createBeeBot() const {
+            sf::Texture *texture = new Texture;
+            if (!texture->loadFromFile("Data/bee_botR.png")) {
+                cout << "Failed to load enemy texture\n";
+            }
+            return new BeeBot(
+                500.0f,   // pos_x
+                50.0f,   // pos_y
+                64,       // height
+                64,       // width
+                texture,  // texture pointer
+                1.5f,     // velocity_x (used for horizontal movement)
+                4992.0f,     // maxX (maximum region in x-direction)
+                3584.0f,     // minX (minimum region in x-direction)
+                5,        // HP
+                1.0f,     // max speed (if you use it for movement cap)
+                true,     // alive
+                true      // movingRight
+            );
+        }
+    };
