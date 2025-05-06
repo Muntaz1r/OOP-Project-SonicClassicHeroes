@@ -8,7 +8,6 @@ using namespace std;
 class Tails : public Player {
 protected:
     sf::Clock boostClock;
-    bool boosting = false;
     int specialAbillityTime;
     float prevGravity;
 
@@ -60,7 +59,7 @@ public:
         if(leader){
             if (!boosting) {
                 cout << "Tails boost activated!\n";
-                pos_y = pos_y - 128 - 64;
+                pos_y = pos_y - 128;
                 prevGravity = gravity;
                 velocity_y = 0;
                 // acc_y= 0;

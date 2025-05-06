@@ -54,6 +54,7 @@ bool Level1_Labyrinth::loadFromFile(const string& filePath) {
 
 void Level1_Labyrinth::initializeGrid() {
     // 's' - space
+    // 'p' - pit
     // 'w' - wall1
     // 'q' - platform
     // 'b' - breakable wall
@@ -166,8 +167,10 @@ void Level1_Labyrinth::update(float deltaTime) {
     if (Keyboard::isKeyPressed(Keyboard::F) && player->isOnGround()) {
         player->specialAbility();
     }
-    if (Keyboard::isKeyPressed(Keyboard::Z)) {
+    if (Keyboard::isKeyPressed(Keyboard::Z) && !player->getBoosting()) {
+
         if (switchCooldownClock.getElapsedTime().asSeconds() >= 5.0f){
+        player->setBoosting(false);
         switchCooldownClock.restart();
         cout<<"Switch\n";
         Player* temp;

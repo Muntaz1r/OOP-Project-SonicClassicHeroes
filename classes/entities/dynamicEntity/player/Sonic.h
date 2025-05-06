@@ -10,7 +10,6 @@ protected:
     float originalAcc;
     float originalMaxSpeed;
     sf::Clock boostClock;
-    bool boosting = false;
     int specialAbillityTime;
 
 public:

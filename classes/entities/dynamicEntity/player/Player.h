@@ -23,7 +23,7 @@ struct CollidingTiles {
 class Player : public DynamicEntity
 {
 protected:
-    //static int hp;
+    static int hp;
     float maxSpeed;
     bool onGround;
     bool invincible;
@@ -31,13 +31,15 @@ protected:
     float acc_x;
     float acc_y;
     sf::Clock invincibilityClock;
-    sf::Time invincibilityDuration = sf::seconds(1);
+    sf::Time invincibilityDuration = sf::seconds(3);
     float friction;
     float gravity;
     bool leader;
+    bool boosting;
     Player* followers[2];
     CollidingTiles collidingTiles;
     char invalid = '\0';
+    bool fallingIntoVoid = false;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -55,7 +57,11 @@ public:
         bool leader = false)
         : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
         maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
-        , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {}
+        , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {
+            boosting = false;
+            invalid = '\0';
+            fallingIntoVoid = false;
+        }
 
     // Getters
     float getMaxSpeed() const { return maxSpeed; }
@@ -68,6 +74,8 @@ public:
     bool getLeader() const {return leader;}
     Player* getFollower1() const{return followers[0];}
     Player* getFollower2() const{return followers[1];}
+    bool getBoosting() const{return boosting;}
+    bool getFallingIntoVoid() const{return fallingIntoVoid;}
 
 
     // Setters
@@ -85,6 +93,8 @@ public:
     }
     void setGravity(float value){ gravity = value;}
     void setFriction(float value){ friction= value;}
+    void setBoosting(bool value){ boosting = value;}
+    void setFallingIntoVoid(bool value){fallingIntoVoid = true;}
     
     
     
@@ -169,8 +179,8 @@ public:
 
     //Damage mechanics
     void takeDamage() {
-        if (!invincible /*&& hp > 0*/) {
-            //--hp;
+        if (!invincible && hp > 0) {
+            --hp;
             invincible = true;
             invincibilityClock.restart();
         }
@@ -197,7 +207,6 @@ public:
             }
             
         }
-        
         if(abs(velocity_y) > 0){// going  up or down
             velocity_y += gravity; 
         }
@@ -326,9 +335,23 @@ public:
     
 
     void collisionHandle(float previousX, float previousY){
+
+        if(collidesBelow('p') && !(collidesBelow('\0') || collidesBelow('w') 
+        || collidesBelow('q') || collidesBelow('b'))){
+            if(leader){
+                cout<<"Player fell into the void\n";
+                velocity_y = terminal_velocity;
+                hp = 0;
+                fallingIntoVoid = true;
+                for (int i =0; i<2; ++i){
+                    followers[i]->setVelocityY(terminal_velocity);
+                    followers[i]->setFallingIntoVoid(true);
+                }
+            }
+        }
         //Below ther is : out-of-bounds, wall or platform
-        if (pos_y >= previousY && (collidesBelow('\0') || collidesBelow('w') 
-        || collidesBelow('q') || collidesBelow('b'))) {
+        if (!fallingIntoVoid && (pos_y >= previousY && (collidesBelow('\0') || collidesBelow('w') 
+        || collidesBelow('q') || collidesBelow('b')))) {
             if (pos_y - previousY > 64/5.0f) // when hit ground really hard
                 pos_y = previousY - velocity_y;
             else   
@@ -351,13 +374,14 @@ public:
         }
         
         if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || 
-        collidesAbove('x') || collidesAbove('b'))){
+        collidesAbove('x') || collidesAbove('b') || pos_y < 0 )){
             pos_y = previousY;
             velocity_y = -velocity_y;
         }
         
         //Handling falling off
-        if (!(collidesBelow('\0')||collidesBelow('q') || collidesBelow('w'))) {
+        if (!(collidesBelow('\0')||collidesBelow('q') || collidesBelow('w')
+        || collidesBelow('b'))) {
             if (onGround) {
                 velocity_y += gravity;
                 onGround = false;
@@ -365,6 +389,7 @@ public:
         }
         
 
+        
         //Ring collection
         if (collidesBelow('R')) {
             // Check both tiles (belowLeft and belowRight) and set to 's' only if they are 'R'
@@ -437,6 +462,4 @@ public:
 
     virtual ~Player(){};
 };
-//Initialize static member
-//int Player::hp = 3;
 

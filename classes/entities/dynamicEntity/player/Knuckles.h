@@ -56,19 +56,30 @@ public:
     }
     
     virtual void specialAbility() override {
-        cout<<"Breaking unbreakable wall..\n";
-        boostClock.restart(); // remove on basis of special abillity
-        boosting = true;
-    }
-
-    virtual void update(float deltaTime) override {
-        Player::update(deltaTime);
-
-        // Stop boosting if boost time is done
-        if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {
-            cout << "Knuckles boost expired.\n";
-            boosting = false;
+        cout<<"Break\n";
+        if(collidesRight('b')) {
+            // Collect right coins if they are 'R'
+            if (*collidingTiles.rightTop == 'b') {
+                *collidingTiles.rightTop = 's';  // Set to 's' if it's a coin
+            }
+            if (*collidingTiles.rightBottom == 'b') {
+                *collidingTiles.rightBottom = 's';  // Set to 's' if it's a coin
+            }
+        }
+        
+        if (collidesLeft('R')) {
+            // Collect left coins if they are 'R'
+            if (*collidingTiles.leftTop == 'b') {
+                *collidingTiles.leftTop = 's';  // Set to 's' if it's a coin
+            }
+            if (*collidingTiles.leftBottom == 'b') {
+                *collidingTiles.leftBottom = 's';  // Set to 's' if it's a coin
+            }
         }
     }
+
+    // virtual void update(float deltaTime) override {
+    //     Player::update(deltaTime);
+    // }
     virtual ~Knuckles() {}
 };
