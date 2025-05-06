@@ -79,6 +79,7 @@ public:
             boosting = true;
         }
     }
+    
     virtual void update(float deltaTime) override {
         Player::update(deltaTime);
 

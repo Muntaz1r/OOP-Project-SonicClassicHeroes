@@ -118,6 +118,8 @@ void Level1_Labyrinth::loadAssets() {
     player->setFollowers(tailsMaker.createPlayer(), knucklesMaker.createPlayer());
     player->setCollidingTiles(64, 14, 200, grid);
 
+    batBrain = batBrainMaker.createBatBrain();
+
 
     // for (int i = 0; i < ringCount; i++) {
     //     ringSprites[i].setTexture(ringTex);
@@ -179,7 +181,9 @@ void Level1_Labyrinth::update(float deltaTime) {
     player->setCollidingTiles(64, 14, 200, grid);
     player->update(deltaTime);
 
+    batBrain->update(deltaTime, player->getPosX(), player->getPosY());
 
+    batBrain->checkCollisionWithPlayer(*player);
 
     // if (ringAnimationClock.getElapsedTime().asSeconds() > 0.15f) {
     //     ringFrameIndex = (ringFrameIndex + 1) % 4;
@@ -238,6 +242,8 @@ void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
     }
 
     player->render(window, cameraOffsetX);
+    batBrain->render(window, cameraOffsetX);
+    
 }
 
 

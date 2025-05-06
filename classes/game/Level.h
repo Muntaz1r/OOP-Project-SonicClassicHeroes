@@ -8,6 +8,7 @@ using namespace std;
 
 #include "Animation.h"
 #include "PlayerFactory.h"
+#include "EnemyFactory.h"
 
 class Levels {
 protected:
@@ -78,6 +79,9 @@ private:
     TailsFactory tailsMaker;
     KnucklesFactory knucklesMaker;
     Player* player;
+
+    BatBrainFactory batBrainMaker;
+    BatBrain* batBrain; // bat brain for now
 
     // int ringFrameIndex;
     // Clock ringAnimationClock;

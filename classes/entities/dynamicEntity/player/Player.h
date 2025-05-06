@@ -335,23 +335,20 @@ public:
             velocity_y = 0;
         }
 
-        if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w')) && movingRight)) {
+        if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') || collidesRight('x')) && movingRight)) {
             pos_x = previousX;  // Prevent movement if collided
             velocity_x = 0;
         }
 
         // Left collision check (only when moving left)
-        if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || pos_x < 0) && !movingRight) {
+        if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || collidesRight('x') || pos_x < 0) && !movingRight) {
             pos_x = previousX;  // Prevent movement if collided
             velocity_x = 0;
         }
         
-        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w'))){
-            if (-pos_y + previousY > 64/5.0f) // when hit ceiling really hard
-                pos_y = previousY + velocity_y;
-            else   
-                pos_y = previousY;
-            velocity_y = 0;;
+        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || collidesRight('x'))){
+            pos_y = previousY;
+            velocity_y = -velocity_y;
         }
         
         //Handling falling off
@@ -414,7 +411,10 @@ public:
         }
         
         if (pos_y >= previousY && collidesBelow('x')) {
-            cout << "Spike hurt";
+            cout << "Spike hurt" << endl;
+            if(!isInvincible()) {
+                takeDamage();
+            }
         }
     }
 
