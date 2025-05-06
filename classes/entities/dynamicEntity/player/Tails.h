@@ -10,7 +10,8 @@ protected:
     sf::Clock boostClock;
     bool boosting = false;
     int specialAbillityTime;
-    float prevValues[3];
+    float prevGravity;
+
 public:
     Tails(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0,
@@ -60,9 +61,7 @@ public:
             if (!boosting) {
                 cout << "Tails boost activated!\n";
                 pos_y = pos_y - 128 - 64;
-                prevValues[0] = velocity_y;
-                prevValues[1] = acc_y;
-                prevValues[2] = gravity;
+                prevGravity = gravity;
                 velocity_y = 0;
                 // acc_y= 0;
                 gravity = 0;
@@ -87,17 +86,23 @@ public:
         // Stop boosting if boost time is done
         if (boosting && boostClock.getElapsedTime().asSeconds() >= 10) {
             cout << "Tails boost expired.\n";
-            velocity_y=prevValues[0];
-            acc_y=prevValues[1];
-            gravity = prevValues[2];
+            velocity_y = terminal_velocity;
+            gravity = prevGravity;
+            for (int i=0; i<2; ++i) followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
             boosting = false;
+            onGround = false;
         }
     }
     void jump()override{
         if(boosting){
-            pos_y -= acc_y/10.0f;
+            pos_y -= acc_y/5.0f;
         }else
             Player::jump();
+    }
+    void flyDown()override{
+        if(boosting){
+            pos_y += acc_y/5.0f;
+        }
     }
     void moveRight()override{
         if(boosting) onGround = true;

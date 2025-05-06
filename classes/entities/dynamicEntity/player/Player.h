@@ -165,6 +165,8 @@ public:
         }
     }
 
+    virtual void flyDown(){} // Tails specific ftn
+
     //Damage mechanics
     void takeDamage() {
         if (!invincible /*&& hp > 0*/) {
@@ -326,7 +328,7 @@ public:
     void collisionHandle(float previousX, float previousY){
         //Below ther is : out-of-bounds, wall or platform
         if (pos_y >= previousY && (collidesBelow('\0') || collidesBelow('w') 
-        || collidesBelow('q'))) {
+        || collidesBelow('q') || collidesBelow('b'))) {
             if (pos_y - previousY > 64/5.0f) // when hit ground really hard
                 pos_y = previousY - velocity_y;
             else   
@@ -335,18 +337,21 @@ public:
             velocity_y = 0;
         }
 
-        if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') || collidesRight('x')) && movingRight)) {
+        if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') 
+        || collidesRight('x') || collidesRight('b')) && movingRight)) {
             pos_x = previousX;  // Prevent movement if collided
             velocity_x = 0;
         }
 
         // Left collision check (only when moving left)
-        if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || collidesRight('x') || pos_x < 0) && !movingRight) {
+        if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || 
+        collidesLeft('x') || pos_x < 0 || collidesLeft('b')) && !movingRight) {
             pos_x = previousX;  // Prevent movement if collided
             velocity_x = 0;
         }
         
-        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || collidesRight('x'))){
+        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || 
+        collidesAbove('x') || collidesAbove('b'))){
             pos_y = previousY;
             velocity_y = -velocity_y;
         }
