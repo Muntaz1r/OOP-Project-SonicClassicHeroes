@@ -346,12 +346,9 @@ public:
             velocity_x = 0;
         }
         
-        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w'))){
-            if (-pos_y + previousY > 64/5.0f) // when hit ceiling really hard
-                pos_y = previousY + velocity_y;
-            else   
-                pos_y = previousY;
-            velocity_y = 0;;
+        if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || collidesRight('x'))){
+            pos_y = previousY;
+            velocity_y = -velocity_y;
         }
         
         //Handling falling off
