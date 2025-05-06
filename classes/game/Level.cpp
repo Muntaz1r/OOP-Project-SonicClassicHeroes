@@ -155,7 +155,7 @@ void Level1_Labyrinth::update(float deltaTime) {
         player->moveLeft();
     }
     
-    if (Keyboard::isKeyPressed(Keyboard::W) && player->isOnGround()) {
+    if (Keyboard::isKeyPressed(Keyboard::W)) {
         player->jump();
     }
     if (Keyboard::isKeyPressed(Keyboard::F) && player->isOnGround()) {

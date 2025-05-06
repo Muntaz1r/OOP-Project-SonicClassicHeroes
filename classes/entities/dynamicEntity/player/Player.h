@@ -16,6 +16,7 @@ struct CollidingTiles {
     char *rightTop;
     char *rightBottom;
     
+    
 };
 
 
@@ -31,8 +32,8 @@ protected:
     float acc_y;
     sf::Clock invincibilityClock;
     sf::Time invincibilityDuration = sf::seconds(1);
-    const float friction;
-    const float gravity;
+    float friction;
+    float gravity;
     bool leader;
     Player* followers[2];
     CollidingTiles collidingTiles;
@@ -82,6 +83,8 @@ public:
         followers[0]=follower1;
         followers[1]=follower2;
     }
+    void setGravity(float value){ gravity = value;}
+    void setFriction(float value){ friction= value;}
     
     
     
@@ -130,7 +133,7 @@ public:
     
     
     // Movement
-    void jump() {
+    virtual void jump() {
         if(onGround){
             velocity_y -= acc_y;
         }
@@ -140,7 +143,7 @@ public:
         }
     }
 
-    void moveLeft() {
+    virtual void moveLeft() {
         if(onGround){
             velocity_x -= acc_x;
             if (velocity_x < -maxSpeed) velocity_x = -maxSpeed;
@@ -151,7 +154,7 @@ public:
         }
     }
     
-    void moveRight() {
+    virtual void moveRight() {
         if(onGround){
             velocity_x += acc_x;
             if (velocity_x > maxSpeed) velocity_x = maxSpeed;
@@ -344,14 +347,17 @@ public:
         }
         
         if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w'))){
-            pos_y = previousY;
-            velocity_y = -velocity_y;
+            if (-pos_y + previousY > 64/5.0f) // when hit ceiling really hard
+                pos_y = previousY + velocity_y;
+            else   
+                pos_y = previousY;
+            velocity_y = 0;;
         }
         
         //Handling falling off
         if (!(collidesBelow('\0')||collidesBelow('q') || collidesBelow('w'))) {
             if (onGround) {
-                velocity_y += acc_y;
+                velocity_y += gravity;
                 onGround = false;
             }
         }

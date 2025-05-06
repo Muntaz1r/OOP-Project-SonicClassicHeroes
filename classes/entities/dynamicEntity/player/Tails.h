@@ -10,6 +10,7 @@ protected:
     sf::Clock boostClock;
     bool boosting = false;
     int specialAbillityTime;
+    float prevValues[3];
 public:
     Tails(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0,
@@ -55,19 +56,57 @@ public:
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 6, 0.1f);
     }
     virtual void specialAbility() override {
-        cout << "Flying...\n";
-        boostClock.restart();
-        boosting = true;
+        if(leader){
+            if (!boosting) {
+                cout << "Tails boost activated!\n";
+                pos_y = pos_y - 128 - 64;
+                prevValues[0] = velocity_y;
+                prevValues[1] = acc_y;
+                prevValues[2] = gravity;
+                velocity_y = 0;
+                // acc_y= 0;
+                gravity = 0;
+                
+                boostClock.restart();
+                boosting = true;
+            }
+        }
     }
     virtual void update(float deltaTime) override {
+        if(boosting){
+            onGround = true;
+            for (int i=0; i<2; ++i) followers[i]->setOnGround(true); // Align followers
+        }
         Player::update(deltaTime);
 
+        if(boosting){
+            for (int i=0; i<2; ++i) followers[i]->setPosX(pos_x); // Align followers
+            for (int i=0; i<2; ++i) followers[i]->setPosY(pos_y + 64*(i+1)); // Align followers
+        }
+        
         // Stop boosting if boost time is done
-        if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {
+        if (boosting && boostClock.getElapsedTime().asSeconds() >= 10) {
             cout << "Tails boost expired.\n";
+            velocity_y=prevValues[0];
+            acc_y=prevValues[1];
+            gravity = prevValues[2];
             boosting = false;
         }
-
     }
+    void jump()override{
+        if(boosting){
+            pos_y -= acc_y/10.0f;
+        }else
+            Player::jump();
+    }
+    void moveRight()override{
+        if(boosting) onGround = true;
+        Player::moveRight();
+    }
+    void moveLeft()override{
+        if(boosting) onGround = true;
+        Player::moveLeft();
+    }
+
     virtual ~Tails() {}
 };

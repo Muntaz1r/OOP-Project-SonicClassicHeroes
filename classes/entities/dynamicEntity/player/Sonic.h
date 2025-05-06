@@ -84,7 +84,7 @@ public:
 
         // Stop boosting if boost time is done
         if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {
-            std::cout << "Sonic boost expired.\n";
+            cout << "Sonic boost expired.\n";
             acc_x = originalAcc;
             maxSpeed = originalMaxSpeed;
             boosting = false;
