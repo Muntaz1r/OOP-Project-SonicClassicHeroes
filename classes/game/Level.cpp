@@ -160,6 +160,9 @@ void Level1_Labyrinth::update(float deltaTime) {
     if (Keyboard::isKeyPressed(Keyboard::W)) {
         player->jump();
     }
+    if (Keyboard::isKeyPressed(Keyboard::S)) {
+        player->flyDown();
+    }
     if (Keyboard::isKeyPressed(Keyboard::F) && player->isOnGround()) {
         player->specialAbility();
     }
