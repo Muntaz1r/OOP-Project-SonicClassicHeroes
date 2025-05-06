@@ -81,7 +81,10 @@ private:
     Player* player;
 
     BatBrainFactory batBrainMaker;
-    BatBrain* batBrain; // bat brain for now
+    BatBrain* batBrain;
+
+    BeeBotFactory beeBotMaker;
+    BeeBot* beeBot;
 
     // int ringFrameIndex;
     // Clock ringAnimationClock;
