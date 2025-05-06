@@ -22,13 +22,19 @@ public:
         //     static_cast<float>(height) / this->texture.getSize().y
         // );
         sprite.setScale(2.0f, 2.0f);
-        sprite.setTextureRect(IntRect(0, 0, 40, 40));
+        sprite.setTextureRect(sf::IntRect(0, 0, 40, 40));
     }
     // Getters
     float getPosX() const { return pos_x; }
     float getPosY() const { return pos_y; }
     int getHeight() const { return height; }
     int getWidth() const { return width; }
+    // HitBox for collison
+    float getLeft() const { return pos_x; }
+    float getRight() const { return pos_x + width; }
+    float getTop() const { return pos_y; }
+    float getBottom() const { return pos_y + height; }
+
 
     // Setters
     void setPosX(float x) { pos_x = x; }
@@ -37,6 +43,7 @@ public:
     void setWidth(int w) { width = w; }
 
     virtual void update(float deltaTime) = 0;
+    //virtual void update(float deltaTime, float playerX, float playerY) = 0;
 
     virtual void render(sf::RenderWindow& window, float cameraOffsetX) { //render
         sprite.setPosition(pos_x - cameraOffsetX, pos_y); // pos_x, pos_y inherited from Entity
