@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <ctime>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
@@ -118,6 +119,8 @@ int main()
 	// LstillSprite.setScale(scale_x, scale_y);
 
 	////////////////////////////////////////////////////////
+	srand(time(0));
+
 	Game game(screen_x, screen_y);
 	game.runGame();
 	// Event ev;

@@ -86,6 +86,12 @@ private:
     BeeBotFactory beeBotMaker;
     BeeBot* beeBot;
 
+    MotoBugFactory motoBugMaker;
+    MotoBug* motoBug;
+
+    CrabMeatFactory crabMeatMaker;
+    CrabMeat* crabMeat;
+
     // int ringFrameIndex;
     // Clock ringAnimationClock;
 
