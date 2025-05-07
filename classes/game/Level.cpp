@@ -122,6 +122,11 @@ void Level1_Labyrinth::loadAssets() {
 
     batBrain = batBrainMaker.createBatBrain();
 
+    beeBot = beeBotMaker.createBeeBot();
+
+    motoBug = motoBugMaker.createMotoBug();
+
+    crabMeat = crabMeatMaker.createCrabMeat();
 
     // for (int i = 0; i < ringCount; i++) {
     //     ringSprites[i].setTexture(ringTex);
@@ -145,8 +150,6 @@ void Level1_Labyrinth::loadAssets() {
     //     levelMusic.setLoop(true);
     //     levelMusic.play();
     // }
-
-    
 }
 
 void Level1_Labyrinth::update(float deltaTime) {
@@ -171,9 +174,9 @@ void Level1_Labyrinth::update(float deltaTime) {
     if (Keyboard::isKeyPressed(Keyboard::Z) && !player->getBoosting()) {
 
         if (switchCooldownClock.getElapsedTime().asSeconds() >= 5.0f){
-        player->setBoosting(false);
-        switchCooldownClock.restart();
-        switch (currentPlayer) {
+            player->setBoosting(false);
+            switchCooldownClock.restart();
+            switch (currentPlayer) {
             case 's':
                 currentPlayer ='t';
                 break;
@@ -188,23 +191,34 @@ void Level1_Labyrinth::update(float deltaTime) {
         }
     
         cout<<"Switch\n";
-        Player* temp;
-        player->setLeader(false); // Old leader no longer leader
-       
-        temp = player;
-        player = temp->getFollower1();
-        player->setFollowers(temp->getFollower2(), temp);
-        player->setLeader(true);
+            Player* temp;
+            player->setLeader(false); // Old leader no longer leader
+        
+            temp = player;
+            player = temp->getFollower1();
+            player->setFollowers(temp->getFollower2(), temp);
+            player->setLeader(true);
 
-        temp->setFollowers(nullptr, nullptr); // Old leaders followers null
+            temp->setFollowers(nullptr, nullptr); // Old leaders followers null
         }
     }
+
     player->setCollidingTiles(64, 14, 200, grid);
     player->update(deltaTime);
 
     batBrain->update(deltaTime, player->getPosX(), player->getPosY());
-
     batBrain->checkCollisionWithPlayer(*player);
+
+    beeBot->update(deltaTime);
+    beeBot->checkCollisionWithPlayer(*player);
+    beeBot->checkProjectilesHitPlayer(*player);
+
+    motoBug->update(deltaTime, player->getPosX(), player->getPosY());
+    motoBug->checkCollisionWithPlayer(*player);
+
+    crabMeat->update(deltaTime);
+    crabMeat->checkCollisionWithPlayer(*player);
+    crabMeat->checkProjectilesHitPlayer(*player);
 
     // if (ringAnimationClock.getElapsedTime().asSeconds() > 0.15f) {
     //     ringFrameIndex = (ringFrameIndex + 1) % 4;
@@ -264,7 +278,9 @@ void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
 
     player->render(window, cameraOffsetX);
     batBrain->render(window, cameraOffsetX);
-    
+    beeBot->render(window, cameraOffsetX);
+    motoBug->render(window, cameraOffsetX);
+    crabMeat->render(window, cameraOffsetX);
 }
 
 void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {

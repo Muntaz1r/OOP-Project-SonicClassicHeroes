@@ -83,7 +83,16 @@ private:
     KnucklesFactory knucklesMaker;
 
     BatBrainFactory batBrainMaker;
-    BatBrain* batBrain; // bat brain for now
+    BatBrain* batBrain;
+
+    BeeBotFactory beeBotMaker;
+    BeeBot* beeBot;
+
+    MotoBugFactory motoBugMaker;
+    MotoBug* motoBug;
+
+    CrabMeatFactory crabMeatMaker;
+    CrabMeat* crabMeat;
 
     // int ringFrameIndex;
     // Clock ringAnimationClock;
