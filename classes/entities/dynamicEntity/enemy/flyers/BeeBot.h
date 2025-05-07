@@ -1,8 +1,12 @@
 #pragma once
-#include "Enemy.h"
+
 #include "SFML/System/Clock.hpp"
 #include <iostream>
 #include <cmath>
+
+#include "Enemy.h"
+#include "Projectile.h"
+#include "ProjectileManager.h"
 
 class BeeBot : public Enemy {
 private:
@@ -12,28 +16,36 @@ private:
     float maxX; // to confine it to a region of the screen
     float minX;
     Clock shootTimer;
-    Clock movementClock;    
+    Clock movementClock; 
+    
+    ProjectileManager* projectileManager;
 
 public:
     BeeBot(float px = 0, float py = 0, int h = 64, int w = 64, sf::Texture* texture = nullptr,
-    float vx = 0, float maxX = 0, float minX = 0, int hp = 5, float maxSpeed = 1.0f, bool alive = true, bool movinRight = true)
-    : Enemy(px, py, h, w, texture, vx, hp, maxSpeed, alive, movingRight),
+    float vx = 0, float vy = 0, float terminal = 0, float maxX = 0, float minX = 0, int hp = 5, float maxSpeed = 1.0f, bool alive = true, bool movinRight = true)
+    : Enemy(px, py, h, w, texture, vx, vy, terminal, hp, maxSpeed, alive, movingRight),
       maxX(maxX), minX(minX), zigzagAmp(50.0f), zigzagSpeed(3.0f), originalY(py) {
 
-    if (!walkRightTexture.loadFromFile("Data/bee_botR.png")) {
-        cout << "Failed to load bat_brainR.png\n";
-    }
-    if (!walkLeftTexture.loadFromFile("Data/bee_botL.png")) {
-        cout << "Failed to load bat_brainR.png\n";
-    }
+        if (!walkRightTexture.loadFromFile("Data/bee_botR.png")) {
+            cout << "Failed to load bat_brainR.png\n";
+        }
+        if (!walkLeftTexture.loadFromFile("Data/bee_botL.png")) {
+            cout << "Failed to load bat_brainL.png\n";
+        }
 
-    sprite.setTexture(walkRightTexture);
-    sprite.setTextureRect(sf::IntRect(0, 0, 64, 64)); // single frame
-    //sprite.setScale(2.0f, 2.0f);
+        sprite.setTexture(walkRightTexture);
+        sprite.setTextureRect(sf::IntRect(0, 0, 64, 64)); // single frame
+        //sprite.setScale(2.0f, 2.0f);
 
-    // Setup animation for walking
-    walkRightAnimation.initialize(&sprite, &walkRightTexture, 64, 64, 6, 0.07f);
-    walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 64, 64, 6, 0.07f);
+        // Setup animation for walking
+        walkRightAnimation.initialize(&sprite, &walkRightTexture, 64, 64, 6, 0.07f);
+        walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 64, 64, 6, 0.07f);
+
+        if (!texture->loadFromFile("Data/projectileD.png")) {
+            cout << "Unable to load projectileD.png" << endl;
+        }
+
+        projectileManager = new ProjectileManager();
     }
 
     void update(float deltaTime) override {
@@ -67,16 +79,23 @@ public:
         }
 
         if (shootTimer.getElapsedTime().asSeconds() > 5.0f) {
-            shoot();
+            projectileManager->spawn(pos_x, pos_y, true, false); // BeeBot only shoots downwards so down = true
             shootTimer.restart();
         }
+        projectileManager->update(deltaTime, minX, maxX); // display the projectile over the confined region
     }
 
     void onDeath() override {
         cout << "Bee Bot destroyed!" << endl;
+        projectileManager->clear();
     }
 
-    void shoot() {
-        cout << "Bee Bot shoots!" << endl;
+    void render(RenderWindow& window, float cameraOffsetX) {
+        Enemy::render(window, cameraOffsetX);
+        projectileManager->render(window, cameraOffsetX);
+    }
+
+    void checkProjectilesHitPlayer(Player& player) {
+        projectileManager->checkCollisionWithPlayer(player);
     }
 };
