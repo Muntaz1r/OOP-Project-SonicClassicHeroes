@@ -57,6 +57,7 @@ public:
     
     virtual void specialAbility() override {
         cout<<"Break\n";
+        boosting = true;
         if(collidesRight('b')) {
             // Collect right coins if they are 'R'
             if (*collidingTiles.rightTop == 'b') {
@@ -67,7 +68,7 @@ public:
             }
         }
         
-        if (collidesLeft('R')) {
+        if (collidesLeft('b')) {
             // Collect left coins if they are 'R'
             if (*collidingTiles.leftTop == 'b') {
                 *collidingTiles.leftTop = 's';  // Set to 's' if it's a coin
@@ -78,8 +79,9 @@ public:
         }
     }
 
-    // virtual void update(float deltaTime) override {
-    //     Player::update(deltaTime);
-    // }
+    virtual void update(float deltaTime) override {
+        Player::update(deltaTime);
+        if(leader) boosting = false;
+    }
     virtual ~Knuckles() {}
 };

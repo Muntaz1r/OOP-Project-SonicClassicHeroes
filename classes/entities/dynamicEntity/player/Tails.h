@@ -77,8 +77,10 @@ public:
         }
         Player::update(deltaTime);
 
+       
         if(boosting){
-            for (int i=0; i<2; ++i) followers[i]->setPosX(pos_x); // Align followers
+            for (int i=0; i<2; ++i) followers[i]->setPosX(pos_x); // Align followers y
+            
             for (int i=0; i<2; ++i) followers[i]->setPosY(pos_y + 64*(i+1)); // Align followers
         }
         
@@ -90,6 +92,41 @@ public:
             for (int i=0; i<2; ++i) followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
             boosting = false;
             onGround = false;
+        }
+    }
+
+    void collisionHandle(float previousX, float previousY) override {
+        Player::collisionHandle(previousX, previousY);
+        if(boosting){
+            if (!fallingIntoVoid && ((followers[1]->collidesBelow('\0') || followers[1]->collidesBelow('w') 
+            || followers[1]->collidesBelow('q') || followers[1]->collidesBelow('b') || followers[1]->collidesBelow('x')))) {
+                pos_y = followers[1]->collidingTiles.yBelow - height - 128 - 8;
+                velocity_y = -0;
+            }
+            // X collision
+            if (((followers[1]->collidesRight('\0') || followers[1]->collidesRight('w') 
+                || followers[1]->collidesRight('x') || followers[1]->collidesRight('b')) && movingRight)) {
+                pos_x = followers[1]->collidingTiles.xRight - 80;
+                velocity_x = -0;
+                movingRight = false;
+            }else if ((followers[1]->collidesLeft('\0') || followers[1]->collidesLeft('w') || 
+            followers[1]->collidesLeft('x') || followers[1]->collidesLeft('b')) && !movingRight) {
+                pos_x = followers[1]->collidingTiles.xLeft + 60;  // Prevent movement if collided
+                velocity_x = -0;
+                movingRight = true;
+            }
+            if (((followers[0]->collidesRight('\0') || followers[0]->collidesRight('w') 
+            || followers[0]->collidesRight('x') || followers[0]->collidesRight('b')) && movingRight)) {
+                pos_x = followers[0]->collidingTiles.xRight - 80;
+                velocity_x = -0;
+                movingRight = false;
+            }else if ((followers[0]->collidesLeft('\0') || followers[0]->collidesLeft('w') || 
+            followers[0]->collidesLeft('x') || followers[0]->collidesLeft('b')) && !movingRight) {
+                pos_x = followers[0]->collidingTiles.xLeft + 60;  // Prevent movement if collided
+                velocity_x = -0;
+                movingRight = true;
+            }
+            
         }
     }
     void jump()override{

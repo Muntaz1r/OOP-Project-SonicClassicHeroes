@@ -38,7 +38,7 @@ public:
             false,   // invincible
             true,    // movingRight
             0.5f,    // acc_x
-            12.0f,     // acc_y
+            13.0f,     // acc_y
             0.2f,    // friction
             0.4f,   //gravity
             7,  //special abillity duration
@@ -67,7 +67,7 @@ class TailsFactory : public PlayerFactory {
                 false,   // invincible
                 true,    // movingRight
                 0.47f,    // acc_x
-                12.0f,     // acc_y
+                13.0f,     // acc_y
                 0.2f,    // friction
                 0.4f,   //gravity
                 7, // specail abillity time
@@ -98,7 +98,7 @@ public:
             false,   // invincible
             true,    // movingRight
             0.42f,    // acc_x
-            12.0f,     // acc_y
+            14.0f,     // acc_y
             0.2f,    // friction
             0.4f,   //gravity
             7, // specail abillity time

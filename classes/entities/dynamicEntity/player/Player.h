@@ -15,7 +15,10 @@ struct CollidingTiles {
     char *leftBottom;
     char *rightTop;
     char *rightBottom;
-    
+    float yBelow;
+    float yAbove;
+    float xRight;
+    float xLeft;
     
 };
 
@@ -37,9 +40,8 @@ protected:
     bool leader;
     bool boosting;
     Player* followers[2];
-    CollidingTiles collidingTiles;
-    char invalid = '\0';
-    bool fallingIntoVoid = false;
+    char invalid;
+    bool fallingIntoVoid;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -50,6 +52,7 @@ protected:
 
     
 public:
+    CollidingTiles collidingTiles;
     Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0, 
         float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
@@ -67,7 +70,7 @@ public:
     float getMaxSpeed() const { return maxSpeed; }
     bool isOnGround() const { return onGround; }
     bool isInvincible() const { return invincible; }
-    //static int getHP() { return hp; }
+    static int getHP() { return hp; }
     bool isMovingRight() const { return movingRight; }
     float getAccnX() const { return acc_x; }
     float getAccY() const { return acc_y; }
@@ -82,7 +85,7 @@ public:
     void setMaxSpeed(float speed) { maxSpeed = speed; }
     void setOnGround(bool value) { onGround = value; }
     void setInvincible(bool value) { invincible = value; }
-    //static void setHP(int value) { hp = value; }
+    static void setHP(int value) { hp = value; }
     void setMovingRight(bool value) { movingRight = value; }
     void setAccX(float value) { acc_x = value; }
     void setAccY(float value) { acc_y = value; }
@@ -99,46 +102,66 @@ public:
     
     
     
-    char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid) {
+    char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow = nullptr, int* outCol = nullptr) {
         int col = static_cast<int>(x / tileSize);
         int row = static_cast<int>(y / tileSize);
-        if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight)
-            return &invalid;
+    
+        if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight) {
+            if (outRow) *outRow = -1;
+            if (outCol) *outCol = -1;
+            return &invalid; // assuming 'invalid' is defined somewhere
+        }
+    
+        if (outRow) *outRow = row;
+        if (outCol) *outCol = col;
+    
         return &grid[row][col];
     }
     
+
+    
     void setCollidingTiles(int tileSize, int levelHeight, int levelWidth, char** grid) {
+        
         float left   = pos_x;
         float right  = pos_x + width;
         float top    = pos_y;
         float bottom = pos_y + height;
     
-        // Use separate buffers for better distinction between left/right and top/bottom
-        float bufferY = tileSize / 10.0f;  // Vertical buffer (for Y axis)
-        float bufferX = 0 /*-tileSize / 5.0*/;  // Horizontal buffer (for X axis)
-        
+        // Buffer helps avoid jitter or premature collision detection
+        float bufferY = tileSize / 10.0f;
+        float bufferX = tileSize / 10.0f;
+    
+        int row, col;
+    
         // BELOW
-        collidingTiles.belowLeft  = sampleTile(left + bufferX, bottom + bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.belowLeft  = sampleTile(left + bufferX, bottom + bufferY, tileSize, levelHeight, levelWidth, grid, &row, &col);
+        collidingTiles.yBelow = row * tileSize;
         collidingTiles.belowRight = sampleTile(right - bufferX, bottom + bufferY, tileSize, levelHeight, levelWidth, grid);
-        
+    
         // ABOVE
-        collidingTiles.aboveLeft  = sampleTile(left + bufferX, top - bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.aboveLeft  = sampleTile(left + bufferX, top - bufferY, tileSize, levelHeight, levelWidth, grid, &row, &col);
+        collidingTiles.yAbove = row * tileSize;
         collidingTiles.aboveRight = sampleTile(right - bufferX, top - bufferY, tileSize, levelHeight, levelWidth, grid);
-        
+    
         // LEFT
-        collidingTiles.leftTop    = sampleTile(left - bufferX, top + bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.leftTop    = sampleTile(left - bufferX, top + bufferY, tileSize, levelHeight, levelWidth, grid, &row, &col);
+        collidingTiles.xLeft = col * tileSize;
         collidingTiles.leftBottom = sampleTile(left - bufferX, bottom - bufferY, tileSize, levelHeight, levelWidth, grid);
-        
+    
         // RIGHT
-        collidingTiles.rightTop   = sampleTile(right + bufferX, top + bufferY, tileSize, levelHeight, levelWidth, grid);
+        collidingTiles.rightTop   = sampleTile(right + bufferX, top + bufferY, tileSize, levelHeight, levelWidth, grid, &row, &col);
+        collidingTiles.xRight = col * tileSize;
         collidingTiles.rightBottom = sampleTile(right + bufferX, bottom - bufferY, tileSize, levelHeight, levelWidth, grid);
-        
-        // Followers
+        // If this object has followers, update their collision tiles too
         if (leader) {
             for (int i = 0; i < 2; ++i)
                 followers[i]->setCollidingTiles(tileSize, levelHeight, levelWidth, grid);
         }
+        
     }
+    
+    
+    
     
     
     
@@ -190,7 +213,6 @@ public:
     virtual void update(float deltaTime) override {
         float previousX = pos_x;
         float previousY = pos_y;
-        
         // Updating position and velocities
         DynamicEntity::update();
         if(onGround){
@@ -276,7 +298,6 @@ public:
         if(leader){
             for(int i=0; i<2; ++i) {
                 followers[i]->update(deltaTime);
-                
                 if(abs(pos_x - followers[i]->getPosX()) > 960){
                     followers[i]->setPosY(0);
                     followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
@@ -334,10 +355,10 @@ public:
     
     
 
-    void collisionHandle(float previousX, float previousY){
+    virtual void collisionHandle(float previousX, float previousY){
 
         if(collidesBelow('p') && !(collidesBelow('\0') || collidesBelow('w') 
-        || collidesBelow('q') || collidesBelow('b'))){
+        || collidesBelow('q') || collidesBelow('b') || collidesBelow('x'))){
             if(leader){
                 cout<<"Player fell into the void\n";
                 velocity_y = terminal_velocity;
@@ -351,31 +372,34 @@ public:
         }
         //Below ther is : out-of-bounds, wall or platform
         if (!fallingIntoVoid && (pos_y >= previousY && (collidesBelow('\0') || collidesBelow('w') 
-        || collidesBelow('q') || collidesBelow('b')))) {
-            if (pos_y - previousY > 64/5.0f) // when hit ground really hard
-                pos_y = previousY - velocity_y;
-            else   
-                pos_y = previousY;
-            onGround = true;
+        || collidesBelow('q') || collidesBelow('b') || collidesBelow('x')))) {
+            // if (pos_y - previousY > 64/5.0f) // when hit ground really hard
+            //     pos_y = previousY - velocity_y;
+            // else   
+            //     pos_y = previousY;
+            // onGround = true;
+            // velocity_y = 0;
+            pos_y = collidingTiles.yBelow - height;
             velocity_y = 0;
+            onGround = true;
         }
 
         if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') 
         || collidesRight('x') || collidesRight('b')) && movingRight)) {
-            pos_x = previousX;  // Prevent movement if collided
+            pos_x = collidingTiles.xRight - width;  // Prevent movement if collided
             velocity_x = 0;
         }
 
         // Left collision check (only when moving left)
         if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || 
-        collidesLeft('x') || pos_x < 0 || collidesLeft('b')) && !movingRight) {
-            pos_x = previousX;  // Prevent movement if collided
+        collidesLeft('x') || collidesLeft('b')) && !movingRight) {
+            pos_x = collidingTiles.xLeft + 64;  // Prevent movement if collided
             velocity_x = 0;
         }
         
         if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || 
         collidesAbove('x') || collidesAbove('b') || pos_y < 0 )){
-            pos_y = previousY;
+            pos_y = collidingTiles.yAbove + 64;//tile size
             velocity_y = -velocity_y;
         }
         
@@ -442,9 +466,7 @@ public:
         
         if (pos_y >= previousY && collidesBelow('x')) {
             cout << "Spike hurt" << endl;
-            if(!isInvincible()) {
                 takeDamage();
-            }
         }
     }
 

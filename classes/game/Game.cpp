@@ -131,8 +131,8 @@ void Game::runGame() {
                 else {
                     cameraOffsetX = playerCenterX - halfScreen; // follow and center the player
                 }
-
                 level->render(window, cameraOffsetX);
+                level->drawUI(window, cameraOffsetX);
             }
         }
         else if (currentState == GAME_STATE_LEADERBOARD) {

@@ -13,6 +13,8 @@ using namespace std;
 class Levels {
 protected:
     sf::Clock switchCooldownClock;
+    char currentPlayer;
+    Player* player;
 public:
     virtual void loadAssets() = 0; // load level assets
     virtual void update(float deltaTime) =0; // update logic per frame
@@ -25,6 +27,7 @@ public:
     virtual int getPlayerWidth() const = 0;
     virtual int getLevelWidthinTiles() const = 0;
     virtual int getCellSize() const = 0;
+    virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
     
     virtual ~Levels() {}
 };
@@ -78,7 +81,6 @@ private:
     SonicFactory sonicMaker;
     TailsFactory tailsMaker;
     KnucklesFactory knucklesMaker;
-    Player* player;
 
     BatBrainFactory batBrainMaker;
     BatBrain* batBrain; // bat brain for now
