@@ -12,14 +12,14 @@ using namespace std;
 
 class PlayerFactory {
 public:
-    virtual Player* createPlayer() const = 0;
+    virtual Player* createPlayer(float acc_x, float acc_y, float friction, float gravity) const = 0;
     virtual ~PlayerFactory(){};
 };
 
 class SonicFactory : public PlayerFactory {
 public:
     
-    Player* createPlayer() const override {
+    Player* createPlayer(float acc_x, float acc_y, float friction, float gravity) const override {
         sf::Texture *texture = new Texture;
         if (!texture->loadFromFile("Data/0right.png")) {
             cout << "Failed to load player texture\n";
@@ -37,10 +37,10 @@ public:
             true,    // onGround
             false,   // invincible
             true,    // movingRight
-            0.5f,    // acc_x
-            13.0f,     // acc_y
-            0.2f,    // friction
-            0.4f,   //gravity
+            acc_x,    // acc_x
+            acc_y,     // acc_y
+            friction,    // friction
+            gravity,   //gravity
             7,  //special abillity duration
             false // leader
         );
@@ -48,7 +48,7 @@ public:
 };
 class TailsFactory : public PlayerFactory {
     public:
-        Player* createPlayer() const override {
+        Player* createPlayer(float acc_x, float acc_y, float friction, float gravity) const override {
             sf::Texture *texture = new Texture;
             if (!texture->loadFromFile("Data/0right.png")) {
                 cout << "Failed to load player texture\n";
@@ -66,10 +66,10 @@ class TailsFactory : public PlayerFactory {
                 true,    // onGround
                 false,   // invincible
                 true,    // movingRight
-                0.47f,    // acc_x
-                13.0f,     // acc_y
-                0.2f,    // friction
-                0.4f,   //gravity
+                acc_x,    // acc_x
+                acc_y,     // acc_y
+                friction,    // friction
+                gravity,   //gravity
                 7, // specail abillity time
                 false //leader
             );
@@ -79,7 +79,7 @@ class TailsFactory : public PlayerFactory {
 // Knuckles Factory
 class KnucklesFactory : public PlayerFactory {
 public:
-    Player* createPlayer() const override {
+    Player* createPlayer(float acc_x, float acc_y, float friction, float gravity) const override {
         sf::Texture *texture = new Texture;
         if (!texture->loadFromFile("Data/0right.png")) {
             cout << "Failed to load player texture\n";
@@ -97,10 +97,10 @@ public:
             true,    // onGround
             false,   // invincible
             true,    // movingRight
-            0.42f,    // acc_x
-            14.0f,     // acc_y
-            0.2f,    // friction
-            0.4f,   //gravity
+            acc_x,    // acc_x
+            acc_y,     // acc_y
+            friction,    // friction
+            gravity,   //gravity
             7, // specail abillity time
             false //leader
         );

@@ -79,7 +79,9 @@ void Game::runGame() {
                     level = nullptr;
                 }
 
-                level = new Level1_Labyrinth();
+                //level = new Level1_Labyrinth();
+                //level = new Level2_IceCap();
+                level = new Level3_DeathEgg();
                 levelCreated = true;
                 
                 level->loadAssets(); // load all assests when level is created
