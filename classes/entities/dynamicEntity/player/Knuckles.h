@@ -77,6 +77,16 @@ public:
                 *collidingTiles.leftBottom = 's';  // Set to 's' if it's a coin
             }
         }
+
+        if (collidesBelow('b')) {
+            // Collect left coins if they are 'R'
+            if (*collidingTiles.belowLeft == 'b') {
+                *collidingTiles.belowLeft = 's';  // Set to 's' if it's a coin
+            }
+            if (*collidingTiles.belowRight == 'b') {
+                *collidingTiles.belowRight = 's';  // Set to 's' if it's a coin
+            }
+        }
     }
 
     virtual void update(float deltaTime) override {
