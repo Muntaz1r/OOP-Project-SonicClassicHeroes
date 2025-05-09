@@ -161,11 +161,6 @@ public:
         
     }
     
-    
-    
-    
-    
-    
     // Movement
     virtual void jump() {
         if(onGround){
@@ -408,7 +403,7 @@ public:
         if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') 
         || collidesRight('x') || collidesRight('b')) && movingRight)) {
             pos_x = collidingTiles.xRight - width;  // Prevent movement if collided
-            velocity_x = velocity_x/1.5f;
+            //velocity_x = velocity_x/1.5f;
         }
 
         // Left collision check (only when moving left)

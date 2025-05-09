@@ -5,7 +5,9 @@
 
 #include "Menu.h"
 #include "Scoreboard.h"
-#include "Level.h"
+#include "Level1_Labyrinth.h"
+#include "Level2_IceCap.h"
+#include "Level3_DeathEgg.h"
 
 using namespace sf;
 using namespace std;

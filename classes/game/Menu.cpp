@@ -4,6 +4,7 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
     currentState = STATE_MAIN;
     volume = 40; 
     mainSelected = 0;
+    selectedLevel = 0;
     isMuted = false;
     prevVolume = volume;
     leaderboardRequested = false;
@@ -22,6 +23,12 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
         menuText[i].setString(mainOptions[i]);
         menuText[i].setCharacterSize(28);
         menuText[i].setPosition(100, 120 + i * 60);
+    }
+
+    for (int i = 0; i < 4; i++) {
+        levelText[i].setFont(font);
+        levelText[i].setCharacterSize(28);
+        levelText[i].setPosition(100, 120 + i * 60);
     }
 
     volumeText.setFont(font);
@@ -71,7 +78,6 @@ void Menu::handleInput(Event& event) {
                 if (mainSelected == 0) {
                     currentState = STATE_NAME_INPUT;
                     playerName.clear();
-                    
                 }
                 else if (mainSelected == 1) {
                     currentState = STATE_OPTIONS;
@@ -84,7 +90,10 @@ void Menu::handleInput(Event& event) {
                     leaderboardRequested = true;
                     cout << "Menu: Leaderboard selected" << endl;
                 }
-                else if(mainSelected == 4) {
+                else if (mainSelected == 4) {
+                    currentState = STATE_SELECT_LEVEL;
+                }
+                else if(mainSelected == 5) {
                     currentState = STATE_EXIT;
                 }
             }
@@ -157,6 +166,29 @@ void Menu::handleInput(Event& event) {
             cout << "Menu: Return to main from leaderboard" << endl;
         }
     }
+    else if (currentState == STATE_SELECT_LEVEL) {
+        cout << "Menu: Level menu selected" << endl;
+        if (event.type == Event::KeyPressed) {
+            if (event.key.code == Keyboard::Up) {
+                selectedLevel = (selectedLevel - 1 + 4) % 4;
+            }
+            
+            if (event.key.code == Keyboard::Down) {
+                selectedLevel = (selectedLevel + 1) % 4;
+            }
+
+            if (event.key.code == Keyboard::Escape) {
+                currentState = STATE_MAIN;
+            }
+
+            if (event.key.code == Keyboard::Enter) {
+                cout << "Level " << selectedLevel + 1 << " selected" << endl; 
+                currentState = STATE_NAME_INPUT;
+                playerName.clear();
+            }
+        }
+        
+    }
     else if (currentState == STATE_EXIT) {
         window.close();
     }
@@ -190,6 +222,15 @@ void Menu::draw() {
     else if (currentState == STATE_NAME_INPUT) {
         window.draw(namePrompt);
         window.draw(nameText);
+    }
+    else if (currentState == STATE_SELECT_LEVEL) {
+        string levelOptions[4] = {"Level 1", "Level 2", "Level 3", "Boss Level"};
+        for (int i = 0; i < 4; i++) {
+            levelText[i].setString(levelOptions[i]);
+            levelText[i].setPosition(100, 120 + i * 60);
+            levelText[i].setFillColor(i == selectedLevel ? Color::Yellow : Color::White);
+            window.draw(levelText[i]);
+        }
     }
     
     //window.display();

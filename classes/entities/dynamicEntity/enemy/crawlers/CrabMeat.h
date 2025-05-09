@@ -38,9 +38,9 @@ public:
         walkRightAnimation.initialize(&sprite, &walkRightTexture, 32, 32, 10, 0.05f);
         walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 32, 32, 10, 0.05f);
 
-        // if (!texture->loadFromFile("Data/projectile.png")) {
-        //     cout << "Unable to load projectile.ppng" << endl;
-        // }
+        if (!texture->loadFromFile("Data/projectileR.png")) {
+            cout << "Unable to load projectile.png" << endl;
+        }
 
         projectileManager = new ProjectileManager();
     }
