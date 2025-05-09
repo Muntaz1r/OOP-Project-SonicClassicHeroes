@@ -34,7 +34,7 @@ protected:
     float acc_x;
     float acc_y;
     sf::Clock invincibilityClock;
-    sf::Time invincibilityDuration = sf::seconds(3);
+    sf::Time invincibilityDuration = sf::seconds(5);
     float friction;
     float gravity;
     bool leader;
@@ -79,7 +79,7 @@ public:
     Player* getFollower2() const{return followers[1];}
     bool getBoosting() const{return boosting;}
     bool getFallingIntoVoid() const{return fallingIntoVoid;}
-
+    virtual sf::Clock getBoostClock() {return sf::Clock();}
 
     // Setters
     void setMaxSpeed(float speed) { maxSpeed = speed; }
@@ -97,26 +97,27 @@ public:
     void setGravity(float value){ gravity = value;}
     void setFriction(float value){ friction= value;}
     void setBoosting(bool value){ boosting = value;}
-    void setFallingIntoVoid(bool value){fallingIntoVoid = true;}
+    void setFallingIntoVoid(bool value){fallingIntoVoid = value;}
     
     
     
     
     char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow = nullptr, int* outCol = nullptr) {
-        int col = static_cast<int>(x / tileSize);
-        int row = static_cast<int>(y / tileSize);
-    
-        if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight) {
-            if (outRow) *outRow = -1;
-            if (outCol) *outCol = -1;
-            return &invalid; // assuming 'invalid' is defined somewhere
-        }
-    
-        if (outRow) *outRow = row;
-        if (outCol) *outCol = col;
-    
-        return &grid[row][col];
+    int col = static_cast<int>(x / tileSize);
+    int row = static_cast<int>(y / tileSize);
+
+    if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight) {
+        *outRow = -1;
+        *outCol = -1;
+        return &invalid; // assuming 'invalid' is defined somewhere
     }
+
+    if (outRow) *outRow = row;
+    if (outCol) *outCol = col;
+
+    return &grid[row][col];
+}
+
     
 
     
@@ -183,7 +184,11 @@ public:
             movingRight = false;
         }
         if(leader){
-            for(int i=0; i<2; ++i) followers[i]->moveLeft();
+            for(int i=0; i<2; ++i){
+                if(!(pos_x - followers[i]->getPosX() > 100)){
+                    followers[i]->moveLeft();
+                }
+            }
         }
     }
     
@@ -194,7 +199,11 @@ public:
             movingRight = true;
         }
         if(leader){
-            for(int i=0; i<2; ++i) followers[i]->moveRight();
+            for(int i=0; i<2; ++i){
+                if(!(pos_x - followers[i]->getPosX() < -100)){
+                    followers[i]->moveRight();
+                }
+            }
         }
     }
 
@@ -210,11 +219,11 @@ public:
     }
    
     //Updating everything relevant 
-    virtual void update(float deltaTime) override {
+    virtual void update(float deltaTime, int &score) override{
         float previousX = pos_x;
         float previousY = pos_y;
         // Updating position and velocities
-        DynamicEntity::update();
+        DynamicEntity::update(deltaTime, score);
         if(onGround){
             if(velocity_x>0){ // friction
                 velocity_x -= friction;
@@ -241,6 +250,7 @@ public:
         //     velocity_y = 0;
         //     onGround = true;
         // }
+        
         
         // Animation logic
         if (!onGround) { // Jumping
@@ -271,7 +281,6 @@ public:
                 }
                 walkLeftAnimation.update(deltaTime);
             }
-            
         }
         else { // for idle situations
             if (isMovingRight()) {
@@ -294,10 +303,19 @@ public:
             jumpRightAnimation.reset();
             jumpLeftAnimation.reset();
         }
-        collisionHandle(previousX, previousY);
+        collisionHandle(previousX, previousY, score);
+        
         if(leader){
+            if(fallingIntoVoid){
+                fallingIntoVoid = false;
+                velocity_x = 0;
+                pos_x = 20;
+                this->takeDamage();
+                pos_y = 50;
+                velocity_y = terminal_velocity;
+            }
             for(int i=0; i<2; ++i) {
-                followers[i]->update(deltaTime);
+                followers[i]->update(deltaTime, score);
                 if(abs(pos_x - followers[i]->getPosX()) > 960){
                     followers[i]->setPosY(0);
                     followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
@@ -308,7 +326,11 @@ public:
                     followers[i]->setVelocityX(-followers[i]->getMaxSpeed());
                 }
             }
+        }else if(fallingIntoVoid){
+           fallingIntoVoid = false;
+           pos_x = 1000000; // initiates teleport to leader
         }
+
     }
 
     //Tile Checkers
@@ -355,14 +377,13 @@ public:
     
     
 
-    virtual void collisionHandle(float previousX, float previousY){
+    virtual void collisionHandle(float previousX, float previousY, int &score){
 
         if(collidesBelow('p') && !(collidesBelow('\0') || collidesBelow('w') 
         || collidesBelow('q') || collidesBelow('b') || collidesBelow('x'))){
             if(leader){
                 cout<<"Player fell into the void\n";
                 velocity_y = terminal_velocity;
-                hp = 0;
                 fallingIntoVoid = true;
                 for (int i =0; i<2; ++i){
                     followers[i]->setVelocityY(terminal_velocity);
@@ -379,7 +400,7 @@ public:
             //     pos_y = previousY;
             // onGround = true;
             // velocity_y = 0;
-            pos_y = collidingTiles.yBelow - height;
+            pos_y = collidingTiles.yBelow - height - 2;
             velocity_y = 0;
             onGround = true;
         }
@@ -387,31 +408,39 @@ public:
         if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') 
         || collidesRight('x') || collidesRight('b')) && movingRight)) {
             pos_x = collidingTiles.xRight - width;  // Prevent movement if collided
-            velocity_x = 0;
+            velocity_x = velocity_x/1.5f;
         }
 
         // Left collision check (only when moving left)
         if (pos_x < previousX && (collidesLeft('\0') || collidesLeft('w') || 
         collidesLeft('x') || collidesLeft('b')) && !movingRight) {
             pos_x = collidingTiles.xLeft + 64;  // Prevent movement if collided
-            velocity_x = 0;
+            velocity_x = velocity_x/1.5f;
+        }
+        if (pos_x < previousX && pos_x < 0){
+            pos_x = previousX;
+            velocity_x = velocity_x/1.5f;
         }
         
         if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || 
         collidesAbove('x') || collidesAbove('b') || pos_y < 0 )){
             pos_y = collidingTiles.yAbove + 64;//tile size
-            velocity_y = -velocity_y;
+            velocity_y = -velocity_y*0.5;
         }
         
         //Handling falling off
         if (!(collidesBelow('\0')||collidesBelow('q') || collidesBelow('w')
-        || collidesBelow('b'))) {
+        || collidesBelow('b') || collidesBelow('x'))) {
             if (onGround) {
                 velocity_y += gravity;
                 onGround = false;
             }
         }
         
+        // For some reason leader has above definded while followers don't idk y
+        if((leader ? collidesAbove('p') : collidesBelow('p') )&& !fallingIntoVoid){ 
+            fallingIntoVoid = true;
+        }
 
         
         //Ring collection
@@ -419,8 +448,10 @@ public:
             // Check both tiles (belowLeft and belowRight) and set to 's' only if they are 'R'
             if (*collidingTiles.belowLeft == 'R') {
                 *collidingTiles.belowLeft = 's';  // Set only belowLeft to 's' if it's 'R'
+                score += 100;
             }
             if (*collidingTiles.belowRight == 'R') {
+                score += 100;
                 *collidingTiles.belowRight = 's';  // Set only belowRight to 's' if it's 'R'
             }
         }
@@ -428,9 +459,11 @@ public:
         if (collidesAbove('R')) {
             // Check both tiles (aboveLeft and aboveRight) and set to 's' only if they are 'R'
             if (*collidingTiles.aboveLeft == 'R') {
+                score += 100;
                 *collidingTiles.aboveLeft = 's';  // Set only aboveLeft to 's' if it's 'R'
             }
             if (*collidingTiles.aboveRight == 'R') {
+                score += 100;
                 *collidingTiles.aboveRight = 's';  // Set only aboveRight to 's' if it's 'R'
             }
         }
@@ -438,9 +471,11 @@ public:
         if (collidesRight('R')) {
             // Collect right coins if they are 'R'
             if (*collidingTiles.rightTop == 'R') {
+                score += 100;
                 *collidingTiles.rightTop = 's';  // Set to 's' if it's a coin
             }
             if (*collidingTiles.rightBottom == 'R') {
+                score += 100;
                 *collidingTiles.rightBottom = 's';  // Set to 's' if it's a coin
             }
         }
@@ -448,9 +483,11 @@ public:
         if (collidesLeft('R')) {
             // Collect left coins if they are 'R'
             if (*collidingTiles.leftTop == 'R') {
+                score += 100;
                 *collidingTiles.leftTop = 's';  // Set to 's' if it's a coin
             }
             if (*collidingTiles.leftBottom == 'R') {
+                score += 100;
                 *collidingTiles.leftBottom = 's';  // Set to 's' if it's a coin
             }
         }
@@ -471,10 +508,22 @@ public:
     }
 
     virtual void render(sf::RenderWindow& window, float cameraOffsetX) override {
-        Entity::render(window, cameraOffsetX);
-        if(leader){
-            for(int i=0; i<2; ++i) {
-                followers[i]->render(window, cameraOffsetX);
+        float time = invincibilityClock.getElapsedTime().asSeconds();
+        static const float flickerRate = 0.000001f;
+
+        int cycle = static_cast<int>(time / flickerRate);
+        bool shouldRender = true;
+
+        if (invincible) {
+            shouldRender = (cycle % 2 == 0);
+        }
+    
+        if (shouldRender) {
+            Entity::render(window, cameraOffsetX);
+            if (leader) {
+                for (int i = 0; i < 2; ++i) {
+                    followers[i]->render(window, cameraOffsetX);
+                }
             }
         }
     }

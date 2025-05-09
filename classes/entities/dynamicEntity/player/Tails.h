@@ -55,6 +55,7 @@ public:
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 6, 0.1f);
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 6, 0.1f);
     }
+    sf::Clock getBoostClock(){return boostClock;}
     virtual void specialAbility() override {
         if(leader){
             if (!boosting) {
@@ -70,12 +71,12 @@ public:
             }
         }
     }
-    virtual void update(float deltaTime) override {
+    virtual void update(float deltaTime, int &score) override {
         if(boosting){
             onGround = true;
             for (int i=0; i<2; ++i) followers[i]->setOnGround(true); // Align followers
         }
-        Player::update(deltaTime);
+        Player::update(deltaTime, score);
 
        
         if(boosting){
@@ -95,13 +96,20 @@ public:
         }
     }
 
-    void collisionHandle(float previousX, float previousY) override {
-        Player::collisionHandle(previousX, previousY);
+    void collisionHandle(float previousX, float previousY, int &score) override {
+        Player::collisionHandle(previousX, previousY, score);
+
         if(boosting){
+
+            if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || 
+                collidesAbove('x') || collidesAbove('b') || pos_y < 0 )){
+                pos_y = collidingTiles.yAbove + 64 + 5;//tile size
+                velocity_y = 0;
+            }
             if (!fallingIntoVoid && ((followers[1]->collidesBelow('\0') || followers[1]->collidesBelow('w') 
             || followers[1]->collidesBelow('q') || followers[1]->collidesBelow('b') || followers[1]->collidesBelow('x')))) {
-                pos_y = followers[1]->collidingTiles.yBelow - height - 128 - 8;
-                velocity_y = -0;
+                pos_y = followers[1]->collidingTiles.yBelow - height - 128 - 7.25;
+                velocity_y = 0;
             }
             // X collision
             if (((followers[1]->collidesRight('\0') || followers[1]->collidesRight('w') 

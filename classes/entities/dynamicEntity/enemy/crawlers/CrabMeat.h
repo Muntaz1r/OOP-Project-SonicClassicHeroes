@@ -38,15 +38,15 @@ public:
         walkRightAnimation.initialize(&sprite, &walkRightTexture, 32, 32, 10, 0.05f);
         walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 32, 32, 10, 0.05f);
 
-        if (!texture->loadFromFile("Data/projectile.png")) {
-            cout << "Unable to load projectile.ppng" << endl;
-        }
+        // if (!texture->loadFromFile("Data/projectile.png")) {
+        //     cout << "Unable to load projectile.ppng" << endl;
+        // }
 
         projectileManager = new ProjectileManager();
     }
 
-    void update(float deltaTime) override {
-        Enemy::update(deltaTime);
+    void update(float deltaTime, int &score) override {
+        Enemy::update(deltaTime, score);
 
         if (!isAlive()) {
             return;

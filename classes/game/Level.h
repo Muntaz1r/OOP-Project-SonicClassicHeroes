@@ -12,10 +12,16 @@ using namespace std;
 
 class Levels {
 protected:
+    sf::Clock gameTime;
+    int score;
     sf::Clock switchCooldownClock;
     char currentPlayer;
     Player* player;
 public:
+    Levels(){
+        score = 0;
+        gameTime.restart();
+    }
     virtual void loadAssets() = 0; // load level assets
     virtual void update(float deltaTime) =0; // update logic per frame
     virtual void render(RenderWindow& window, float cameraOffsetX) = 0; // Draw the level
@@ -27,6 +33,8 @@ public:
     virtual int getPlayerWidth() const = 0;
     virtual int getLevelWidthinTiles() const = 0;
     virtual int getCellSize() const = 0;
+    virtual int getScore() const;
+    virtual sf::Clock getGameTime() const;
     virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
     
     virtual ~Levels() {}

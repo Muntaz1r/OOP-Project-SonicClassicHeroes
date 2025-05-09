@@ -42,7 +42,7 @@ public:
     void setHeight(int h) { height = h; }
     void setWidth(int w) { width = w; }
 
-    virtual void update(float deltaTime) = 0;
+    virtual void update(float deltaTime, int &score) = 0;
     //virtual void update(float deltaTime, float playerX, float playerY) = 0;
 
     virtual void render(sf::RenderWindow& window, float cameraOffsetX) { //render

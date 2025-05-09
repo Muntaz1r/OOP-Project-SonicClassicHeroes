@@ -32,7 +32,7 @@ public:
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            4.0f,    // terminal_velocity
+            2.0f,    // terminal_velocity
             4.5f,    // maxSpeed
             true,    // onGround
             false,   // invincible
@@ -61,7 +61,7 @@ class TailsFactory : public PlayerFactory {
                 texture,  // Texture pointer
                 0.0f,    // velocity_x
                 0.0f,    // velocity_y
-                4.0f,    // terminal_velocity
+                2.0f,    // terminal_velocity
                 4.5f,    // maxSpeed
                 true,    // onGround
                 false,   // invincible
@@ -92,7 +92,7 @@ public:
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            4.0f,    // terminal_velocity
+            2.0f,    // terminal_velocity
             4.5f,    // maxSpeed
             true,    // onGround
             false,   // invincible

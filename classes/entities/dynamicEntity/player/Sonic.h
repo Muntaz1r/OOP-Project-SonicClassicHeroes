@@ -63,6 +63,7 @@ public:
 
     float getBoostedAcc() const { return boostedAcc; }
     float getBoostedMaxSpeed() const { return boostedMaxSpeed; }
+    sf::Clock getBoostClock(){return boostClock;}
 
     virtual void specialAbility() override {
         if (!boosting) {
@@ -79,8 +80,8 @@ public:
         }
     }
     
-    virtual void update(float deltaTime) override {
-        Player::update(deltaTime);
+    virtual void update(float deltaTime, int &score) override {
+        Player::update(deltaTime, score);
 
         // Stop boosting if boost time is done
         if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {

@@ -48,8 +48,8 @@ public:
         projectileManager = new ProjectileManager();
     }
 
-    void update(float deltaTime) override {
-        Enemy::update(deltaTime);
+    void update(float deltaTime, int &score) override {
+        Enemy::update(deltaTime, score);
 
         if (!isAlive()) {
             return;

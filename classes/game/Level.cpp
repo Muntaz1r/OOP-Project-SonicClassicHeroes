@@ -173,7 +173,7 @@ void Level1_Labyrinth::update(float deltaTime) {
     }
     if (Keyboard::isKeyPressed(Keyboard::Z) && !player->getBoosting()) {
 
-        if (switchCooldownClock.getElapsedTime().asSeconds() >= 5.0f){
+        if (switchCooldownClock.getElapsedTime().asSeconds() >= 1.0f){
             player->setBoosting(false);
             switchCooldownClock.restart();
             switch (currentPlayer) {
@@ -186,8 +186,6 @@ void Level1_Labyrinth::update(float deltaTime) {
             case 'k':
                 currentPlayer ='s';
                 break;
-            default:
-                return; // Invalid player
         }
     
         cout<<"Switch\n";
@@ -204,19 +202,19 @@ void Level1_Labyrinth::update(float deltaTime) {
     }
 
     player->setCollidingTiles(64, 14, 200, grid);
-    player->update(deltaTime);
+    player->update(deltaTime, score);
 
-    batBrain->update(deltaTime, player->getPosX(), player->getPosY());
+    batBrain->update(deltaTime, player->getPosX(), player->getPosY(), score);
     batBrain->checkCollisionWithPlayer(*player);
 
-    beeBot->update(deltaTime);
+    beeBot->update(deltaTime, score);
     beeBot->checkCollisionWithPlayer(*player);
     beeBot->checkProjectilesHitPlayer(*player);
 
-    motoBug->update(deltaTime, player->getPosX(), player->getPosY());
+    motoBug->update(deltaTime, player->getPosX(), player->getPosY(), score);
     motoBug->checkCollisionWithPlayer(*player);
 
-    crabMeat->update(deltaTime);
+    crabMeat->update(deltaTime, score);
     crabMeat->checkCollisionWithPlayer(*player);
     crabMeat->checkProjectilesHitPlayer(*player);
 
@@ -292,6 +290,10 @@ void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {
     static sf::Texture knucklesIcon;
     static sf::Texture heartIcon;
     static sf::Texture emptyHeartIcon;
+    static sf::Texture specialAbillityRingTex;
+    static sf::Sprite specialAbillityRingSprite;
+    static sf::Font uiFont;
+    static float iterate = 0;
 
     if (uiInitialized) {
         if (!sonicIcon.loadFromFile("Data/sonicIcon.png")) {
@@ -309,8 +311,14 @@ void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {
         if (!emptyHeartIcon.loadFromFile("Data/emptyHeartIcon.png")) {
             cout << "Failed to load Data/emptyHeartIcon.png\n";
         }
+        if (!specialAbillityRingTex.loadFromFile("Data/specialAbillityRing2.png")) {
+            cout << "Failed to load ring texture\n";
+        }
+        if (!uiFont.loadFromFile("Data/Retro Gaming.ttf")) {
+            std::cout << "Failed to load Retro Gaming.ttf\n";
+        }
 
-        playerSprite.setPosition(8.f, 8.f);  // Top left
+        playerSprite.setPosition(15.f, 40.f);  // Top left
         uiInitialized = false;
     }
 
@@ -329,42 +337,112 @@ void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {
         default:
             return; // Invalid player
     }
+    iterate = player->getBoosting()? 30 : 0;
 
     // Get the texture pointer directly
     const sf::Texture* texture = playerSprite.getTexture();
     if (!texture) return;
 
-    // Get texture dimensions without using Vector2u
+    // Get texture dimensions
     unsigned int texWidth = texture->getSize().x;
     unsigned int texHeight = texture->getSize().y;
 
-    // Set texture rect to full texture area
+    // Set texture area
     playerSprite.setTextureRect(sf::IntRect(0, 0, texWidth, texHeight));
 
-    // Calculate scale for consistent visual size
-    float targetSize = player->getBoosting() ? 112.f : 96.f;
-    float scale = targetSize / static_cast<float>(texWidth); // assumes square textures
+    // Calculate uniform scale (assumes square texture)
+    float targetSize = 140.f;
+    float scale = targetSize / static_cast<float>(texWidth); // assuming square
     playerSprite.setScale(scale, scale);
+
+    // Compute final screen position so that the center is always at (desiredX, desiredY)
+    float desiredX = 6.f + targetSize / 2.f + 5.f + iterate/2.f;
+    float desiredY = 4.f + targetSize / 2.f + iterate;
+
+    // Compute adjusted top-left position
+    float adjustedX = desiredX - (texWidth * scale) / 2.f;
+    float adjustedY = desiredY - (texHeight * scale) / 2.f;
+
+    playerSprite.setPosition(adjustedX, adjustedY);
 
     window.draw(playerSprite);
     
 
-    // Set constant heart scale
-    heartSprite.setScale(0.4f, 0.4f);
-
-    // Draw filled hearts
+    // Desired display size for hearts (square )
+    static const float heartTargetSize = 40.f;
+    
+    // Draw filled hearts 
     heartSprite.setTexture(heartIcon);
-    for (int i = 0; i < Player::getHP(); ++i) {
-        heartSprite.setPosition(220.f + 80 * i, 50.f);
-        window.draw(heartSprite);
+    {
+        unsigned texWidth = heartIcon.getSize().x; 
+        float scale = heartTargetSize / static_cast<float>(texWidth);
+        heartSprite.setScale(scale, scale);
+
+        for (int i = 0; i < Player::getHP(); ++i) {
+            heartSprite.setPosition(17 + 40 * i + iterate/1.7f, 140.f + iterate*1.8f);
+            window.draw(heartSprite);
+        }
     }
 
-    // Draw empty hearts
-    for (int i = Player::getHP(); i < 3; ++i) {
-        heartSprite.setTexture(emptyHeartIcon);
-        heartSprite.setPosition(220.f + 80 * i, 50.f);
-        window.draw(heartSprite);
+    // Draw empty hearts 
+    heartSprite.setTexture(emptyHeartIcon);
+    {
+        unsigned texWidth = emptyHeartIcon.getSize().x; 
+        float scale = heartTargetSize / static_cast<float>(texWidth);
+        heartSprite.setScale(scale, scale);
+
+        for (int i = Player::getHP(); i < 3; ++i) {
+            heartSprite.setPosition(17 + 40 * i + iterate/1.7f, 140.f + iterate*1.8f);
+            window.draw(heartSprite);
+        }
     }
+    
+
+
+    // Draw special ability ring if boosting
+    if (player->getBoosting()) {
+        // Assume ring is slightly larger than icon
+        const unsigned int specialAbillityRingWidth = specialAbillityRingTex.getSize().x;
+        const unsigned int specialAbillityRingHeight = specialAbillityRingTex.getSize().y;
+
+        specialAbillityRingSprite.setTexture(specialAbillityRingTex);
+        specialAbillityRingSprite.setTextureRect(sf::IntRect(0, 0, specialAbillityRingWidth, specialAbillityRingHeight));
+
+        // Calculate scale so it's slightly larger than icon
+        float specialAbillityRingTargetSize = 260.f; // larger than 140 icon
+        float specialAbillityRingScale = specialAbillityRingTargetSize / static_cast<float>(specialAbillityRingWidth);
+        specialAbillityRingSprite.setScale(specialAbillityRingScale, specialAbillityRingScale);
+
+        // Same center as icon
+        float specialAbillityRingAdjustedX = desiredX - (specialAbillityRingWidth * specialAbillityRingScale) / 2.f;
+        float specialAbillityRingAdjustedY = desiredY - (specialAbillityRingHeight * specialAbillityRingScale) / 2.f;
+
+        specialAbillityRingSprite.setPosition(specialAbillityRingAdjustedX, specialAbillityRingAdjustedY);
+        window.draw(specialAbillityRingSprite);
+    }
+
+    sf::Time elapsed = gameTime.getElapsedTime();
+    int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
+    int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
+
+    std::string timeText = 
+        (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
+        (seconds < 10 ? "0" : "") + std::to_string(seconds);
+
+    // Create SFML Text objects
+    sf::Text scoreText("Score: " + to_string(score), uiFont, 20);
+    sf::Text timeDisplay(timeText, uiFont, 20);
+
+    // Position them in top-right
+    scoreText.setFillColor(sf::Color::White);
+    timeDisplay.setFillColor(sf::Color::White);
+
+    scoreText.setPosition(1200 - scoreText.getGlobalBounds().width - 10.f, 10.f);
+    timeDisplay.setPosition(1200- timeDisplay.getGlobalBounds().width - 10.f, 35.f);
+
+    window.draw(scoreText);
+    window.draw(timeDisplay);
+
 }
 
 
@@ -394,5 +472,13 @@ int Level1_Labyrinth::getLevelWidthinTiles() const {
 int Level1_Labyrinth::getCellSize() const {
     return cellSize;
 }
+
+int Levels::getScore() const {
+    return score;
+}
+sf::Clock Levels::getGameTime() const{
+    return gameTime;
+}
+    
 
 

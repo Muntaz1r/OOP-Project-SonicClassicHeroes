@@ -40,7 +40,7 @@ public:
     bool isAlive() const { return alive; }
     bool isMovingRight() const { return movingRight; }
 
-    virtual void update(float deltaTime) override {
+    virtual void update(float deltaTime, int &score) override {
         if (isMovingRight()) {
             if (sprite.getTexture() != &walkRightTexture) {
                 sprite.setTexture(walkRightTexture);
