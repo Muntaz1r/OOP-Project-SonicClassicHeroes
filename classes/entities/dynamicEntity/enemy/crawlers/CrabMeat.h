@@ -61,14 +61,14 @@ public:
             pos_x += -velocity_x;
         }
 
-        if (pos_x > maxX) {
-            pos_x = maxX;
-            movingRight = false;
-        }
-        else if (pos_x < minX) {
-            pos_x = minX;
-            movingRight = true;
-        }
+        // if (pos_x > maxX) {
+        //     pos_x = maxX;
+        //     movingRight = false;
+        // }
+        // else if (pos_x < minX) {
+        //     pos_x = minX;
+        //     movingRight = true;
+        // }
 
         if (shootTimer.getElapsedTime().asSeconds() > 3.0f) {
             if (isMovingRight()) { // shoot right when moving left and vice versa

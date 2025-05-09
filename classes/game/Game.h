@@ -8,6 +8,7 @@
 #include "Level1_Labyrinth.h"
 #include "Level2_IceCap.h"
 #include "Level3_DeathEgg.h"
+#include "BossLevel.h"
 
 using namespace sf;
 using namespace std;

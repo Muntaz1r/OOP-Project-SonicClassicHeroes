@@ -91,7 +91,7 @@ void Game::runGame() {
                     level = new Level3_DeathEgg();
                 }
                 else if (selectedLevel == 3) {
-                    level = new Level1_Labyrinth(); // Placeholder for now
+                    level = new BossLevel();
                 }
                 levelCreated = true;
                 
@@ -119,7 +119,6 @@ void Game::runGame() {
             menu->update();
         }
 		
-        
 
         // Rendering
 		window.clear(Color::Black);
