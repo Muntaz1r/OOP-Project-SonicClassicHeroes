@@ -216,26 +216,26 @@ void Level2_IceCap::update(float deltaTime) {
     }
 
     player->setCollidingTiles(cellSize, height, width, grid);
-    player->update(deltaTime);
+    player->update(deltaTime, score);
 
     for (int i = 0; i < numBatBrain; i++) {
-        batBrains[i]->update(deltaTime, player->getPosX(), player->getPosY());
+        batBrains[i]->update(deltaTime, player->getPosX(), player->getPosY(), score);
         batBrains[i]->checkCollisionWithPlayer(*player);
     }
 
     for (int i = 0; i < numBeeBot; i++) {
-        beeBots[i]->update(deltaTime);
+        beeBots[i]->update(deltaTime, score);
         beeBots[i]->checkCollisionWithPlayer(*player);
         beeBots[i]->checkProjectilesHitPlayer(*player);
     }
 
     for (int i = 0; i < numMotoBug; i++) {
-        motoBugs[i]->update(deltaTime, player->getPosX(), player->getPosY());
+        motoBugs[i]->update(deltaTime, player->getPosX(), player->getPosY(), score);
         motoBugs[i]->checkCollisionWithPlayer(*player);
     }
     
     for (int i = 0; i < numCrabMeat; i++) {
-        crabMeats[i]->update(deltaTime);
+        crabMeats[i]->update(deltaTime, score);
         crabMeats[i]->checkCollisionWithPlayer(*player);
         crabMeats[i]->checkProjectilesHitPlayer(*player);
     }

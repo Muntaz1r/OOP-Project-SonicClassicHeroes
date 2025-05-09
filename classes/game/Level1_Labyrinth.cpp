@@ -192,19 +192,19 @@ void Level1_Labyrinth::update(float deltaTime) {
     }
 
     player->setCollidingTiles(cellSize, height, width, grid);
-    player->update(deltaTime);
+    player->update(deltaTime, score);
 
-    batBrain->update(deltaTime, player->getPosX(), player->getPosY());
+    batBrain->update(deltaTime, player->getPosX(), player->getPosY(), score);
     batBrain->checkCollisionWithPlayer(*player);
 
-    beeBot->update(deltaTime);
+    beeBot->update(deltaTime, score);
     beeBot->checkCollisionWithPlayer(*player);
     beeBot->checkProjectilesHitPlayer(*player);
 
-    motoBug->update(deltaTime, player->getPosX(), player->getPosY());
+    motoBug->update(deltaTime, player->getPosX(), player->getPosY(), score);
     motoBug->checkCollisionWithPlayer(*player);
 
-    crabMeat->update(deltaTime);
+    crabMeat->update(deltaTime, score);
     crabMeat->checkCollisionWithPlayer(*player);
     crabMeat->checkProjectilesHitPlayer(*player);
 }
