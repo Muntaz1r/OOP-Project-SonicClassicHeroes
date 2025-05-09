@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <string>
 
 #include "flyers/BatBrain.h"
 #include "flyers/BeeBot.h"
+#include "flyers/Boss.h"
 #include "crawlers/MotoBug.h"
 #include "crawlers/CrabMeat.h"
 
@@ -115,6 +115,32 @@ public:
             maxX,     // maxX (maximum region in x-direction)
             minX,     // minX (minimum region in x-direction)
             4,        // HP
+            1.0f,     // max speed (if you use it for movement cap)
+            true,     // alive
+            true      // movingRight
+        );
+    }
+};
+
+class EggStingerFactory {
+public:
+    EggStinger* createEggStinger(float pos_x, float pos_y, float maxX, float minX) const {
+        sf::Texture *texture = new Texture;
+        if (!texture->loadFromFile("Data/eggstinger/idle.png")) {
+            cout << "Failed to load enemy texture\n";
+        }
+        return new EggStinger(
+            pos_x,   // pos_x
+            pos_y,   // pos_y
+            64,       // height
+            96,       // width
+            texture,  // texture pointer
+            1.5f,     // velocity_x (used for horizontal movement)
+            1.5f,       // velocity_y
+            0.0f,       // terminal velocity (not used here)
+            maxX,     // maxX (maximum region in x-direction)
+            minX,     // minX (minimum region in x-direction)
+            15,        // HP
             1.0f,     // max speed (if you use it for movement cap)
             true,     // alive
             true      // movingRight
