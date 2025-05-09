@@ -79,9 +79,20 @@ void Game::runGame() {
                     level = nullptr;
                 }
 
-                //level = new Level1_Labyrinth();
-                //level = new Level2_IceCap();
-                level = new Level3_DeathEgg();
+                int selectedLevel = menu->getSelectedLevel();
+
+                if (selectedLevel == 0) {
+                    level = new Level1_Labyrinth();
+                }
+                else if (selectedLevel == 1) {
+                    level = new Level2_IceCap();
+                }
+                else if (selectedLevel == 2) {
+                    level = new Level3_DeathEgg();
+                }
+                else if (selectedLevel == 3) {
+                    level = new Level1_Labyrinth(); // Placeholder for now
+                }
                 levelCreated = true;
                 
                 level->loadAssets(); // load all assests when level is created

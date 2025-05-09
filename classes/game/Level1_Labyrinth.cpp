@@ -127,7 +127,7 @@ void Level1_Labyrinth::loadAssets() {
 
     motoBug = motoBugMaker.createMotoBug(7500.0f, 768.0f, 8511.0f, 6536.0f);
 
-    crabMeat = crabMeatMaker.createCrabMeat(10800.0f, 768.0f, 11392.0f, 10624.0f);
+    crabMeat = crabMeatMaker.createCrabMeat(10800.0f, 768.0f, 11392.0f, 10752.0f);
 
     // Music is currently being handled by Menu, might need changing if each level has a different track
     // if (!levelMusic.openFromFile("Data/labrynth.ogg")) {
