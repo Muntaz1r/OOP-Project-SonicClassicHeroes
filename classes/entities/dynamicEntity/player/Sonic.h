@@ -12,6 +12,8 @@ protected:
     sf::Clock boostClock;
     int specialAbillityTime;
 
+    
+
 public:
     Sonic(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
           float vx = 0, float vy = 0, float terminal = 0,
@@ -47,6 +49,22 @@ public:
         if (!jumpLeftTexture.loadFromFile("Data/0upL.png")) {
             cout << "Failed to load 0upL.png" << endl;
         }
+
+        if (!boostRightTexture.loadFromFile("Data/boostR.png")) {
+            cout << "Failed to load boostR.png" << endl;
+        }
+
+        if (!boostLeftTexture.loadFromFile("Data/boostL.png")) {
+            cout << "Failed to load boostL.png" << endl;
+        }
+
+        if (!hangingRightTexture.loadFromFile("Data/hangR.png")) {
+            cout << "Failed to load hangR.png" << endl;
+        }
+
+        if (!hangingLeftTexture.loadFromFile("Data/hangL.png")) {
+            cout << "Failed to load hangL.png" << endl;
+        }
         
         sprite.setTexture(idleRightTexture); // start with idle right texture
         sprite.setTextureRect(IntRect(0, 0, 40, 40));
@@ -59,6 +77,14 @@ public:
         // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
+
+        // Setup animation for boosting
+        boostRightAnimation.initialize(&sprite, &boostRightTexture, 40, 40, 8, 0.025f);
+        boostLeftAnimation.initialize(&sprite, &boostLeftTexture, 40, 40, 8, 0.025f);
+
+        // Setup animation for hanging
+        hangingRightAnimation.initialize(&sprite, &hangingRightTexture, 40, 40, 8, 0.1f);
+        hangingLeftAnimation.initialize(&sprite, &hangingLeftTexture, 40, 40, 8, 0.1f);
     }
 
     float getBoostedAcc() const { return boostedAcc; }

@@ -41,6 +41,22 @@ public:
         if (!jumpLeftTexture.loadFromFile("Data/knuckles/0upL.png")) {
             cout << "Failed to load knuckles/0upL.png" << endl;
         }
+
+        if (!boostRightTexture.loadFromFile("Data/knuckles/boostR.png")) {
+            cout << "Failed to load knuckles/boostR.png" << endl;
+        }
+
+        if (!boostLeftTexture.loadFromFile("Data/knuckles/boostL.png")) {
+            cout << "Failed to load knuckles/boostL.png" << endl;
+        }
+
+        if (!hangingRightTexture.loadFromFile("Data/knuckles/hangR.png")) {
+            cout << "Failed to load knuckles/hangR.png" << endl;
+        }
+
+        if (!hangingLeftTexture.loadFromFile("Data/knuckles/hangL.png")) {
+            cout << "Failed to load knuckles/hangL.png" << endl;
+        }
         
         sprite.setTexture(idleRightTexture); // start with idle right texture
         sprite.setTextureRect(IntRect(0, 0, 40, 40));
@@ -53,6 +69,14 @@ public:
         // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 8, 0.1f);
+
+        // Setup animation for boosting
+        boostRightAnimation.initialize(&sprite, &boostRightTexture, 40, 40, 8, 0.1f);
+        boostLeftAnimation.initialize(&sprite, &boostLeftTexture, 40, 40, 8, 0.1f);
+
+        // Setup animation for hanging
+        hangingRightAnimation.initialize(&sprite, &hangingRightTexture, 40, 40, 8, 0.1f);
+        hangingLeftAnimation.initialize(&sprite, &hangingLeftTexture, 40, 40, 8, 0.1f);
     }
     
     virtual void specialAbility() override {
