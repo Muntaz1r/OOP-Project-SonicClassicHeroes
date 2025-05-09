@@ -34,7 +34,7 @@ protected:
     float acc_x;
     float acc_y;
     sf::Clock invincibilityClock;
-    sf::Time invincibilityDuration = sf::seconds(5);
+    sf::Time invincibilityDuration = sf::seconds(1);
     float friction;
     float gravity;
     bool leader;
@@ -514,12 +514,12 @@ public:
         }
     
         if (shouldRender) {
-            Entity::render(window, cameraOffsetX);
             if (leader) {
                 for (int i = 0; i < 2; ++i) {
                     followers[i]->render(window, cameraOffsetX);
                 }
             }
+            Entity::render(window, cameraOffsetX);
         }
     }
     
