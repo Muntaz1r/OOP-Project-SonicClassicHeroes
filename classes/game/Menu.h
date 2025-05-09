@@ -12,6 +12,7 @@ const int STATE_OPTIONS = 1;
 const int STATE_NAME_INPUT = 2;
 const int STATE_LEADERBOARD = 3;
 const int STATE_EXIT = 4;
+const int STATE_SELECT_LEVEL = 5;
 
 class Menu {
 private:
@@ -25,13 +26,14 @@ private:
     int volume;
     int prevVolume;
     int mainSelected;
+    int selectedLevel;
 
     bool isMuted;
     bool leaderboardRequested; // used to transfer control over to leaderboard in Game class
     bool gameStarted;
 
-    const int menuItemCount = 5;
-    string mainOptions[5] = {"New Game", "Options", "Continue", "LeaderBoard", "Exit"};
+    const int menuItemCount = 6;
+    string mainOptions[6] = {"New Game", "Options", "Continue", "LeaderBoard", "Select Level", "Exit"};
 
     // Options
     Text volumeText;
@@ -43,7 +45,8 @@ private:
 
     // UI
     Text title;
-    Text menuText[5];
+    Text menuText[6];
+    Text levelText[4];
 
     // Background
     Texture bgTexture;
@@ -64,4 +67,5 @@ public:
     bool hasGameStarted() const;
     void resetGameStarted();
     string getPlayerName() const;
+    int getSelectedLevel() const { return selectedLevel; }
 };
