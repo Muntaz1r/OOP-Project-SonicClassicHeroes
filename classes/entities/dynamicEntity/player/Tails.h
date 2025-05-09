@@ -42,6 +42,14 @@ public:
         if (!jumpLeftTexture.loadFromFile("Data/tails/0upL.png")) {
             cout << "Failed to load tails/0upL.png" << endl;
         }
+
+        if (!boostRightTexture.loadFromFile("Data/tails/boostR.png")) {
+            cout << "Failed to load tails/boostR.png" << endl;
+        }
+
+        if (!boostLeftTexture.loadFromFile("Data/tails/boostL.png")) {
+            cout << "Failed to load tails/boostL.png" << endl;
+        }
         
         sprite.setTexture(idleRightTexture); // start with idle right texture
         sprite.setTextureRect(IntRect(0, 0, 40, 40));
@@ -54,6 +62,10 @@ public:
         // Setup animation for jumping
         jumpRightAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 6, 0.1f);
         jumpLeftAnimation.initialize(&sprite, &jumpLeftTexture, 40, 40, 6, 0.1f);
+
+        // Setup animation for boosting
+        boostRightAnimation.initialize(&sprite, &boostRightTexture, 40, 40, 8, 0.07f);
+        boostLeftAnimation.initialize(&sprite, &boostLeftTexture, 40, 40, 8, 0.07f);
     }
     sf::Clock getBoostClock(){return boostClock;}
     virtual void specialAbility() override {

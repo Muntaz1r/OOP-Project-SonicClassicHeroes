@@ -42,6 +42,8 @@ protected:
     Player* followers[2];
     char invalid;
     bool fallingIntoVoid;
+    bool hanging;
+    bool hangingRight;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -49,7 +51,15 @@ protected:
     Texture walkLeftTexture;
     Texture jumpRightTexture;
     Texture jumpLeftTexture;
+    Texture boostRightTexture;
+    Texture boostLeftTexture;
+    Texture hangingRightTexture;
+    Texture hangingLeftTexture;
 
+    Animation boostRightAnimation;
+    Animation boostLeftAnimation;
+    Animation hangingRightAnimation;
+    Animation hangingLeftAnimation;
     
 public:
     CollidingTiles collidingTiles;
@@ -64,6 +74,7 @@ public:
             boosting = false;
             invalid = '\0';
             fallingIntoVoid = false;
+            hanging = false;
         }
 
     // Getters
@@ -79,6 +90,8 @@ public:
     Player* getFollower2() const{return followers[1];}
     bool getBoosting() const{return boosting;}
     bool getFallingIntoVoid() const{return fallingIntoVoid;}
+    bool getHanging() const { return hanging; }
+    bool getHangingRight() const { return hangingRight; }
     virtual sf::Clock getBoostClock() {return sf::Clock();}
 
     // Setters
@@ -98,6 +111,9 @@ public:
     void setFriction(float value){ friction= value;}
     void setBoosting(bool value){ boosting = value;}
     void setFallingIntoVoid(bool value){fallingIntoVoid = value;}
+    void setHanging(bool value) { hanging = value; }
+    void setHangingRight(bool value) { hangingRight = value; }
+
     
     
     
@@ -248,7 +264,21 @@ public:
         
         
         // Animation logic
-        if (!onGround) { // Jumping
+        if (hanging) {
+            if (getHangingRight()) {
+                if (sprite.getTexture() != &hangingRightTexture) {
+                    sprite.setTexture(hangingRightTexture);
+                }
+                hangingRightAnimation.update(deltaTime);
+            }
+            else {
+                if (sprite.getTexture() != &hangingLeftTexture) {
+                    sprite.setTexture(hangingLeftTexture);
+                }
+                hangingLeftAnimation.update(deltaTime);
+            }
+        }
+        else if (!onGround) { // Jumping
             if (isMovingRight()) {
                 if (sprite.getTexture() != &jumpRightTexture) {
                     sprite.setTexture(jumpRightTexture);
@@ -262,7 +292,22 @@ public:
                 jumpLeftAnimation.update(deltaTime);
             }
         }
-        else if (velocity_x != 0) { // check if stationary
+        else if (boosting && (velocity_x != 0 || velocity_y != 0)) {
+            if (isMovingRight()) {
+                // Switch to running texture if not already
+                if (sprite.getTexture() != &boostRightTexture) {
+                    sprite.setTexture(boostRightTexture);
+                }
+                boostRightAnimation.update(deltaTime);
+            }
+            else {
+                if (sprite.getTexture() != &boostLeftTexture) {
+                    sprite.setTexture(boostLeftTexture);
+                }
+                boostLeftAnimation.update(deltaTime);
+            }
+        }
+        else if (velocity_x != 0) { // check if not stationary
             if (isMovingRight()) {
                 // Switch to running texture if not already
                 if (sprite.getTexture() != &walkRightTexture) {
@@ -298,6 +343,7 @@ public:
             jumpRightAnimation.reset();
             jumpLeftAnimation.reset();
         }
+        
         collisionHandle(previousX, previousY, score);
         
         if(leader){
