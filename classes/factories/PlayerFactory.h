@@ -25,8 +25,8 @@ public:
             cout << "Failed to load player texture\n";
         }
         return new Sonic(
-            11500.0f,   // px
-            100.0f,   // py
+            50.0f,   // px
+            200.0f,   // py
             80,      // height
             80,      // width
             texture,  // Texture pointer
@@ -54,8 +54,8 @@ class TailsFactory : public PlayerFactory {
                 cout << "Failed to load player texture\n";
             }
             return new Tails(
-                20.0f,   // px
-                100.0f,   // py
+                10.0f,   // px
+                200.0f,   // py
                 80,      // height
                 80,      // width
                 texture,  // Texture pointer
@@ -85,8 +85,8 @@ public:
             cout << "Failed to load player texture\n";
         }
         return new Knuckles(
-            60.0f,   // px
-            100.0f,   // py
+            20.0f,   // px
+            200.0f,   // py
             80,      // height
             80,      // width
             texture,  // Texture pointer
