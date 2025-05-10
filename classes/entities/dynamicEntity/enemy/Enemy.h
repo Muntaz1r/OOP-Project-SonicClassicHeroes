@@ -75,7 +75,7 @@ public:
                 takeDamage(1);
                 player.setVelocityY(-5.0f); // Bounce effect
                 cout << "Enemy took damage." << endl;
-            } else if (!player.isInvincible()) {
+            } else if (!player.isInvincible() && player.isOnGround()) {
                 player.takeDamage();
                 cout << "Player took damage." << endl;
             }

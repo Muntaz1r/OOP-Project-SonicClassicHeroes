@@ -175,20 +175,20 @@ void Level1_Labyrinth::update(float deltaTime) {
             player->setBoosting(false);
             switchCooldownClock.restart();
             switch (currentPlayer) {
-            case 's':
-                currentPlayer ='t';
-                break;
-            case 't':
-                currentPlayer ='k';
-                break;
-            case 'k':
-                currentPlayer ='s';
-                break;
-            default:
-                return; // Invalid player
-        }
+                case 's':
+                    currentPlayer ='t';
+                    break;
+                case 't':
+                    currentPlayer ='k';
+                    break;
+                case 'k':
+                    currentPlayer ='s';
+                    break;
+                default:
+                    return; // Invalid player
+            }
     
-        cout<<"Switch\n";
+            cout<<"Switch\n";
             Player* temp;
             player->setLeader(false); // Old leader no longer leader
         
@@ -197,10 +197,28 @@ void Level1_Labyrinth::update(float deltaTime) {
             player->setFollowers(temp->getFollower2(), temp);
             player->setLeader(true);
 
-            temp->setFollowers(nullptr, nullptr); // Old leaders followers null
+            temp->setFollowers(nullptr, nullptr); // Old leaders followers null   
+        }        
+    }
+
+    // When tails is flying, turn sonic and knuckles into hanging state 
+    if (currentPlayer == 't' && player->getBoosting()) {
+        player->getFollower1()->setHanging(true);
+        player->getFollower2()->setHanging(true);
+        if (player->isMovingRight()) {
+            player->getFollower1()->setHangingRight(true);
+            player->getFollower2()->setHangingRight(true);
+        }
+        else {
+            player->getFollower1()->setHangingRight(false);
+            player->getFollower2()->setHangingRight(false);
         }
 
         
+    }
+    else {
+        player->getFollower1()->setHanging(false);
+        player->getFollower2()->setHanging(false);
     }
 
     player->setCollidingTiles(cellSize, height, width, grid);
