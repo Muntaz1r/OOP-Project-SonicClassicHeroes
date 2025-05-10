@@ -168,7 +168,17 @@ void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {
 }
 
 
-
+bool Levels::exitCheck(float cameraOffSetX){ //made in level1_labyrinth
+    // //Exit portal
+    // if(player->getPosY() >= 600 && player->getPosY() >= (600 + portalTex.getSize().y)){ //Y intercept
+    //     if((player->getPosX() >= width*cellSize - exit - cameraOffSetX - portalTex.getSize().x)
+    //     && (player->getPosX() <= width*cellSize - exit - cameraOffSetX)){ //X intercept
+    //         cout<<"Exit level";
+    //         return true;
+    //     }
+    // }
+    return false;
+}
 
 
 int Levels::getScore() const {

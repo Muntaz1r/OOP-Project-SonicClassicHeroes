@@ -103,20 +103,36 @@ public:
     
     
     char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow = nullptr, int* outCol = nullptr) {
-    int col = static_cast<int>(x / tileSize);
-    int row = static_cast<int>(y / tileSize);
+        int col = static_cast<int>(x / tileSize);
+        int row = static_cast<int>(y / tileSize);
 
-    if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight) {
-        *outRow = -1;
-        *outCol = -1;
-        return &invalid; // assuming 'invalid' is defined somewhere
-    }
+        // Handle out-of-bound coordinates
+        if (col < 0) {
+            col = 0; // Set col to 0 if it is out of bounds (left of the grid)
+            if (outCol) *outCol = 0; // Store the closest valid col (0)
+        }
+        if (col >= levelWidth) {
+            col = levelWidth - 1; // Set col to the max valid column
+            if (outCol) *outCol = levelWidth - 1; // Store the closest valid col (max column)
+        }
+        if (row < 0) {
+            row = 0; // Set row to 0 if it is out of bounds (top of the grid)
+            if (outRow) *outRow = 0; // Store the closest valid row (0)
+        }
+        if (row >= levelHeight) {
+            row = levelHeight - 1; // Set row to the max valid row
+            if (outRow) *outRow = levelHeight - 1; // Store the closest valid row (max row)
+        }
 
-    if (outRow) *outRow = row;
-    if (outCol) *outCol = col;
+        if (col < 0 || col >= levelWidth || row < 0 || row >= levelHeight) {
+            return &invalid; // assuming 'invalid' is defined somewhere
+        }
+
+        if (outRow) *outRow = row;
+        if (outCol) *outCol = col;
 
     return &grid[row][col];
-}
+    }
 
     
 
@@ -403,7 +419,7 @@ public:
         if ((pos_x> previousX && (collidesRight('\0') || collidesRight('w') 
         || collidesRight('x') || collidesRight('b')) && movingRight)) {
             pos_x = collidingTiles.xRight - width;  // Prevent movement if collided
-            //velocity_x = velocity_x/1.5f;
+            velocity_x = velocity_x/1.5f;
         }
 
         // Left collision check (only when moving left)
@@ -420,7 +436,7 @@ public:
         if (pos_y <= previousY && (collidesAbove('\0') || collidesAbove('w') || 
         collidesAbove('x') || collidesAbove('b') || pos_y < 0 )){
             pos_y = collidingTiles.yAbove + 64;//tile size
-            velocity_y = -velocity_y*0.5;
+            velocity_y = -velocity_y*0.2;
         }
         
         //Handling falling off

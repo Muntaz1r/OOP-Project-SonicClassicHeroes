@@ -5,6 +5,7 @@
 Level1_Labyrinth::Level1_Labyrinth() {
     completed = false;
     failed = false;
+    exitX = 400; 
 
     grid = new char*[height];
     for (int i = 0; i < height; i++) {
@@ -17,6 +18,7 @@ Level1_Labyrinth::Level1_Labyrinth() {
         }
     }
 
+   
     initializeGrid();
 }
 
@@ -109,6 +111,14 @@ void Level1_Labyrinth::loadAssets() {
         cout << "Failed to load ring.png" << endl;
     }
 
+    if(!portalTex.loadFromFile("Data/portal.png")){
+        cout<<"Failed to load portal.png";
+    }
+
+    portalSprite.setTexture(portalTex);
+    portalSprite.setScale(0.75f,0.75f);
+
+
     ringSprite.setTexture(ringTex);
     ringSprite.setScale(4.0f, 4.0f);
 
@@ -161,7 +171,7 @@ void Level1_Labyrinth::update(float deltaTime) {
     }
     if (Keyboard::isKeyPressed(Keyboard::Z) && !player->getBoosting()) {
 
-        if (switchCooldownClock.getElapsedTime().asSeconds() >= 5.0f){
+        if (switchCooldownClock.getElapsedTime().asSeconds() >= 1.0f){
             player->setBoosting(false);
             switchCooldownClock.restart();
             switch (currentPlayer) {
@@ -189,6 +199,8 @@ void Level1_Labyrinth::update(float deltaTime) {
 
             temp->setFollowers(nullptr, nullptr); // Old leaders followers null
         }
+
+        
     }
 
     player->setCollidingTiles(cellSize, height, width, grid);
@@ -207,6 +219,7 @@ void Level1_Labyrinth::update(float deltaTime) {
     crabMeat->update(deltaTime, score);
     crabMeat->checkCollisionWithPlayer(*player);
     crabMeat->checkProjectilesHitPlayer(*player);
+
 }
 
 void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
@@ -245,11 +258,46 @@ void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX) {
         }
     }
 
+    portalSprite.setPosition(-10 - cameraOffsetX, 100); // entry portal
+    window.draw(portalSprite);
+
+    portalSprite.setPosition(width*cellSize - exitX - cameraOffsetX, 450); // exit portal
+    window.draw(portalSprite);
+
     player->render(window, cameraOffsetX);
     batBrain->render(window, cameraOffsetX);
     beeBot->render(window, cameraOffsetX);
     motoBug->render(window, cameraOffsetX);
     crabMeat->render(window, cameraOffsetX);
+}
+
+bool Level1_Labyrinth::exitCheck(float cameraOffSetX){
+    //Exit portal check
+
+    float portalX = width * cellSize - exitX - cameraOffSetX;
+    static const float portalY = 450;
+
+    float playerLeft   = player->getPosX() - cameraOffSetX;
+    float playerRight  = playerLeft + player->getWidth()/2;
+    float playerTop    = player->getPosY();
+    float playerBottom = playerTop + player->getHeight();
+
+    float portalLeft   = width * cellSize - exitX - cameraOffSetX + 25;
+    float portalRight  = portalLeft + portalTex.getSize().x - 100;
+    float portalTop    = 450 + 50;
+    float portalBottom = portalTop + portalTex.getSize().y - 50;
+
+    bool xOverlap = playerRight >= portalLeft  && playerLeft <= portalRight ;
+    bool yOverlap = playerBottom >= portalTop  && playerTop <= portalBottom ;
+
+    
+
+    if (xOverlap && yOverlap) {
+        cout << "Exit level" << endl;
+        return true;
+    }
+
+    return false;
 }
 
 bool Level1_Labyrinth::isLevelComplete() const {

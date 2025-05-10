@@ -45,7 +45,7 @@ class Level1_Labyrinth : public Levels {
     
         Texture bgTex;
         Sprite bgSprite;
-    
+
         SonicFactory sonicMaker;
         TailsFactory tailsMaker;
         KnucklesFactory knucklesMaker;
@@ -81,4 +81,5 @@ class Level1_Labyrinth : public Levels {
         int getPlayerWidth() const override;
         int getLevelWidthinTiles() const override;
         int getCellSize() const override;
+        bool exitCheck(float);
     };

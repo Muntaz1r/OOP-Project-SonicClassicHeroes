@@ -130,6 +130,13 @@ void Level2_IceCap::loadAssets() {
         cout << "Failed to load ring.png" << endl;
     }
 
+    if(!portalTex.loadFromFile("Data/portal.png")){
+        cout<<"Failed to load portal.png";
+    }
+
+    portalSprite.setTexture(portalTex);
+    portalSprite.setScale(0.75f,0.75f);
+
     ringSprite.setTexture(ringTex);
     ringSprite.setScale(4.0f, 4.0f);
 

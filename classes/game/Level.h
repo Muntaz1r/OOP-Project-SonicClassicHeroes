@@ -15,6 +15,10 @@ protected:
     sf::Clock switchCooldownClock;
     char currentPlayer;
     Player* player;
+    Texture portalTex;
+    Sprite portalSprite;
+    float exitX;
+
 public:
     Levels(){
         score = 0;
@@ -34,6 +38,6 @@ public:
     virtual int getScore() const;
     virtual sf::Clock getGameTime() const;
     virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
-    
+    virtual bool exitCheck(float cameraOffset);
     virtual ~Levels() {}
 };
