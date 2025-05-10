@@ -101,7 +101,7 @@ public:
             acc_y,     // acc_y
             friction,    // friction
             gravity,   //gravity
-            7, // specail abillity time
+            7, // power up abillity time
             false //leader
         );
     }

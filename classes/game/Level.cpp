@@ -1,7 +1,7 @@
 #include "Level.h"
 #include <iostream>
 #include <fstream>
-
+#include <ctime> 
 
 bool Level::loadFromFile(const string& filePath) {
     ifstream myFile(filePath);
@@ -20,7 +20,12 @@ bool Level::loadFromFile(const string& filePath) {
         }
 
         for (int j = 0; j < width && j < line.length(); j++) {
-            grid[i][j] = line[j];
+            // if(line[j] == 'R')
+            //     grid[i][j] = 'u'; // for testing
+            // else
+                grid[i][j] = line[j];
+
+
         }
     }
 
@@ -125,6 +130,7 @@ void Level::update(float deltaTime) {
 }
 
 void Level::render(RenderWindow& window, float cameraOffsetX) {
+    srand(static_cast<unsigned int>(time(nullptr)));
     window.draw(bgSprite);
 
     for (int i = 0; i < height; i++) {
@@ -156,7 +162,29 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
             else if (cell == 'R') {
                 ringSprite.setPosition(drawX, drawY);
                 window.draw(ringSprite);
+            }else if (cell == 's') {
+                if(specialItemCount <= 2){
+                    specialItemCount++;
+                    int r = rand() % 100;
+                
+                    // 'l' has 1 in 500 chance -> values 0–2
+                    // 'u' has 1 in 1500 chance -> value 3
+                
+                    if (r < 3)        // 0,1,2 (3 values out of 1500)
+                        grid[i][j] = 'l'; // 1 in 500
+                    else if (r == 3)  // 1 value out of 1500
+                        grid[i][j] = 'u'; // 1 in 1500
+                }
             }
+            else if (cell == 'l') {
+                extraLifeSprite.setPosition(drawX, drawY);
+                window.draw(extraLifeSprite);
+            }
+            else if (cell == 'u') {
+                powerUpSprite.setPosition(drawX, drawY);
+                window.draw(powerUpSprite);    
+            }
+            
         }
     }
 
@@ -363,6 +391,33 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
     window.draw(scoreText);
     window.draw(timeDisplay);
 
+}
+
+bool Level::exitCheck(float cameraOffSetX){
+    //Exit portal check
+
+    float portalX = width * cellSize - 40 - cameraOffSetX;
+    static const float portalY = 450;
+
+    float playerLeft   = player->getPosX() - cameraOffSetX;
+    float playerRight  = playerLeft + player->getWidth()/2;
+    float playerTop    = player->getPosY();
+    float playerBottom = playerTop + player->getHeight();
+    float portalLeft   = width * cellSize - 40 - cameraOffSetX + 25;
+    float portalRight  = portalLeft + portalTex.getSize().x - 100;
+    float portalTop    = 450 + 50;
+    float portalBottom = portalTop + portalTex.getSize().y - 50;
+
+    bool xOverlap = playerRight >= portalLeft  && playerLeft <= portalRight ;
+    bool yOverlap = playerBottom >= portalTop  && playerTop <= portalBottom ;
+
+
+    if (xOverlap && yOverlap) {
+        cout << "Exit level" << endl;
+        return true;
+    }
+
+    return false;
 }
 
 int Level::getScore() const {

@@ -10,17 +10,17 @@ protected:
     float originalAcc;
     float originalMaxSpeed;
     sf::Clock boostClock;
-    int specialAbillityTime;
+    int specialAbilityTime;
 
 public:
     Sonic(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
           float vx = 0, float vy = 0, float terminal = 0,
           float ms = 0, bool onGround = true, bool invincible = false, bool moving_right = true,
           float acc_x = 0, float acc_y = 0,float friction = 0, float gravity = 0,
-          int specialAbillityTime = 7, bool leader = false)
+          int specialAbilityTime = 7, bool leader = false)
         : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
             moving_right, acc_x, acc_y, friction, gravity, leader) ,
-            specialAbillityTime(specialAbillityTime)
+            specialAbilityTime(specialAbilityTime)
     {
         originalAcc = acc_x;
         originalMaxSpeed = ms;
@@ -92,6 +92,9 @@ public:
     virtual void specialAbility() override {
         if (!boosting) {
             cout << "Sonic boost activated!\n";
+            if(numPowerUps > 0){
+                this->powerUp();
+            }
             acc_x = boostedAcc;
             maxSpeed = boostedMaxSpeed;
             if(movingRight){
@@ -108,13 +111,20 @@ public:
         Player::update(deltaTime, score, volume);
 
         // Stop boosting if boost time is done
-        if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {
+        if (boosting && boostClock.getElapsedTime().asSeconds() >= specialAbilityTime) {
             cout << "Sonic boost expired.\n";
             acc_x = originalAcc;
             maxSpeed = originalMaxSpeed;
             boosting = false;
+            if(specialAbilityTime > 7){ //If powerup just used up
+                specialAbilityTime = 7;
+            }
         }
-
+    }
+    void powerUp() override{
+        cout<<"Sonic powered up\n";
+        specialAbilityTime +=4;
+        numPowerUps--;
     }
     virtual ~Sonic() {}
 };

@@ -6,18 +6,17 @@ using namespace std;
 
 class Knuckles : public Player {
 protected:
-    sf::Clock boostClock;
-    bool boosting = false;
-    int specialAbillityTime;
+    sf::Clock powerUpClock;
+    int powerUpTime;
 public:
     Knuckles(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0,
         float ms = 0, bool onGround = true, bool invincible = false, bool moving_right = true,
         float acc_x = 0, float acc_y = 0,float friction = 0, float gravity = 0,
-        int specialAbillityTime = 7/*think this may be removed*/
+        int powerUpTime = 15
         ,bool leader = false)
     : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
-        moving_right, acc_x, acc_y, friction, gravity, leader), specialAbillityTime(specialAbillityTime)
+        moving_right, acc_x, acc_y, friction, gravity, leader), powerUpTime(powerUpTime)
     {
         if (!idleRightTexture.loadFromFile("Data/knuckles/0right_still.png")) {
             cout << "Failed to load knuckles/0right_still.png\n";
@@ -81,7 +80,6 @@ public:
     
     virtual void specialAbility() override {
         cout<<"Break\n";
-        boosting = true;
         if(collidesRight('b')) {
             // Collect right coins if they are 'R'
             if (*collidingTiles.rightTop == 'b') {
@@ -120,11 +118,27 @@ public:
                 *collidingTiles.belowRight = 's';  // Set to 's' if it's a coin
             }
         }
+        if(numPowerUps > 0){
+            this->powerUp();
+        }
     }
 
     virtual void update(float deltaTime, int &score, int volume) override {
         Player::update(deltaTime, score, volume);
-        if(leader) boosting = false;
+        if (boosting && powerUpClock.getElapsedTime().asSeconds() >= powerUpTime) {
+            cout << "Knuckles power up expired.\n";
+            boosting = false;
+            invincible = false;
+        }
+    }
+
+    void powerUp() override {
+        if (!boosting) {
+            cout<<"knuckles power up\n";
+            boosting = true;
+            powerUpClock.restart();
+            invincible = true;
+        }
     }
     virtual ~Knuckles() {}
 };

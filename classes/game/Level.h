@@ -51,6 +51,17 @@ protected:
     Sprite crystalSprite;
     Animation ringAnimation;
 
+    Texture portalTex;
+    Sprite portalSprite;
+
+    Texture powerUpTex;
+    Sprite powerUpSprite;
+
+    Texture extraLifeTex;
+    Sprite extraLifeSprite;
+
+    int specialItemCount;
+
     Texture bgTex;
     Sprite bgSprite;
 
@@ -84,6 +95,7 @@ public:
         score = 0;
         completed = false;
         failed = false;
+        specialItemCount = 0;
 
         grid = new char*[height];
         for (int i = 0; i < height; i++) {
@@ -135,6 +147,28 @@ public:
     
         ringSprite.setTexture(ringTex);
         ringSprite.setScale(4.0f, 4.0f);
+
+        if(!portalTex.loadFromFile("Data/portal.png")){
+            cout<<"Failed to load portal.png";
+        }
+    
+        portalSprite.setTexture(portalTex);
+        portalSprite.setScale(0.75f,0.75f);
+
+        if(!powerUpTex.loadFromFile("Data/powerUp.png")){
+            cout<<"Failed to load powerUp.png";
+        }
+        
+        powerUpSprite.setTexture(powerUpTex);
+        powerUpSprite.setScale(0.13f, 0.13f);        
+
+        if(!extraLifeTex.loadFromFile("Data/heartIcon.png")){
+            cout<<"Failed to load powerUp.png";
+        }
+
+        
+        extraLifeSprite.setTexture(extraLifeTex);
+        extraLifeSprite.setScale(0.5f, 0.5f);
     
         ringAnimation.initialize(&ringSprite, &ringTex, 16, 16, 4, 0.2f);
 
@@ -162,6 +196,7 @@ public:
     virtual int getScore() const;
     virtual sf::Clock getGameTime() const;
     virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
+    virtual bool exitCheck(float cameraOffSetX);
     
     virtual ~Level() {
         

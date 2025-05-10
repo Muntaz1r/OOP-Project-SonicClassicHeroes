@@ -8,7 +8,7 @@ using namespace std;
 class Tails : public Player {
 protected:
     sf::Clock boostClock;
-    int specialAbillityTime;
+    int specialAbilityTime;
     float prevGravity;
 
 public:
@@ -16,9 +16,9 @@ public:
         float vx = 0, float vy = 0, float terminal = 0,
         float ms = 0, bool onGround = true, bool invincible = false, bool moving_right = true,
         float acc_x = 0, float acc_y = 0,float friction = 0, float gravity = 0,
-        int specialAbillityTime = 7, bool leader = false)
+        int specialAbilityTime = 7, bool leader = false)
     : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
-        moving_right, acc_x, acc_y, friction, gravity, leader) , specialAbillityTime(specialAbillityTime)
+        moving_right, acc_x, acc_y, friction, gravity, leader) , specialAbilityTime(specialAbilityTime)
     {
         if (!idleRightTexture.loadFromFile("Data/tails/0right_still.png")) {
             cout << "Failed to load tails/0right_still.png\n";
@@ -72,6 +72,9 @@ public:
         if(leader){
             if (!boosting) {
                 cout << "Tails boost activated!\n";
+                if(numPowerUps > 0){
+                    this->powerUp();
+                }
                 pos_y = pos_y - 128;
                 prevGravity = gravity;
                 velocity_y = 0;
@@ -104,6 +107,9 @@ public:
             for (int i=0; i<2; ++i) followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
             boosting = false;
             onGround = false;
+            if(specialAbilityTime > 7){//If power up just used up
+                specialAbilityTime = 7;
+            }
         }
     }
 
@@ -166,6 +172,11 @@ public:
     void moveLeft()override{
         if(boosting) onGround = true;
         Player::moveLeft();
+    }
+    void powerUp() override{
+        cout<<"tails power up\n";
+        specialAbilityTime +=4;
+        numPowerUps--;
     }
 
     virtual ~Tails() {}

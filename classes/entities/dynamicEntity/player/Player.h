@@ -44,6 +44,7 @@ protected:
     bool fallingIntoVoid;
     bool hanging;
     bool hangingRight;
+    int numPowerUps;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -77,6 +78,7 @@ public:
             invalid = '\0';
             fallingIntoVoid = false;
             hanging = false;
+            numPowerUps = 0;
 
             playerSounds = new SoundManager();
         
@@ -562,6 +564,74 @@ public:
                 *collidingTiles.leftBottom = 's';  // Set to 's' if it's a coin
             }
         }
+
+        //Extra Life collection
+        if (collidesAbove('l') || collidesBelow('l') 
+        || collidesRight('l') || collidesLeft('l') && leader){
+            ++hp;
+            //Left
+            if (*collidingTiles.leftTop == 'l') {
+                *collidingTiles.leftTop = 's';  // Set to 's' if it's collected
+            }
+            if (*collidingTiles.leftBottom == 'l') {
+                *collidingTiles.leftBottom = 's';  // Set to 's' if it's collected
+            }
+            //Right
+            if (*collidingTiles.rightTop == 'l') {
+                *collidingTiles.rightTop = 's';  // Set to 's' if it's collected
+            }
+            if (*collidingTiles.rightBottom == 'l') {
+                *collidingTiles.rightBottom = 's';  // Set to 's' if it's collected
+            }
+            //Above
+            if (*collidingTiles.aboveLeft == 'l') {
+                *collidingTiles.aboveLeft = 's';  // Set only aboveLeft to 's' if it's 'collected
+            }
+            if (*collidingTiles.aboveRight == 'l') {
+                *collidingTiles.aboveRight = 's';  // Set only aboveRight to 's' if it's collected
+            }
+            //Below
+            if (*collidingTiles.belowLeft == 'l') {
+                *collidingTiles.belowLeft = 's';  // Set only aboveLeft to 's' if it's 'collected
+            }
+            if (*collidingTiles.belowRight == 'l') {
+                *collidingTiles.belowRight = 's';  // Set only aboveRight to 's' if it's collected
+            }
+        }
+        
+        //Power up collection
+        if (collidesAbove('u') || collidesBelow('u') 
+        || collidesRight('u') || collidesLeft('u') && leader){
+            cout<<"Power up\n";
+            //Left
+            if (*collidingTiles.leftTop == 'u') {
+                *collidingTiles.leftTop = 's';  // Set to 's' if it's collected
+            }
+            if (*collidingTiles.leftBottom == 'u') {
+                *collidingTiles.leftBottom = 's';  // Set to 's' if it's collected
+            }
+            //Right
+            if (*collidingTiles.rightTop == 'u') {
+                *collidingTiles.rightTop = 's';  // Set to 's' if it's collected
+            }
+            if (*collidingTiles.rightBottom == 'u') {
+                *collidingTiles.rightBottom = 's';  // Set to 's' if it's collected
+            }
+            //Above
+            if (*collidingTiles.aboveLeft == 'u') {
+                *collidingTiles.aboveLeft = 's';  // Set only aboveLeft to 's' if it's 'collected
+            }
+            if (*collidingTiles.aboveRight == 'u') {
+                *collidingTiles.aboveRight = 's';  // Set only aboveRight to 's' if it's collected
+            }
+            //Below
+            if (*collidingTiles.belowLeft == 'u') {
+                *collidingTiles.belowLeft = 's';  // Set only aboveLeft to 's' if it's 'collected
+            }
+            if (*collidingTiles.belowRight == 'u') {
+                *collidingTiles.belowRight = 's';  // Set only aboveRight to 's' if it's collected
+            }
+        }
         
     
         
@@ -586,7 +656,7 @@ public:
         int cycle = static_cast<int>(time / flickerRate);
         bool shouldRender = true;
 
-        if (invincible) {
+        if (invincible && !boosting) {
             shouldRender = (cycle % 2 == 0);
         }
     
@@ -598,6 +668,9 @@ public:
             }
             Entity::render(window, cameraOffsetX);
         }
+    }
+    virtual void powerUp(){
+
     }
     
     // Will be defined in children classes
