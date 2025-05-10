@@ -161,7 +161,6 @@ void Game::runGame() {
                     cameraOffsetX = playerCenterX - halfScreen; // follow and center the player
                 }
                 level->render(window, cameraOffsetX);
-                level->exitCheck(cameraOffsetX);
                 level->drawUI(window, cameraOffsetX);
             }
         }
