@@ -57,10 +57,20 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
     bgSprite.setScale((float)screen_x / bgWidth, (float)screen_y / bgHeight);
     bgSprite.setColor(Color(255, 255, 255, 150)); // lower obapacity
 
-    
     music.setVolume(volume);
     music.setLoop(true);
-    //music.play();
+    
+    menuSounds = new SoundManager();
+    // Index 0: Navigation
+    // Index 1: Selection
+    menuSounds->loadSound(0, "Data/sfx/menu_nav.wav");
+    menuSounds->loadSound(1, "Data/sfx/menu_select.wav");
+
+    if (isMuted) {
+        menuSounds->setVolume(0);
+    } else {
+        menuSounds->setVolume(volume);
+    }
 }
 
 void Menu::handleInput(Event& event) {
@@ -68,13 +78,16 @@ void Menu::handleInput(Event& event) {
         if (event.type == Event::KeyPressed) {
             if (event.key.code == Keyboard::Up) {
                 mainSelected = (mainSelected - 1 + menuItemCount) % menuItemCount; // implement wrap around feature
+                menuSounds->play(0);
             }
             
             if (event.key.code == Keyboard::Down) {
                 mainSelected = (mainSelected + 1) % menuItemCount;
+                menuSounds->play(0);
             }
 
             if (event.key.code == Keyboard::Enter) {
+                menuSounds->play(1);
                 if (mainSelected == 0) {
                     currentState = STATE_NAME_INPUT;
                     playerName.clear();
@@ -101,7 +114,9 @@ void Menu::handleInput(Event& event) {
     }
     else if (currentState == STATE_OPTIONS) {
         if (event.type == Event::KeyPressed) {
+            menuSounds->setVolume(isMuted ? 0 : volume);
             if (event.key.code == Keyboard::Up) {
+                menuSounds->play(0);
                 if (isMuted) {
                     volume = prevVolume;
                     isMuted = false;
@@ -112,6 +127,7 @@ void Menu::handleInput(Event& event) {
             }
             
             if (event.key.code == Keyboard::Down) {
+                menuSounds->play(0);
                 if (isMuted) {
                     volume = prevVolume;
                     isMuted = false;
@@ -122,6 +138,7 @@ void Menu::handleInput(Event& event) {
             }
 
             if (event.key.code == Keyboard::M) {
+                menuSounds->play(0);
                 if (!isMuted) { // Mute Volume
                     prevVolume = volume;
                     music.setVolume(0);
@@ -134,6 +151,7 @@ void Menu::handleInput(Event& event) {
             }
 
             if (event.key.code == Keyboard::Escape) {
+                menuSounds->play(1);
                 currentState = STATE_MAIN;
             }
         }
@@ -149,6 +167,7 @@ void Menu::handleInput(Event& event) {
         }
 
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
+            menuSounds->play(1);
             if (!playerName.empty()) {
                 cout << "Starting game as: " << playerName << endl;
                 gameStarted = true;
@@ -156,11 +175,13 @@ void Menu::handleInput(Event& event) {
         }
 
         if (event.key.code == Keyboard::Escape) {
+            menuSounds->play(1);
             currentState = STATE_MAIN;
         }
     }
     else if (currentState == STATE_LEADERBOARD) {
         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+            menuSounds->play(1);
             currentState = STATE_MAIN;
             leaderboardRequested = false;
             cout << "Menu: Return to main from leaderboard" << endl;
@@ -170,18 +191,22 @@ void Menu::handleInput(Event& event) {
         cout << "Menu: Level menu selected" << endl;
         if (event.type == Event::KeyPressed) {
             if (event.key.code == Keyboard::Up) {
+                menuSounds->play(0);
                 selectedLevel = (selectedLevel - 1 + 4) % 4;
             }
             
             if (event.key.code == Keyboard::Down) {
+                menuSounds->play(0);
                 selectedLevel = (selectedLevel + 1) % 4;
             }
 
             if (event.key.code == Keyboard::Escape) {
+                menuSounds->play(1);
                 currentState = STATE_MAIN;
             }
 
             if (event.key.code == Keyboard::Enter) {
+                menuSounds->play(1);
                 cout << "Level " << selectedLevel + 1 << " selected" << endl; 
                 currentState = STATE_NAME_INPUT;
                 playerName.clear();
@@ -254,4 +279,16 @@ bool Menu::hasGameStarted() const {
 
 void Menu::resetGameStarted() {
     gameStarted = false;
+}
+
+int Menu::getSelectedLevel() const { 
+    return selectedLevel; 
+}
+
+int Menu::getVolume() const {
+    return volume;
+}
+
+bool Menu::isMutedStatus() const {
+    return isMuted;
 }

@@ -3,6 +3,8 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 
+#include "SoundManager.h"
+
 using namespace sf;
 using namespace std;
 
@@ -55,6 +57,8 @@ private:
     int bgWidth;
     int bgHeight;
 
+    SoundManager* menuSounds;
+
 public:
     Menu(RenderWindow& window, Music & music, int screen_x, int screen_y);
 
@@ -67,5 +71,7 @@ public:
     bool hasGameStarted() const;
     void resetGameStarted();
     string getPlayerName() const;
-    int getSelectedLevel() const { return selectedLevel; }
+    int getSelectedLevel() const;
+    int getVolume() const;
+    bool isMutedStatus() const;
 };

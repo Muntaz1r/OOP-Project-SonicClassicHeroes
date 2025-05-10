@@ -26,7 +26,7 @@ private:
 
     Menu* menu;
     Scoreboard* scoreboard;
-    Levels* level;
+    Level* level;
 
     int screen_x;
     int screen_y;

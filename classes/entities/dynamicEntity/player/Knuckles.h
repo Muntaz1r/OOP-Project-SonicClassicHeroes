@@ -113,8 +113,8 @@ public:
         }
     }
 
-    virtual void update(float deltaTime, int &score) override {
-        Player::update(deltaTime, score);
+    virtual void update(float deltaTime, int &score, int volume) override {
+        Player::update(deltaTime, score, volume);
         if(leader) boosting = false;
     }
     virtual ~Knuckles() {}

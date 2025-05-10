@@ -12,8 +12,6 @@ protected:
     sf::Clock boostClock;
     int specialAbillityTime;
 
-    
-
 public:
     Sonic(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
           float vx = 0, float vy = 0, float terminal = 0,
@@ -106,8 +104,8 @@ public:
         }
     }
     
-    virtual void update(float deltaTime, int &score) override {
-        Player::update(deltaTime, score);
+    virtual void update(float deltaTime, int &score, int volume) override {
+        Player::update(deltaTime, score, volume);
 
         // Stop boosting if boost time is done
         if (boosting && boostClock.getElapsedTime().asSeconds() >= 7) {

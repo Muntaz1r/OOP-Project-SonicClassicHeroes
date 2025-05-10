@@ -61,8 +61,8 @@ public:
         }
     }
 
-    void update(float deltaTime, float playerX, int& score) {
-        Enemy::update(deltaTime, score);
+    void update(float deltaTime, float playerX, int& score, int volume) {
+        Enemy::update(deltaTime, score, volume);
 
         if (!isAlive()) {
             return;

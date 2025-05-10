@@ -83,14 +83,13 @@ public:
             }
         }
     }
-    virtual void update(float deltaTime, int &score) override {
+    virtual void update(float deltaTime, int &score, int volume) override {
         if(boosting){
             onGround = true;
             for (int i=0; i<2; ++i) followers[i]->setOnGround(true); // Align followers
         }
-        Player::update(deltaTime, score);
+        Player::update(deltaTime, score, volume);
 
-       
         if(boosting){
             for (int i=0; i<2; ++i) followers[i]->setPosX(pos_x); // Align followers y
             
