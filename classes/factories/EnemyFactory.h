@@ -41,7 +41,6 @@ public:
     }
 };
 
-
 class BeeBotFactory {
 public:
     BeeBot* createBeeBot(float pos_x, float pos_y, float maxX, float minX) const {

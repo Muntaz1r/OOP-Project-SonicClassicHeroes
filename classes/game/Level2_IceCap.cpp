@@ -3,6 +3,7 @@
 #include <fstream>
 
 Level2_IceCap::Level2_IceCap() : Level(250, 2, 1, 1, 4) {
+    levelID = 2;
     // Load Textures
     if (!bgTex.loadFromFile("Data/icecap/bg1.png")) {
         cout << "Failed to load to bg1.png" << endl;

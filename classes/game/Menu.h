@@ -33,6 +33,7 @@ private:
     bool isMuted;
     bool leaderboardRequested; // used to transfer control over to leaderboard in Game class
     bool gameStarted;
+    bool wantsToContinue;
 
     const int menuItemCount = 6;
     string mainOptions[6] = {"New Game", "Options", "Continue", "LeaderBoard", "Select Level", "Exit"};
@@ -61,7 +62,7 @@ private:
 
 public:
     Menu(RenderWindow& window, Music & music, int screen_x, int screen_y);
-
+    ~Menu();
     void handleInput(Event& event);
     void update();
     void draw();
@@ -74,4 +75,6 @@ public:
     int getSelectedLevel() const;
     int getVolume() const;
     bool isMutedStatus() const;
+    bool getWantsToContinue() const;
+    void resetWantsToContinue();
 };

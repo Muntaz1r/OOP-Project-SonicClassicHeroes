@@ -10,6 +10,7 @@ using namespace std;
 #include "PlayerFactory.h"
 #include "EnemyFactory.h"
 #include "SoundManager.h"
+#include "SaveState.h"
 
 class Level {
 protected:
@@ -21,6 +22,8 @@ protected:
     const int numBeeBot;
     const int numMotoBug;
     const int numCrabMeat;
+
+    int levelID;
 
     int score;
     int levelVolume;
@@ -86,101 +89,13 @@ protected:
     Clock gameTime;
     Clock switchCooldownClock;
     
+    Time gameStartOffset;
+
     Music levelMusic;
 
     SoundManager* levelSounds;
 public:
-    Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numCrabMeat)
-    : width(width), numBatBrain(numBatBrain), numBeeBot(numBeeBot), numMotoBug(numMotoBug), numCrabMeat(numCrabMeat) {
-        score = 0;
-        completed = false;
-        failed = false;
-        specialItemCount = 0;
-
-        grid = new char*[height];
-        for (int i = 0; i < height; i++) {
-            grid[i] = new char[width];
-        }
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                grid[i][j] = 's';
-            }
-        }
-        
-        if (numBatBrain > 0) { batBrains = new BatBrain*[numBatBrain]; }
-        if (numBeeBot > 0) { beeBots = new BeeBot*[numBeeBot]; }
-        if (numMotoBug > 0) { motoBugs = new MotoBug*[numMotoBug]; }
-        if (numCrabMeat > 0) { crabMeats = new CrabMeat*[numCrabMeat]; }
-        
-        for (int i = 0; i < numBatBrain; i++) {
-            batBrains[i] = nullptr;
-        }
-
-        for (int i = 0; i < numBeeBot; i++) {
-            beeBots[i] = nullptr;
-        }
-
-        for (int i = 0; i < numMotoBug; i++) {
-            motoBugs[i] = nullptr;
-        }
-
-        for (int i = 0; i < numCrabMeat; i++) {
-            crabMeats[i] = nullptr;
-        }
-    
-        if (!spikeTex.loadFromFile("Data/spike.png")) {
-            cout << "Failed to load spike.png" << endl;
-        }
-    
-        spikeSprite.setTexture(spikeTex);
-    
-        if (!crystalTex.loadFromFile("Data/crystal.png")) {
-            cout << "Failed to load crystal.png" << endl;
-        }
-    
-        crystalSprite.setTexture(crystalTex);
-    
-        if (!ringTex.loadFromFile("Data/ring.png")) {
-            cout << "Failed to load ring.png" << endl;
-        }
-    
-        ringSprite.setTexture(ringTex);
-        ringSprite.setScale(4.0f, 4.0f);
-
-        if(!portalTex.loadFromFile("Data/portal.png")){
-            cout<<"Failed to load portal.png";
-        }
-    
-        portalSprite.setTexture(portalTex);
-        portalSprite.setScale(0.75f,0.75f);
-
-        if(!powerUpTex.loadFromFile("Data/powerUp.png")){
-            cout<<"Failed to load powerUp.png";
-        }
-        
-        powerUpSprite.setTexture(powerUpTex);
-        powerUpSprite.setScale(0.13f, 0.13f);        
-
-        if(!extraLifeTex.loadFromFile("Data/heartIcon.png")){
-            cout<<"Failed to load powerUp.png";
-        }
-
-        
-        extraLifeSprite.setTexture(extraLifeTex);
-        extraLifeSprite.setScale(0.5f, 0.5f);
-    
-        ringAnimation.initialize(&ringSprite, &ringTex, 16, 16, 4, 0.2f);
-
-        levelSounds = new SoundManager();
-        
-        // Index 0: Jump
-        // Index 1: Switch
-        levelSounds->loadSound(0, "Data/sfx/jump.wav");
-        levelSounds->loadSound(1, "Data/sfx/switch.wav");
-
-        gameTime.restart();
-    }
+    Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numCrabMeat);
     virtual void loadAssets(int volume) = 0; // load level assets
     bool loadFromFile(const string& filePath);
     virtual void update(float deltaTime); // update logic per frame
@@ -194,11 +109,18 @@ public:
     virtual int getLevelWidthinTiles() const;
     virtual int getCellSize() const;
     virtual int getScore() const;
-    virtual sf::Clock getGameTime() const;
+    virtual float getGameTime() const;
+    virtual char getCurrentPlayer() const;
     virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
     virtual bool exitCheck(float cameraOffSetX);
-    
-    virtual ~Level() {
-        
-    }
+    virtual void initializeFromSave(
+        float savedTimer, int savedScore, float playerX, float playerY,
+        float velX, float velY, int hp, char currentChar, char** grid,
+        BatBrain** batBrains, int numBatBrains,
+        BeeBot** beeBots, int numBeeBots,
+        MotoBug** motoBugs, int numMotoBugs,
+        CrabMeat** crabMeats, int numCrabMeats
+    );
+    virtual void saveLevelState() const;
+    virtual ~Level();
 };

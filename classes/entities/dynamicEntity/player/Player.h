@@ -67,26 +67,30 @@ protected:
 public:
     CollidingTiles collidingTiles;
     Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
-        float vx = 0, float vy = 0, float terminal = 0, 
-        float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
-        float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0, 
-        bool leader = false)
-        : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
-        maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
-        , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {
-            boosting = false;
-            invalid = '\0';
-            fallingIntoVoid = false;
-            hanging = false;
-            numPowerUps = 0;
+    float vx = 0, float vy = 0, float terminal = 0, 
+    float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
+    float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0, 
+    bool leader = false)
+    : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
+    maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
+    , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {
+        boosting = false;
+        invalid = '\0';
+        fallingIntoVoid = false;
+        hanging = false;
+        numPowerUps = 0;
 
-            playerSounds = new SoundManager();
-        
-            // Index 0: Ring
-            // Index 1: Spike
-            playerSounds->loadSound(0, "Data/sfx/ring.wav");
-            playerSounds->loadSound(1, "Data/sfx/spike.wav");
-        }
+        playerSounds = new SoundManager();
+    
+        // Index 0: Ring
+        // Index 1: Spike
+        playerSounds->loadSound(0, "Data/sfx/ring.wav");
+        playerSounds->loadSound(1, "Data/sfx/spike.wav");
+    }
+
+    ~Player() {
+        delete playerSounds;
+    }
 
     // Getters
     float getMaxSpeed() const { return maxSpeed; }
@@ -125,10 +129,6 @@ public:
     void setHanging(bool value) { hanging = value; }
     void setHangingRight(bool value) { hangingRight = value; }
 
-    
-    
-    
-    
     char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow = nullptr, int* outCol = nullptr) {
         int col = static_cast<int>(x / tileSize);
         int row = static_cast<int>(y / tileSize);
@@ -161,9 +161,6 @@ public:
     return &grid[row][col];
     }
 
-    
-
-    
     void setCollidingTiles(int tileSize, int levelHeight, int levelWidth, char** grid) {
         
         float left   = pos_x;
@@ -201,7 +198,6 @@ public:
             for (int i = 0; i < 2; ++i)
                 followers[i]->setCollidingTiles(tileSize, levelHeight, levelWidth, grid);
         }
-        
     }
     
     // Movement
@@ -675,7 +671,5 @@ public:
     
     // Will be defined in children classes
     virtual void specialAbility() = 0;
-
-    virtual ~Player(){};
 };
 

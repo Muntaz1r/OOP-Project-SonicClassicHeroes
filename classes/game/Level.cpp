@@ -3,6 +3,131 @@
 #include <fstream>
 #include <ctime> 
 
+Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numCrabMeat)
+: width(width), numBatBrain(numBatBrain), numBeeBot(numBeeBot), numMotoBug(numMotoBug), numCrabMeat(numCrabMeat) {
+    score = 0;
+    completed = false;
+    failed = false;
+    specialItemCount = 0;
+
+    grid = new char*[height];
+    for (int i = 0; i < height; i++) {
+        grid[i] = new char[width];
+    }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            grid[i][j] = 's';
+        }
+    }
+    
+    if (numBatBrain > 0) { batBrains = new BatBrain*[numBatBrain]; }
+    if (numBeeBot > 0) { beeBots = new BeeBot*[numBeeBot]; }
+    if (numMotoBug > 0) { motoBugs = new MotoBug*[numMotoBug]; }
+    if (numCrabMeat > 0) { crabMeats = new CrabMeat*[numCrabMeat]; }
+    
+    for (int i = 0; i < numBatBrain; i++) {
+        batBrains[i] = nullptr;
+    }
+
+    for (int i = 0; i < numBeeBot; i++) {
+        beeBots[i] = nullptr;
+    }
+
+    for (int i = 0; i < numMotoBug; i++) {
+        motoBugs[i] = nullptr;
+    }
+
+    for (int i = 0; i < numCrabMeat; i++) {
+        crabMeats[i] = nullptr;
+    }
+
+    if (!spikeTex.loadFromFile("Data/spike.png")) {
+        cout << "Failed to load spike.png" << endl;
+    }
+
+    spikeSprite.setTexture(spikeTex);
+
+    if (!crystalTex.loadFromFile("Data/crystal.png")) {
+        cout << "Failed to load crystal.png" << endl;
+    }
+
+    crystalSprite.setTexture(crystalTex);
+
+    if (!ringTex.loadFromFile("Data/ring.png")) {
+        cout << "Failed to load ring.png" << endl;
+    }
+
+    ringSprite.setTexture(ringTex);
+    ringSprite.setScale(4.0f, 4.0f);
+
+    if(!portalTex.loadFromFile("Data/portal.png")){
+        cout<<"Failed to load portal.png";
+    }
+
+    portalSprite.setTexture(portalTex);
+    portalSprite.setScale(0.75f,0.75f);
+
+    if(!powerUpTex.loadFromFile("Data/powerUp.png")){
+        cout<<"Failed to load powerUp.png";
+    }
+    
+    powerUpSprite.setTexture(powerUpTex);
+    powerUpSprite.setScale(0.13f, 0.13f);        
+
+    if(!extraLifeTex.loadFromFile("Data/heartIcon.png")){
+        cout<<"Failed to load powerUp.png";
+    }
+
+    extraLifeSprite.setTexture(extraLifeTex);
+    extraLifeSprite.setScale(0.5f, 0.5f);
+
+    ringAnimation.initialize(&ringSprite, &ringTex, 16, 16, 4, 0.2f);
+
+    levelSounds = new SoundManager();
+    
+    // Index 0: Jump
+    // Index 1: Switch
+    levelSounds->loadSound(0, "Data/sfx/jump.wav");
+    levelSounds->loadSound(1, "Data/sfx/switch.wav");
+
+    gameStartOffset = seconds(0);
+    gameTime.restart();
+}
+
+Level::~Level() {
+    for (int i = 0; i < height; i++) {
+        delete grid[i];
+    }
+    delete[] grid;
+
+    delete player->getFollower1();
+    delete player->getFollower2();
+    delete player;
+
+    for (int i = 0; i < numBatBrain; i++) {
+        delete batBrains[i];
+    }
+    delete[] batBrains;
+
+    for (int i = 0; i < numBeeBot; i++) {
+        delete beeBots[i];
+    }
+    delete[] beeBots;
+
+    for (int i = 0; i < numMotoBug; i++) {
+        delete motoBugs[i];
+    }
+    delete[] motoBugs;
+
+    for (int i = 0; i < numCrabMeat; i++) {
+        delete crabMeats[i];
+    }
+    delete[] crabMeats;
+
+    delete levelSounds;
+}
+
 bool Level::loadFromFile(const string& filePath) {
     ifstream myFile(filePath);
 
@@ -24,8 +149,6 @@ bool Level::loadFromFile(const string& filePath) {
             //     grid[i][j] = 'u'; // for testing
             // else
                 grid[i][j] = line[j];
-
-
         }
     }
 
@@ -345,8 +468,6 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
         }
     }
     
-
-
     // Draw special ability ring if boosting
     if (player->getBoosting()) {
         // Assume ring is slightly larger than icon
@@ -390,7 +511,6 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
 
     window.draw(scoreText);
     window.draw(timeDisplay);
-
 }
 
 bool Level::exitCheck(float cameraOffSetX){
@@ -420,12 +540,96 @@ bool Level::exitCheck(float cameraOffSetX){
     return false;
 }
 
+void Level::initializeFromSave(
+    float savedTimer, int savedScore, float playerX, float playerY,
+    float velX, float velY, int hp, char currentChar, char** grid,
+    BatBrain** batBrains, int numBatBrain,
+    BeeBot** beeBots, int numBeeBot,
+    MotoBug** motoBugs, int numMotoBug,
+    CrabMeat** crabMeats, int numCrabMeat
+) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            this->grid[i][j] = grid[i][j];
+        }
+    }
+
+    this->score = savedScore;
+    this->gameStartOffset = seconds(savedTimer);
+    this->gameTime.restart();
+
+    currentPlayer = currentChar;
+
+    player->setPosX(playerX);
+    player->setPosY(playerY);
+    player->setVelocityX(velX);
+    player->setVelocityY(velY);
+    player->setHP(hp);
+
+    for (int i = 0; i < numBatBrain; i++) {
+        this->batBrains[i]->setPosX(batBrains[i]->getPosX());
+        this->batBrains[i]->setPosY(batBrains[i]->getPosY());
+        this->batBrains[i]->setHP(batBrains[i]->getHP());
+        this->batBrains[i]->setIsAlive(batBrains[i]->isAlive());
+        this->batBrains[i]->setIsMovingRight(batBrains[i]->isMovingRight());
+
+    }
+
+    for (int i = 0; i < numBeeBot; i++) {
+        this->beeBots[i]->setPosX(beeBots[i]->getPosX());
+        this->beeBots[i]->setPosY(beeBots[i]->getPosY());
+        this->beeBots[i]->setMinX(beeBots[i]->getMinX());
+        this->beeBots[i]->setMaxX(beeBots[i]->getMaxX());
+        this->beeBots[i]->setIsAlive(beeBots[i]->isAlive());
+        this->beeBots[i]->setIsAlive(beeBots[i]->isMovingRight());
+    }
+
+    for (int i = 0; i < numMotoBug; i++) {
+        this->motoBugs[i]->setPosX(motoBugs[i]->getPosX());
+        this->motoBugs[i]->setPosY(motoBugs[i]->getPosY());
+        this->motoBugs[i]->setMinX(motoBugs[i]->getMinX());
+        this->motoBugs[i]->setMaxX(motoBugs[i]->getMaxX());
+        this->motoBugs[i]->setIsAlive(motoBugs[i]->isAlive());
+        this->motoBugs[i]->setIsAlive(motoBugs[i]->isMovingRight());
+    }
+
+    for (int i = 0; i < numCrabMeat; i++) {
+        this->crabMeats[i]->setPosX(crabMeats[i]->getPosX());
+        this->crabMeats[i]->setPosY(crabMeats[i]->getPosY());
+        this->crabMeats[i]->setMinX(crabMeats[i]->getMinX());
+        this->crabMeats[i]->setMaxX(crabMeats[i]->getMaxX());
+        this->crabMeats[i]->setIsAlive(crabMeats[i]->isAlive());
+        this->crabMeats[i]->setIsAlive(crabMeats[i]->isMovingRight());
+    }
+}
+
 int Level::getScore() const {
     return score;
 }
-sf::Clock Level::getGameTime() const{
-    return gameTime;
+float Level::getGameTime() const{
+    return gameStartOffset.asSeconds() + gameTime.getElapsedTime().asSeconds();;
 }
-    
 
+char Level::getCurrentPlayer() const {
+    return currentPlayer;
+}
 
+void Level::saveLevelState() const {
+    cout << "LEVEL: SAVING" << endl;
+    string filePath = "Data/SaveGame.txt";
+    SaveState::saveLevel(
+        filePath,
+        this->levelID,
+        getGameTime(),
+        getScore(),
+        player->getPosX(), player->getPosY(),
+        player->getVelocityX(), player->getVelocityY(),
+        player->getHP(),
+        getCurrentPlayer(),  // 's', 't', 'k'
+        width, height, grid,
+        batBrains, numBatBrain,
+        beeBots, numBeeBot,
+        motoBugs, numMotoBug,
+        crabMeats, numCrabMeat
+    );
+}

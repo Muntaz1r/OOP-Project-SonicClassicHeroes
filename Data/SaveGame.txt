@@ -1,0 +1,30 @@
+LEVEL_ID 1
+TIMER 19.2583
+SCORE 2600
+PLAYER_POS 3410.7 750
+PLAYER_VEL 0 0
+PLAYER_HP 2
+CURRENT_CHAR s
+RING_GRID 200 14
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w s s s s s s s s s s s s s s s s s w s s s s b s s R s R s R s R s R s s s s s s s s s s s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w s s s s s s s s s s s s s s s s s w s s s s b s R s R s R s R s R s s s s s s s s s s s s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s R R R R R R s s s s s s s s w s s s s s s s s s s s s s s s s s w s s s w w R R w w w w w w w w w s s s s s s s s s s s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w s s s s s s s s s s s s s s s s s w s s s s w R R w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s b b b b b b b s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w s s s s s s s s s s s s s s s s s w w s s s w R R w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s R s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s b R R R R R b s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w q q q q q q q q q q q q s s s w s s s s R R R R R R s s s s s s s w s s s s w R R w s s s s s s s s s s s s s s s s s s s s s C s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s b R R R R R b s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w w s s s s s s s s s s s s s s s b s s s s s R R R R R s s s s s s s w s s s w w R R w s s s s s s s s s s s s s s s s s w s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s R s s s s s s s s s s s s s s s s s s s s s s s s s s b R R R R R b s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w w s s s s s s s q q s s s s s s s b s s q s s s R R R R s s s s s s s w s s s s w R R w s s s s s s s s s s s s s s s s w w s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w s s w w w w b b b b b b b s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w w s s s s s s s s s s s s s s x s w w w s s s s s s R R R s s s s s s s w w s s s w R R w s s s s s s s s s s s s s s s w w w s s s s s s s s s s s s s s 
+s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s R s s s s s s s R s s s s s s s s s s s s w w w w w w w s s w w w w w w w w w w w w w s s s s s s s s q q s s s x s w s s w s s q s s s s s R R s s s s s s s w s s s s w R R w s s q q s s s s q q s s s s w w w w s s s s s s s s s s s s s s 
+s s s s s s s w s s s s s s s s s q q q q q q q s s s s s s s s s s s s s s s s w w w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s R s s s s s s s R s s s s s s s s s s s w w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s x s w s s s s w s s s s s s s s s R s s s s s s s w s s s w w R R w s s s s s s s s s s s s s w w w w w s s s s s s s s s s s s s s 
+s s s s s s s w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w w w w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s R s s s s s s s R s s s s s s s s s s w w w s s s s s s s s s s s s s s R R s s s s s s s s s s s s q q s s w s s s s s s w s s q s s s s s s s s s s s s s s b s s s s w R R b s s s s s s s s s s s s w w w w w w s s s s s s s s s s s s s s 
+s s s s s s s w R s s s s s s s s s s s s s s s s s s s s s s s s s s s s s w w w w w s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s s x s x s s s s s x s x s s s s s s s s w w w w s s s s s s s s s s s s R R R R R R s s s s s s s s s s s s s s s s s s s s s w s s s s s s s s s s s s s s s s s b s s s s w R R b s s s s s s s s s s s w w w w w w w s s s s s s s s s s s s s s 
+w w w w w w w w w w w w w w w w w w w w w w w w w p p p p p p p p w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w p p p p p w w w p p p p p w w w p p p p p w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w 
+BAT_BRAIN_COUNT 1
+BATBRAIN 1648.42 477.732 3 1 1
+BEE_BOT_COUNT 1
+BEEBOT 4430 88.5179 5 3584 4864 1 1
+MOTO_BUG_COUNT 1
+MOTOBUG 6536 768 2 6536 8511 1 0
+CRAB_MEAT_COUNT 1
+CRABMEAT 11143 768 4 10752 11392 1 0
