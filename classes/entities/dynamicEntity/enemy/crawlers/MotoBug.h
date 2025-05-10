@@ -29,8 +29,8 @@ public:
         walkLeftAnimation.initialize(&sprite, &walkLeftTexture, 32, 32, 12, 0.1f);
     }
 
-    virtual void update(float deltaTime, float playerX, float playerY, int &score) {
-        Enemy::update(deltaTime, score);
+    virtual void update(float deltaTime, float playerX, float playerY, int &score, int volume) {
+        Enemy::update(deltaTime, score, volume);
 
         if (!alive) return;
 

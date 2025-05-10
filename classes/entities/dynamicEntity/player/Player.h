@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "DynamicEntity.h"
+#include "SoundManager.h"
 
 struct CollidingTiles {
     char *aboveLeft;
@@ -18,8 +19,7 @@ struct CollidingTiles {
     float yBelow;
     float yAbove;
     float xRight;
-    float xLeft;
-    
+    float xLeft;  
 };
 
 
@@ -60,6 +60,8 @@ protected:
     Animation boostLeftAnimation;
     Animation hangingRightAnimation;
     Animation hangingLeftAnimation;
+
+    SoundManager* playerSounds;
     
 public:
     CollidingTiles collidingTiles;
@@ -75,6 +77,13 @@ public:
             invalid = '\0';
             fallingIntoVoid = false;
             hanging = false;
+
+            playerSounds = new SoundManager();
+        
+            // Index 0: Ring
+            // Index 1: Spike
+            playerSounds->loadSound(0, "Data/sfx/ring.wav");
+            playerSounds->loadSound(1, "Data/sfx/spike.wav");
         }
 
     // Getters
@@ -246,11 +255,12 @@ public:
     }
    
     //Updating everything relevant 
-    virtual void update(float deltaTime, int &score) override{
+    virtual void update(float deltaTime, int &score, int volume) override{
+        playerSounds->setVolume(volume);
         float previousX = pos_x;
         float previousY = pos_y;
         // Updating position and velocities
-        DynamicEntity::update(deltaTime, score);
+        DynamicEntity::update(deltaTime, score, volume);
         if(onGround){
             if(velocity_x>0){ // friction
                 velocity_x -= friction;
@@ -372,7 +382,7 @@ public:
                 velocity_y = terminal_velocity;
             }
             for(int i=0; i<2; ++i) {
-                followers[i]->update(deltaTime, score);
+                followers[i]->update(deltaTime, score, volume);
                 if(abs(pos_x - followers[i]->getPosX()) > 960){
                     followers[i]->setPosY(0);
                     followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
@@ -502,6 +512,7 @@ public:
         
         //Ring collection
         if (collidesBelow('R')) {
+            playerSounds->play(0);
             // Check both tiles (belowLeft and belowRight) and set to 's' only if they are 'R'
             if (*collidingTiles.belowLeft == 'R') {
                 *collidingTiles.belowLeft = 's';  // Set only belowLeft to 's' if it's 'R'
@@ -514,6 +525,7 @@ public:
         }
         
         if (collidesAbove('R')) {
+            playerSounds->play(0);
             // Check both tiles (aboveLeft and aboveRight) and set to 's' only if they are 'R'
             if (*collidingTiles.aboveLeft == 'R') {
                 score += 100;
@@ -526,6 +538,7 @@ public:
         }
 
         if (collidesRight('R')) {
+            playerSounds->play(0);
             // Collect right coins if they are 'R'
             if (*collidingTiles.rightTop == 'R') {
                 score += 100;
@@ -538,6 +551,7 @@ public:
         }
         
         if (collidesLeft('R')) {
+            playerSounds->play(0);
             // Collect left coins if they are 'R'
             if (*collidingTiles.leftTop == 'R') {
                 score += 100;
@@ -559,6 +573,7 @@ public:
         }
         
         if (pos_y >= previousY && collidesBelow('x')) {
+            playerSounds->play(1);
             cout << "Spike hurt" << endl;
                 takeDamage();
         }

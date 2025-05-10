@@ -6,38 +6,164 @@
 using namespace sf;
 using namespace std;
 
+#include "Animation.h"
 #include "PlayerFactory.h"
+#include "EnemyFactory.h"
+#include "SoundManager.h"
 
-class Levels {
+class Level {
 protected:
-    sf::Clock gameTime;
-    int score;
-    sf::Clock switchCooldownClock;
-    char currentPlayer;
-    Player* player;
-    Texture portalTex;
-    Sprite portalSprite;
-    float exitX;
+    const int height = 14;    
+    const int width;
+    static const int cellSize = 64;
 
+    const int numBatBrain;
+    const int numBeeBot;
+    const int numMotoBug;
+    const int numCrabMeat;
+
+    int score;
+    int levelVolume;
+
+    char** grid;
+
+    char currentPlayer;
+
+    bool completed;
+    bool failed;
+
+    Texture wallTex1; // wall
+    Sprite wallSprite1;
+
+    Texture wallTex2; // platform
+    Sprite wallSprite2;
+
+    Texture wallTex3; // breakable wall
+    Sprite wallSprite3;
+
+    Texture ringTex;
+    Sprite ringSprite;
+
+    Texture spikeTex;
+    Sprite spikeSprite;
+
+    Texture crystalTex;
+    Sprite crystalSprite;
+    Animation ringAnimation;
+
+    Texture bgTex;
+    Sprite bgSprite;
+
+    SonicFactory sonicMaker;
+    TailsFactory tailsMaker;
+    KnucklesFactory knucklesMaker;
+
+    Player* player;
+
+    BatBrainFactory batBrainMaker;
+    BatBrain** batBrains;
+
+    BeeBotFactory beeBotMaker;
+    BeeBot** beeBots;
+
+    MotoBugFactory motoBugMaker;
+    MotoBug** motoBugs;
+
+    CrabMeatFactory crabMeatMaker;
+    CrabMeat** crabMeats;
+
+    Clock gameTime;
+    Clock switchCooldownClock;
+    
+    Music levelMusic;
+
+    SoundManager* levelSounds;
 public:
-    Levels(){
+    Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numCrabMeat)
+    : width(width), numBatBrain(numBatBrain), numBeeBot(numBeeBot), numMotoBug(numMotoBug), numCrabMeat(numCrabMeat) {
         score = 0;
+        completed = false;
+        failed = false;
+
+        grid = new char*[height];
+        for (int i = 0; i < height; i++) {
+            grid[i] = new char[width];
+        }
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                grid[i][j] = 's';
+            }
+        }
+        
+        if (numBatBrain > 0) { batBrains = new BatBrain*[numBatBrain]; }
+        if (numBeeBot > 0) { beeBots = new BeeBot*[numBeeBot]; }
+        if (numMotoBug > 0) { motoBugs = new MotoBug*[numMotoBug]; }
+        if (numCrabMeat > 0) { crabMeats = new CrabMeat*[numCrabMeat]; }
+        
+        for (int i = 0; i < numBatBrain; i++) {
+            batBrains[i] = nullptr;
+        }
+
+        for (int i = 0; i < numBeeBot; i++) {
+            beeBots[i] = nullptr;
+        }
+
+        for (int i = 0; i < numMotoBug; i++) {
+            motoBugs[i] = nullptr;
+        }
+
+        for (int i = 0; i < numCrabMeat; i++) {
+            crabMeats[i] = nullptr;
+        }
+    
+        if (!spikeTex.loadFromFile("Data/spike.png")) {
+            cout << "Failed to load spike.png" << endl;
+        }
+    
+        spikeSprite.setTexture(spikeTex);
+    
+        if (!crystalTex.loadFromFile("Data/crystal.png")) {
+            cout << "Failed to load crystal.png" << endl;
+        }
+    
+        crystalSprite.setTexture(crystalTex);
+    
+        if (!ringTex.loadFromFile("Data/ring.png")) {
+            cout << "Failed to load ring.png" << endl;
+        }
+    
+        ringSprite.setTexture(ringTex);
+        ringSprite.setScale(4.0f, 4.0f);
+    
+        ringAnimation.initialize(&ringSprite, &ringTex, 16, 16, 4, 0.2f);
+
+        levelSounds = new SoundManager();
+        
+        // Index 0: Jump
+        // Index 1: Switch
+        levelSounds->loadSound(0, "Data/sfx/jump.wav");
+        levelSounds->loadSound(1, "Data/sfx/switch.wav");
+
         gameTime.restart();
     }
-    virtual void loadAssets() = 0; // load level assets
-    virtual void update(float deltaTime) =0; // update logic per frame
-    virtual void render(RenderWindow& window, float cameraOffsetX) = 0; // Draw the level
+    virtual void loadAssets(int volume) = 0; // load level assets
+    bool loadFromFile(const string& filePath);
+    virtual void update(float deltaTime); // update logic per frame
+    virtual void render(RenderWindow& window, float cameraOffsetX); // Draw the level
     //virtual void reset() = 0;
-    virtual bool isLevelComplete() const = 0;
-    //virtual bool isFailed() const = 0;
+    virtual bool isLevelComplete() const;
+    //virtual bool isFailed() const;
     // used for exposing the player details that Game needs, without violating encapsulation
-    virtual float getPlayerX() const = 0;
-    virtual int getPlayerWidth() const = 0;
-    virtual int getLevelWidthinTiles() const = 0;
-    virtual int getCellSize() const = 0;
+    virtual float getPlayerX() const;
+    virtual int getPlayerWidth() const;
+    virtual int getLevelWidthinTiles() const;
+    virtual int getCellSize() const;
     virtual int getScore() const;
     virtual sf::Clock getGameTime() const;
     virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
-    virtual bool exitCheck(float cameraOffset);
-    virtual ~Levels() {}
+    
+    virtual ~Level() {
+        
+    }
 };

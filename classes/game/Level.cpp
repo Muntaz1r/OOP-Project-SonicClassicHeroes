@@ -3,7 +3,205 @@
 #include <fstream>
 
 
-void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {
+bool Level::loadFromFile(const string& filePath) {
+    ifstream myFile(filePath);
+
+    if (!myFile.is_open()) {
+        cout << "Unable to open level layout file " << filePath << endl;
+        return false;
+    }
+
+    for (int i = 0; i < height; i++) {
+        string line;
+        
+        if (!getline(myFile, line)) {
+            cout << "Not enough lines to fill the level!" << endl;
+            return false;
+        }
+
+        for (int j = 0; j < width && j < line.length(); j++) {
+            grid[i][j] = line[j];
+        }
+    }
+
+    myFile.close();
+    return true;
+}
+
+void Level::update(float deltaTime) {
+    ringAnimation.update(deltaTime);
+
+    if (Keyboard::isKeyPressed(Keyboard::D)) {
+        player->moveRight();
+    }
+    else if (Keyboard::isKeyPressed(Keyboard::A)) {
+        player->moveLeft();
+    }
+    
+    if (Keyboard::isKeyPressed(Keyboard::W)) {
+        player->jump();
+        levelSounds->play(0);
+    }
+    if (Keyboard::isKeyPressed(Keyboard::S)) {
+        player->flyDown();
+    }
+    if (Keyboard::isKeyPressed(Keyboard::F) && player->isOnGround()) {
+        player->specialAbility();
+    }
+    if (Keyboard::isKeyPressed(Keyboard::Z) && !player->getBoosting()) {
+        if (switchCooldownClock.getElapsedTime().asSeconds() >= 1.0f) {
+            levelSounds->play(1);
+            player->setBoosting(false);
+            switchCooldownClock.restart();
+            switch (currentPlayer) {
+                case 's':
+                    currentPlayer ='t';
+                    break;
+                case 't':
+                    currentPlayer ='k';
+                    break;
+                case 'k':
+                    currentPlayer ='s';
+                    break;
+                default:
+                    return; // Invalid player
+            }
+    
+            cout<<"Switch\n";
+            Player* temp;
+            player->setLeader(false); // Old leader no longer leader
+        
+            temp = player;
+            player = temp->getFollower1();
+            player->setFollowers(temp->getFollower2(), temp);
+            player->setLeader(true);
+
+            temp->setFollowers(nullptr, nullptr); // Old leaders followers null
+        }
+    }
+
+    // When tails is flying, turn sonic and knuckles into hanging state 
+    if (currentPlayer == 't' && player->getBoosting()) {
+        player->getFollower1()->setHanging(true);
+        player->getFollower2()->setHanging(true);
+        if (player->isMovingRight()) {
+            player->getFollower1()->setHangingRight(true);
+            player->getFollower2()->setHangingRight(true);
+        }
+        else {
+            player->getFollower1()->setHangingRight(false);
+            player->getFollower2()->setHangingRight(false);
+        }
+    }
+    else {
+        player->getFollower1()->setHanging(false);
+        player->getFollower2()->setHanging(false);
+    }
+
+    player->setCollidingTiles(cellSize, height, width, grid);
+    player->update(deltaTime, score, levelVolume);
+
+    for (int i = 0; i < numBatBrain; i++) {
+        batBrains[i]->update(deltaTime, player->getPosX(), player->getPosY(), score, levelVolume);
+        batBrains[i]->checkCollisionWithPlayer(*player);
+    }
+
+    for (int i = 0; i < numBeeBot; i++) {
+        beeBots[i]->update(deltaTime, score, levelVolume);
+        beeBots[i]->checkCollisionWithPlayer(*player);
+        beeBots[i]->checkProjectilesHitPlayer(*player);
+    }
+
+    for (int i = 0; i < numMotoBug; i++) {
+        motoBugs[i]->update(deltaTime, player->getPosX(), player->getPosY(), score, levelVolume);
+        motoBugs[i]->checkCollisionWithPlayer(*player);
+    }
+    
+    for (int i = 0; i < numCrabMeat; i++) {
+        crabMeats[i]->update(deltaTime, score, levelVolume);
+        crabMeats[i]->checkCollisionWithPlayer(*player);
+        crabMeats[i]->checkProjectilesHitPlayer(*player);
+    }
+}
+
+void Level::render(RenderWindow& window, float cameraOffsetX) {
+    window.draw(bgSprite);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            char cell = grid[i][j];
+            float drawX = j * cellSize - cameraOffsetX;
+            float drawY = i * cellSize;
+
+            if (cell == 'w') {
+                wallSprite1.setPosition(drawX, drawY);
+                window.draw(wallSprite1);
+            }
+            else if (cell == 'q') {
+                wallSprite2.setPosition(drawX, drawY);
+                window.draw(wallSprite2);
+            }
+            else if (cell == 'b') {
+                wallSprite3.setPosition(drawX, drawY);
+                window.draw(wallSprite3);
+            }
+            else if (cell == 'x') {
+                spikeSprite.setPosition(drawX, drawY);
+                window.draw(spikeSprite);
+            }
+            else if (cell == 'C') {
+                crystalSprite.setPosition(drawX, drawY);
+                window.draw(crystalSprite);
+            }
+            else if (cell == 'R') {
+                ringSprite.setPosition(drawX, drawY);
+                window.draw(ringSprite);
+            }
+        }
+    }
+
+    player->render(window, cameraOffsetX);
+
+    for (int i = 0; i < numBatBrain; i++) {
+        batBrains[i]->render(window, cameraOffsetX);
+    }
+
+    for (int i = 0; i < numBeeBot; i++) {
+        beeBots[i]->render(window, cameraOffsetX);
+    }
+
+    for (int i = 0; i < numMotoBug; i++) {
+        motoBugs[i]->render(window, cameraOffsetX);
+    }
+    
+    for (int i = 0; i < numCrabMeat; i++) {
+        crabMeats[i]->render(window, cameraOffsetX);
+    }
+}
+
+bool Level::isLevelComplete() const {
+    // add logic here
+    return false;
+}
+
+float Level::getPlayerX() const {
+    return player->getPosX();
+}
+
+int Level::getPlayerWidth() const {
+    return player->getWidth();
+}
+
+int Level::getLevelWidthinTiles() const {
+    return width;
+}
+
+int Level::getCellSize() const {
+    return cellSize;
+}
+
+
+void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
     static sf::Sprite playerSprite;
     static sf::Sprite heartSprite;
     static bool uiInitialized = true;
@@ -167,24 +365,10 @@ void Levels::drawUI(sf::RenderWindow& window, float cameraOffset) const {
 
 }
 
-
-bool Levels::exitCheck(float cameraOffSetX){ //made in level1_labyrinth
-    // //Exit portal
-    // if(player->getPosY() >= 600 && player->getPosY() >= (600 + portalTex.getSize().y)){ //Y intercept
-    //     if((player->getPosX() >= width*cellSize - exit - cameraOffSetX - portalTex.getSize().x)
-    //     && (player->getPosX() <= width*cellSize - exit - cameraOffSetX)){ //X intercept
-    //         cout<<"Exit level";
-    //         return true;
-    //     }
-    // }
-    return false;
-}
-
-
-int Levels::getScore() const {
+int Level::getScore() const {
     return score;
 }
-sf::Clock Levels::getGameTime() const{
+sf::Clock Level::getGameTime() const{
     return gameTime;
 }
     

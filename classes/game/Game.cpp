@@ -56,6 +56,19 @@ void Game::runGame() {
             }
             else if (currentState == GAME_STATE_PLAYING) {
                 if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+                    if (level) {
+                        delete level; // level destructor stops level music
+                        level = nullptr;
+                    }
+                
+                    if (!menu->isMutedStatus()) {
+                        music.setVolume(menu->getVolume());
+                    } else {
+                        music.setVolume(0);
+                    }
+                
+                    music.play(); 
+
                     currentState = GAME_STATE_MENU;
                     menu->handleInput(event);
                 }
@@ -72,6 +85,7 @@ void Game::runGame() {
         if (currentState == GAME_STATE_MENU){
             menu->update();
             if (menu->hasGameStarted()) {
+                music.stop();
                 string playerName = menu->getPlayerName();
                 // to-do
                 if (level != nullptr) {
@@ -80,6 +94,9 @@ void Game::runGame() {
                 }
 
                 int selectedLevel = menu->getSelectedLevel();
+
+                int menuVolume = menu->getVolume();
+                bool isMuted = menu->isMutedStatus();
 
                 if (selectedLevel == 0) {
                     level = new Level1_Labyrinth();
@@ -94,8 +111,8 @@ void Game::runGame() {
                     level = new BossLevel();
                 }
                 levelCreated = true;
-                
-                level->loadAssets(); // load all assests when level is created
+
+                level->loadAssets(isMuted ? 0 : menuVolume); // load all assests when level is created
                 
                 currentState = GAME_STATE_PLAYING;
                 menu->resetGameStarted();

@@ -34,7 +34,7 @@ public:
     void setVelocityY(float vy) { velocity_y = vy; }    
     void setTerminalVelocity(float tv) { terminal_velocity = tv; }
 
-    virtual void update(float deltaTime, int &score) override{
+    virtual void update(float deltaTime, int &score, int volume) override{
         pos_x += velocity_x;
         pos_y += velocity_y; 
     } 
