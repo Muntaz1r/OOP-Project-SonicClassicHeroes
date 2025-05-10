@@ -39,6 +39,10 @@ public:
 
     bool isAlive() const { return alive; }
     bool isMovingRight() const { return movingRight; }
+    int getHP() const { return hp; }
+    void setHP(int hp) { this->hp = hp; }
+    void setIsAlive(bool alive) { this->alive = alive; }
+    void setIsMovingRight(bool movingRight) { this->movingRight = movingRight; }
 
     virtual void update(float deltaTime, int &score, int volume) override {
         if (isMovingRight()) {
@@ -87,4 +91,6 @@ public:
             Entity::render(window, cameraOffsetX);
         }
     }
+
+
 };

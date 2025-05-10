@@ -33,6 +33,7 @@ void Game::runGame() {
     Clock clock;
     float deltaTime = 0.0f;
     bool levelCreated = false;
+    int width = 0;
     
     while (window.isOpen()) {    
         deltaTime = clock.restart().asSeconds();
@@ -111,12 +112,21 @@ void Game::runGame() {
                     level = new BossLevel();
                 }
                 levelCreated = true;
+                width = level->getLevelWidthinTiles();
 
                 level->loadAssets(isMuted ? 0 : menuVolume); // load all assests when level is created
                 
                 currentState = GAME_STATE_PLAYING;
                 menu->resetGameStarted();
                 cout << "Game: Switched to GAME_STATE_PLAYING for " << playerName << endl;
+            }
+            else if (menu->getWantsToContinue()) {
+                if (level) {
+                    delete level;
+                }
+                loadGameFromSave(width, 14);
+                currentState = GAME_STATE_PLAYING;
+                menu->resetWantsToContinue();
             }
         }
         else if (currentState == GAME_STATE_PLAYING) {
@@ -131,12 +141,17 @@ void Game::runGame() {
                     menu->resetGameStarted();
                 }
             }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::F5) {
+                if (level) {
+                    level->saveLevelState();
+                    cout << "GAME: SAVING" << endl;
+                }
+            }
         }
         else if (currentState == GAME_STATE_LEADERBOARD) {
             menu->update();
         }
 		
-
         // Rendering
 		window.clear(Color::Black);
         
@@ -169,5 +184,60 @@ void Game::runGame() {
         }
 
         window.display();
+    }
+}
+
+void Game::loadGameFromSave(int levelWidth, int levelHeight) {
+    int levelID, score, hp, width, height;
+    float timer, playerX, playerY, velX, velY;
+    char currentChar;
+    char** grid;
+
+    grid = new char*[levelHeight];
+    for (int i = 0; i < levelHeight; i++) {
+        grid[i] = new char[levelWidth];
+    }
+
+    for (int i = 0; i < levelHeight; i++) {
+        for (int j = 0; j < levelWidth; j++) {
+            grid[i][j] = 's';
+        }
+    }
+
+    int numBatBrain, numBeeBot, numMotoBug, numCrabMeat;
+    BatBrain** batBrains = nullptr;
+    BeeBot** beeBots = nullptr;
+    MotoBug** motoBugs = nullptr;
+    CrabMeat** crabMeats = nullptr;
+
+
+    string filePath = "Data/SaveGame.txt";
+
+    if (SaveState::loadLevel(filePath, levelID, timer, score, playerX, 
+        playerY, velX, velY, hp, currentChar, width, height, grid,
+        batBrains, numBatBrain, beeBots, numBeeBot, motoBugs, numMotoBug, crabMeats, numCrabMeat)) {
+        
+        if (level) {
+            delete level;
+        }
+        
+        switch (levelID) {
+            case 1: level = new Level1_Labyrinth(); break;
+            case 2: level = new Level2_IceCap(); break;
+            case 3: level = new Level3_DeathEgg(); break;
+            case 4: level = new BossLevel(); break;
+            default: return;
+        }
+
+        level->loadAssets(menu->getVolume());
+
+        level->initializeFromSave(
+            timer, score, playerX, playerY, velX, velY,
+            hp, currentChar, grid,
+            batBrains, numBatBrain, beeBots, numBeeBot,
+            motoBugs, numMotoBug, crabMeats, numCrabMeat
+        );
+
+        currentState = GAME_STATE_PLAYING;
     }
 }

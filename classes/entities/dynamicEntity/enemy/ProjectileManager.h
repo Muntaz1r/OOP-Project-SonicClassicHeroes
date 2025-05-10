@@ -3,10 +3,9 @@
 #include "Projectile.h"
 #include "Player.h"
 
-const int MAX_PROJECTILES = 100;
-
 class ProjectileManager {
 private:
+    static const int MAX_PROJECTILES = 100;
     Projectile* projectiles[MAX_PROJECTILES];
     int numProjectiles;
     Texture projectileTexture;

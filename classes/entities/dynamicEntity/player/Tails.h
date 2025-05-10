@@ -178,6 +178,4 @@ public:
         specialAbilityTime +=4;
         numPowerUps--;
     }
-
-    virtual ~Tails() {}
 };

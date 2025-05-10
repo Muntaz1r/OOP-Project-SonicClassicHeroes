@@ -140,5 +140,4 @@ public:
             invincible = true;
         }
     }
-    virtual ~Knuckles() {}
 };

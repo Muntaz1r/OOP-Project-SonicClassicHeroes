@@ -9,6 +9,7 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
     prevVolume = volume;
     leaderboardRequested = false;
     gameStarted = false;
+    wantsToContinue = false;
     
     font.loadFromFile("Data/Retro Gaming.ttf");
 
@@ -73,6 +74,10 @@ Menu::Menu(RenderWindow& window, Music& music, int screen_x, int screen_y) : win
     }
 }
 
+Menu::~Menu() {
+    delete menuSounds;
+}
+
 void Menu::handleInput(Event& event) {
     if (currentState == STATE_MAIN) {
         if (event.type == Event::KeyPressed) {
@@ -97,6 +102,7 @@ void Menu::handleInput(Event& event) {
                 }
                 else if (mainSelected == 2) {
                     cout << "CONTINUE SAVED GAME" << endl;
+                    wantsToContinue = true;
                 }
                 else if (mainSelected == 3) {
                     currentState = STATE_LEADERBOARD;
@@ -291,4 +297,12 @@ int Menu::getVolume() const {
 
 bool Menu::isMutedStatus() const {
     return isMuted;
+}
+
+bool Menu::getWantsToContinue() const {
+    return wantsToContinue;
+}
+
+void Menu::resetWantsToContinue() {
+    wantsToContinue = false;
 }

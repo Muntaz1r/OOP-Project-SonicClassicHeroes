@@ -98,4 +98,9 @@ public:
     void checkProjectilesHitPlayer(Player& player) {
         projectileManager->checkCollisionWithPlayer(player);
     }
+
+    float getMinX() const { return minX; }
+    float getMaxX() const { return maxX; }
+    void setMinX(float minX) { this->minX = minX; }
+    void setMaxX(float maxX) { this->maxX = maxX; }
 };
