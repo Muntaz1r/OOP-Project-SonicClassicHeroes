@@ -27,7 +27,7 @@ Level1_Labyrinth::Level1_Labyrinth() : Level(200, 1, 1, 1, 1) {
     }
 
     wallSprite3.setTexture(wallTex3);
-   initializeGrid();
+    initializeGrid();
 }
 
 Level1_Labyrinth::~Level1_Labyrinth() {

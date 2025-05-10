@@ -51,7 +51,8 @@ void Level2_IceCap::initializeGrid() {
 }
 
 void Level2_IceCap::loadAssets(int volume) {
-    levelSounds->setVolume(volume);
+    levelVolume = volume;
+    levelSounds->setVolume(levelVolume);
     // acc_x, acc_y, friction, gravity
     player = sonicMaker.createPlayer(0.7f, 13.0f, 0.05f, 0.4f);
     player->setLeader(true);

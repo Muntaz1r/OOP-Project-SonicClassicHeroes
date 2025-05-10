@@ -25,14 +25,14 @@ public:
             cout << "Failed to load player texture\n";
         }
         return new Sonic(
-            50.0f,   // px
-            200.0f,   // py
+            11500.0f,   // px
+            100.0f,   // py
             80,      // height
             80,      // width
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            2.0f,    // terminal_velocity
+            4.0f,    // terminal_velocity
             4.5f,    // maxSpeed
             true,    // onGround
             false,   // invincible
@@ -54,14 +54,14 @@ class TailsFactory : public PlayerFactory {
                 cout << "Failed to load player texture\n";
             }
             return new Tails(
-                10.0f,   // px
-                600.0f,   // py
+                20.0f,   // px
+                100.0f,   // py
                 80,      // height
                 80,      // width
                 texture,  // Texture pointer
                 0.0f,    // velocity_x
                 0.0f,    // velocity_y
-                2.0f,    // terminal_velocity
+                4.0f,    // terminal_velocity
                 4.5f,    // maxSpeed
                 true,    // onGround
                 false,   // invincible
@@ -85,14 +85,14 @@ public:
             cout << "Failed to load player texture\n";
         }
         return new Knuckles(
-            20.0f,   // px
-            600.0f,   // py
+            60.0f,   // px
+            100.0f,   // py
             80,      // height
             80,      // width
             texture,  // Texture pointer
             0.0f,    // velocity_x
             0.0f,    // velocity_y
-            2.0f,    // terminal_velocity
+            4.0f,    // terminal_velocity
             4.5f,    // maxSpeed
             true,    // onGround
             false,   // invincible
