@@ -448,7 +448,8 @@ void Player::collisionHandle(float previousX, float previousY, int &score){
     }
     
     // For some reason leader has above definded while followers don't idk y
-    if((leader ? collidesAbove('p') : collidesBelow('p') )&& !fallingIntoVoid){ 
+    if(((*collidingTiles.belowLeft == 'p' && movingRight) 
+    || (*collidingTiles.belowRight == 'p' && !movingRight)) && !fallingIntoVoid){ 
         fallingIntoVoid = true;
     }
 
@@ -576,14 +577,66 @@ void Player::collisionHandle(float previousX, float previousY, int &score){
     }
     
     
+    //Crystal Collection
     if (collidesBelow('C') || collidesAbove('C') || 
         collidesLeft('C') || collidesRight('C')) {
         cout << "Collect crystal\n";
     }
+
+    if (collidesBelow('C')) {
+        playerSounds->play(0);
+        // Check both tiles (belowLeft and belowRight) and set to 's' only if they are 'C'
+        if (*collidingTiles.belowLeft == 'C') {
+            *collidingTiles.belowLeft = 's';  // Set only belowLeft to 's' if it's 'C'
+            score += 200;
+        }
+        if (*collidingTiles.belowRight == 'C') {
+            score += 200;
+            *collidingTiles.belowRight = 's';  // Set only belowRight to 's' if it's 'C'
+        }
+    }
+    
+    if (collidesAbove('C')) {
+        playerSounds->play(0);
+        // Check both tiles (aboveLeft and aboveRight) and set to 's' only if they are 'C'
+        if (*collidingTiles.aboveLeft == 'C') {
+            score += 200;
+            *collidingTiles.aboveLeft = 's';  // Set only aboveLeft to 's' if it's 'C'
+        }
+        if (*collidingTiles.aboveRight == 'C') {
+            score += 200;
+            *collidingTiles.aboveRight = 's';  // Set only aboveRight to 's' if it's 'C'
+        }
+    }
+
+    if (collidesRight('C')) {
+        playerSounds->play(0);
+        // Collect right crystals if they are 'C'
+        if (*collidingTiles.rightTop == 'C') {
+            score += 200;
+            *collidingTiles.rightTop = 's';  // Set to 's' if it's a crystal
+        }
+        if (*collidingTiles.rightBottom == 'C') {
+            score += 200;
+            *collidingTiles.rightBottom = 's';  // Set to 's' if it's a crystal
+        }
+    }
+    
+    if (collidesLeft('C')) {
+        playerSounds->play(0);
+        // Collect left coins if they are 'C'
+        if (*collidingTiles.leftTop == 'C') {
+            score += 200;
+            *collidingTiles.leftTop = 's';  // Set to 's' if it's a crystal
+        }
+        if (*collidingTiles.leftBottom == 'C') {
+            score += 200;
+            *collidingTiles.leftBottom = 's';  // Set to 's' if it's a crystal
+        }
+    }
     
     if (pos_y >= previousY && collidesBelow('x')) {
         playerSounds->play(1);
-        cout << "Spike hurt" << endl;
         takeDamage();
     }
 }

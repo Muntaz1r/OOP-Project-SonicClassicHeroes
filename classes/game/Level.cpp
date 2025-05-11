@@ -581,7 +581,7 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
 
     // Position them in top-right
     scoreText.setFillColor(sf::Color::White);
-    if(elapsed >= sf::seconds(90) && static_cast<int>(elapsed.asSeconds())%2){//Flash red when time exceeds 1.5 min
+    if(elapsed >= sf::seconds(120) && static_cast<int>(elapsed.asSeconds())%2){//Flash red when time exceeds 2 min
         timeDisplay.setFillColor(sf::Color::Red);
     }else
         timeDisplay.setFillColor(sf::Color::White);

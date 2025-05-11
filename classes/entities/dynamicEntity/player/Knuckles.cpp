@@ -70,7 +70,6 @@ Knuckles::Knuckles(float px, float py, int h, int w, sf::Texture* texture,
 }
 
 void Knuckles::specialAbility() {
-    cout<<"Break\n";
     if(collidesRight('b')) {
         // Collect right coins if they are 'R'
         if (*collidingTiles.rightTop == 'b') {
