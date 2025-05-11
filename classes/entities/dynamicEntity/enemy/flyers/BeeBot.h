@@ -82,7 +82,7 @@ public:
             projectileManager->spawn(pos_x, pos_y, true, false); // BeeBot only shoots downwards so down = true
             shootTimer.restart();
         }
-        projectileManager->update(deltaTime, minX, maxX); // display the projectile over the confined region
+        projectileManager->update(deltaTime, minX, maxX, volume); // display the projectile over the confined region
     }
 
     void onDeath() override {

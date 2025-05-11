@@ -80,7 +80,7 @@ public:
             
             shootTimer.restart();
         }
-        projectileManager->update(deltaTime, minX, maxX); // display the projectile over the entire screen
+        projectileManager->update(deltaTime, minX, maxX, volume); // display the projectile over the entire screen
     }
 
     void onDeath() override {

@@ -135,6 +135,7 @@ public:
             myFile >> label >> ex >> ey >> ehp >> alive >> right;
             batBrains[i] = new BatBrain(ex, ey, 32, 32, texture, 1.5f, 1.5f, 0.0f, ehp, 1.0f, alive == 1, right == 1);
         }
+        
 
         myFile >> label >> numBeeBot;
         if (numBeeBot > 0) { beeBots = new BeeBot*[numBeeBot]; }

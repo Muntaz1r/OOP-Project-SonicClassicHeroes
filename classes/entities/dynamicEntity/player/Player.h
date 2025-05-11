@@ -84,8 +84,10 @@ public:
     
         // Index 0: Ring
         // Index 1: Spike
+        // Index 2: Fell in Void
         playerSounds->loadSound(0, "Data/sfx/ring.wav");
         playerSounds->loadSound(1, "Data/sfx/spike.wav");
+        playerSounds->loadSound(2, "Data/sfx/void.ogg");
     }
 
     ~Player() {
@@ -447,6 +449,7 @@ public:
         if(collidesBelow('p') && !(collidesBelow('\0') || collidesBelow('w') 
         || collidesBelow('q') || collidesBelow('b') || collidesBelow('x'))){
             if(leader){
+                playerSounds->play(2);
                 cout<<"Player fell into the void\n";
                 velocity_y = terminal_velocity;
                 fallingIntoVoid = true;

@@ -4,8 +4,8 @@ Game::Game(int screen_x, int screen_y) : screen_x(screen_x), screen_y(screen_y),
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    if (!music.openFromFile("Data/labrynth.ogg")) {
-        cout << "Failed to load background music" << endl;
+    if (!music.openFromFile("Data/Menu.ogg")) {
+        cout << "Failed to load Menu.ogg" << endl;
     }
     else {
         music.setVolume(40);

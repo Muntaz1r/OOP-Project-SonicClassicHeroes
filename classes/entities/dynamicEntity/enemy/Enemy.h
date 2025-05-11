@@ -13,6 +13,9 @@ protected:
     bool alive;
     bool movingRight;
 
+    int enemyVolume;
+    SoundManager* enemySounds;
+
     Texture walkRightTexture;
     Texture walkLeftTexture;
 
@@ -20,7 +23,14 @@ public:
     Enemy(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0, int hp = 3, float maxSpeed = 0, bool alive = true, bool movinRight = true)
          : DynamicEntity(px, py, h, w, texture, vx, vy, terminal),
-         hp(hp), maxSpeed(maxSpeed), alive(alive), movingRight(movingRight) {}
+         hp(hp), maxSpeed(maxSpeed), alive(alive), movingRight(movingRight) {
+            enemySounds = new SoundManager();
+    
+            // Index 0: Hit
+            // Index 1: Enemy Hit
+            enemySounds->loadSound(0, "Data/sfx/hit.wav");
+            enemySounds->loadSound(1, "Data/sfx/enemy_hit.wav");
+         }
 
     virtual void takeDamage(int amount = 1) {
         if (!alive) {
@@ -45,6 +55,8 @@ public:
     void setIsMovingRight(bool movingRight) { this->movingRight = movingRight; }
 
     virtual void update(float deltaTime, int &score, int volume) override {
+        enemyVolume = volume;
+        enemySounds->setVolume(enemyVolume);
         if (isMovingRight()) {
             if (sprite.getTexture() != &walkRightTexture) {
                 sprite.setTexture(walkRightTexture);
@@ -76,10 +88,12 @@ public:
 
         if (isOverlapping) {
             if (playerBottom <= enemyTop + 10.0f && player.getVelocityY() > 0) {
+                enemySounds->play(1);
                 takeDamage(1);
                 player.setVelocityY(-5.0f); // Bounce effect
                 cout << "Enemy took damage." << endl;
             } else if (!player.isInvincible() && player.isOnGround()) {
+                enemySounds->play(0);
                 player.takeDamage();
                 cout << "Player took damage." << endl;
             }

@@ -490,7 +490,7 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
         window.draw(specialAbillityRingSprite);
     }
 
-    sf::Time elapsed = gameTime.getElapsedTime();
+    sf::Time elapsed = gameTime.getElapsedTime() + gameStartOffset;
     int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
     int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
 
