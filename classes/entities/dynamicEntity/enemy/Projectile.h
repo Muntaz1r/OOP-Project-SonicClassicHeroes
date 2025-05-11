@@ -13,6 +13,8 @@ class Projectile : public DynamicEntity {
 private:
     int damage;
 
+    int projectileVolume;
+
     bool active;
     bool movingDown;
     bool movingRight;
@@ -20,6 +22,8 @@ private:
     Texture projectileTextureD;
     Texture projectileTextureR;
     Texture projectileTextureL;
+
+    SoundManager* projectileSounds;
 
 public:
     Projectile(float px, float py, int h = 0, int w = 0, Texture* texture = nullptr, float vx = 0, float vy = 0, float terminal = 0, int dmg = 1, bool active = true, bool down = false, bool right = true)
@@ -40,10 +44,17 @@ public:
         sprite.setTexture(this->texture);
         sprite.setScale(2.0f, 2.0f);
         sprite.setTextureRect(IntRect(0, 0, width, height));
+
+        projectileSounds = new SoundManager();
+        // Index 0: Hit
+        projectileSounds->loadSound(0, "Data/sfx/hit.wav");
     }
 
     void update(float deltaTime) {}
-    void update(float deltaTime, float minX, float maxX) {
+    void update(float deltaTime, float minX, float maxX, int volume) {
+        projectileVolume = volume;
+        projectileSounds->setVolume(projectileVolume);
+
         if (!isActive()) {
             return;
         }
@@ -102,6 +113,7 @@ public:
         bool isOverlapping = playerRight > projectileLeft && playerLeft < projectileRight && playerBottom > projectileTop && playerTop < projectileBottom;
         
         if (isOverlapping) {
+            projectileSounds->play(0);
             player.takeDamage();
             deactivate();
             cout << "Player took damage from bullet." << endl;
