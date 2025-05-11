@@ -106,7 +106,7 @@ public:
     void setHanging(bool value);
     void setHangingRight(bool value);
     static void setHP(int value);
-    static void Player::setNumPowerUps(int value);
+    static void setNumPowerUps(int value);
     
     char* sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow = nullptr, int* outCol = nullptr);
     void setCollidingTiles(int tileSize, int levelHeight, int levelWidth, char** grid);

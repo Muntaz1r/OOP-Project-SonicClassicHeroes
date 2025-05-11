@@ -33,7 +33,7 @@ public:
     void setTerminalVelocity(float tv);
 
     virtual void update(float deltaTime, int &score, int volume);
-    virtual ~DynamicEntity(){};
+    virtual ~DynamicEntity();
 
     void updateAnimation(float deltaTime);
 

@@ -1,9 +1,7 @@
 #include "DynamicEntity.h"
 
-DynamicEntity::DynamicEntity(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr, 
-    float vx = 0, float vy = 0, float terminal = 0)
-    : Entity(px, py, h, w, texture), velocity_x(vx), velocity_y(vy), 
-    terminal_velocity(terminal){
+DynamicEntity::DynamicEntity(float px, float py, int h, int w, sf::Texture* texture, float vx, float vy, float terminal)
+    : Entity(px, py, h, w, texture), velocity_x(vx), velocity_y(vy), terminal_velocity(terminal){
         //Constructor
     }
 

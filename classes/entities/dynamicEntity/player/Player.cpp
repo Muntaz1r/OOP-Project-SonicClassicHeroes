@@ -5,11 +5,10 @@ int Player::hp = 3;
 int Player::numPowerUps = 3;
 
 //Constructor
-Player::Player(float px=0, float py=0, int h=0, int w = 0, sf::Texture* texture = nullptr,
-    float vx = 0, float vy = 0, float terminal = 0, 
-    float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
-    float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0, 
-    bool leader = false)
+Player::Player(float px, float py, int h, int w, sf::Texture* texture,
+    float vx, float vy, float terminal,
+    float ms, bool onGround, bool invicible, bool movingRight,
+    float acc_x, float acc_y, float friction, float gravity, bool leader)
     : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
     maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
     , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {
@@ -72,7 +71,7 @@ void Player::setNumPowerUps(int value){numPowerUps = value;}
 
 
 //Setting colliding tiles
-char* Player::sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow = nullptr, int* outCol = nullptr) {
+char* Player::sampleTile(float x, float y, int tileSize, int levelHeight, int levelWidth, char** grid, int* outRow, int* outCol) {
     //Helper function
     int col = static_cast<int>(x / tileSize);
     int row = static_cast<int>(y / tileSize);

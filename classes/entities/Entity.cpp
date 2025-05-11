@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(float x=0, float y=0, int h=0, int w=0,sf::Texture* texture = nullptr): 
+Entity::Entity(float x, float y, int h, int w, sf::Texture* texture): 
     pos_x(x), pos_y(y), height(h), width(w), texture(*texture){
         sprite.setTexture(this->texture);
         // sprite.setScale(
