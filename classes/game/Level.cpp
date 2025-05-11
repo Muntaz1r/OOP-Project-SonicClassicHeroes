@@ -99,7 +99,7 @@ Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numC
 Level::~Level() {
     if (grid) {
         for (int i = 0; i < height; i++) {
-            delete grid[i];
+            delete[] grid[i];
         }
         delete[] grid;
         grid = nullptr;
@@ -689,7 +689,7 @@ void Level::initializeFromSave(
         this->beeBots[i]->setMinX(beeBots[i]->getMinX());
         this->beeBots[i]->setMaxX(beeBots[i]->getMaxX());
         this->beeBots[i]->setIsAlive(beeBots[i]->isAlive());
-        this->beeBots[i]->setIsAlive(beeBots[i]->isMovingRight());
+        this->beeBots[i]->setIsMovingRight(beeBots[i]->isMovingRight());
     }
 
     for (int i = 0; i < numMotoBug; i++) {
@@ -698,7 +698,7 @@ void Level::initializeFromSave(
         this->motoBugs[i]->setMinX(motoBugs[i]->getMinX());
         this->motoBugs[i]->setMaxX(motoBugs[i]->getMaxX());
         this->motoBugs[i]->setIsAlive(motoBugs[i]->isAlive());
-        this->motoBugs[i]->setIsAlive(motoBugs[i]->isMovingRight());
+        this->motoBugs[i]->setIsMovingRight(motoBugs[i]->isMovingRight());
     }
 
     for (int i = 0; i < numCrabMeat; i++) {
@@ -707,7 +707,7 @@ void Level::initializeFromSave(
         this->crabMeats[i]->setMinX(crabMeats[i]->getMinX());
         this->crabMeats[i]->setMaxX(crabMeats[i]->getMaxX());
         this->crabMeats[i]->setIsAlive(crabMeats[i]->isAlive());
-        this->crabMeats[i]->setIsAlive(crabMeats[i]->isMovingRight());
+        this->crabMeats[i]->setIsMovingRight(crabMeats[i]->isMovingRight());
     }
 }
 

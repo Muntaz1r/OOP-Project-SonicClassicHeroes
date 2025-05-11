@@ -12,6 +12,10 @@ float vx, float vy, float terminal, int hp, float maxSpeed, bool alive, bool mov
     enemySounds->loadSound(1, "Data/sfx/enemy_hit.wav");
 }
 
+Enemy::~Enemy() {
+    if (enemySounds) {delete enemySounds; enemySounds = nullptr;}
+}
+
 void Enemy::takeDamage(int amount) {
     if (!alive) {
         return;

@@ -57,7 +57,7 @@ void Game::runGame() {
             }
             else if (currentState == GAME_STATE_PLAYING) {
                 if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
-                    cout << "MENU: ESACPE PRESSSED" << endl;
+                    cout << "GAME: ESACPE PRESSSED" << endl;
                     if (level) {
                         delete level; // level destructor stops level music
                         level = nullptr;
@@ -219,7 +219,7 @@ void Game::loadGameFromSave(int levelWidth, int levelHeight) {
         }
     }
 
-    int numBatBrain, numBeeBot, numMotoBug, numCrabMeat;
+    int numBatBrain = 0, numBeeBot = 0, numMotoBug = 0, numCrabMeat = 0;
     BatBrain** batBrains = nullptr;
     BeeBot** beeBots = nullptr;
     MotoBug** motoBugs = nullptr;
@@ -234,6 +234,7 @@ void Game::loadGameFromSave(int levelWidth, int levelHeight) {
         
         if (level) {
             delete level;
+            level = nullptr;
         }
         
         switch (levelID) {
@@ -246,6 +247,10 @@ void Game::loadGameFromSave(int levelWidth, int levelHeight) {
 
         level->loadAssets(menu->getVolume());
 
+        currentState = GAME_STATE_PLAYING;
+        menu->resetGameStarted();
+        cout << "Game: Switched to GAME_STATE_PLAYING for " << endl;
+
         level->initializeFromSave(
             timer, score, playerX, playerY, velX, velY,
             hp, currentChar, grid,
@@ -254,5 +259,45 @@ void Game::loadGameFromSave(int levelWidth, int levelHeight) {
         );
 
         currentState = GAME_STATE_PLAYING;
+    }
+
+    if (grid) {
+        for (int i = 0; i < height; i++) {
+            delete grid[i];
+        }
+        delete[] grid;
+        grid = nullptr;
+    }
+    
+    if (batBrains) {
+        for (int i = 0; i < numBatBrain; i++) {
+            delete batBrains[i];
+        }
+        delete[] batBrains;
+        batBrains = nullptr;
+    }
+    
+    if (beeBots) {
+        for (int i = 0; i < numBeeBot; i++) {
+            delete beeBots[i];
+        }
+        delete[] beeBots;
+        beeBots = nullptr;
+    }
+    
+    if (motoBugs) {
+        for (int i = 0; i < numMotoBug; i++) {
+            delete motoBugs[i];
+        }
+        delete[] motoBugs;
+        motoBugs = nullptr;
+    }
+    
+    if (crabMeats) {
+        for (int i = 0; i < numCrabMeat; i++) {
+            delete crabMeats[i];
+        }
+        delete[] crabMeats;
+        crabMeats = nullptr;
     }
 }

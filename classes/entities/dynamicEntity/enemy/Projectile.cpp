@@ -18,15 +18,13 @@ damage(damage), active(active), movingDown(down), movingRight(right) {
     sprite.setTexture(this->texture);
     sprite.setScale(2.0f, 2.0f);
     sprite.setTextureRect(IntRect(0, 0, width, height));
+}
 
-    projectileSounds = new SoundManager();
-    // Index 0: Hit
-    projectileSounds->loadSound(0, "Data/sfx/hit.wav");
+Projectile::~Projectile() {
 }
 
 void Projectile::update(float deltaTime, float minX, float maxX, int volume) {
     projectileVolume = volume;
-    projectileSounds->setVolume(projectileVolume);
 
     if (!isActive()) {
         return;
@@ -78,7 +76,6 @@ void Projectile::checkCollision(Player& player) {
     bool isOverlapping = playerRight > projectileLeft && playerLeft < projectileRight && playerBottom > projectileTop && playerTop < projectileBottom;
     
     if (isOverlapping) {
-        projectileSounds->play(0);
         player.takeDamage();
         deactivate();
         cout << "Player took damage from bullet." << endl;
