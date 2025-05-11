@@ -15,13 +15,15 @@ using namespace sf;
 using namespace std;
 
 
-// GAME STATES
-const int GAME_STATE_MENU = 0;
-const int GAME_STATE_PLAYING = 1;
-const int GAME_STATE_LEADERBOARD = 2;
+
 
 class Game {
 private:
+    // GAME STATES
+    const int GAME_STATE_MENU = 0;
+    const int GAME_STATE_PLAYING = 1;
+    const int GAME_STATE_LEADERBOARD = 2;
+    
     RenderWindow window;
     Music music;
 

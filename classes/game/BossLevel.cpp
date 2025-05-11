@@ -23,7 +23,10 @@ BossLevel::BossLevel(): Level(19, 0, 0, 0, 0) {
 }
 
 BossLevel::~BossLevel() {
-    delete eggStinger;
+    if (eggStinger) {
+        delete eggStinger;
+        eggStinger = nullptr;
+    }
 }
 
 void BossLevel::initializeGrid() {
