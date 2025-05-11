@@ -2,7 +2,11 @@
 
 Entity::Entity(float x, float y, int h, int w, sf::Texture* texture): 
     pos_x(x), pos_y(y), height(h), width(w), texture(*texture){
-        sprite.setTexture(this->texture);
+        if (texture && texture->getSize().x > 0) {
+            sprite.setTexture(*texture);
+        } else {
+            cout << "Texture is null or empty!" << endl;
+        }
         // sprite.setScale(
         //     static_cast<float>(width) / this->texture.getSize().x,
         //     static_cast<float>(height) / this->texture.getSize().y

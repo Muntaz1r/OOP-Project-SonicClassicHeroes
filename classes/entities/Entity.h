@@ -4,6 +4,7 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
+using namespace std;
 
 class Entity {
 protected:

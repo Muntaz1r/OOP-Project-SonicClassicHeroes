@@ -161,7 +161,7 @@ public:
 
         myFile.close();
 
-        //if (texture) { delete texture; }
+        if (texture) { delete texture; }
         return true;
     }
 };

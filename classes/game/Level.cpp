@@ -98,7 +98,7 @@ Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numC
 Level::~Level() {
     if (grid) {
         for (int i = 0; i < height; i++) {
-            delete grid[i];
+            delete[] grid[i];
         }
         delete[] grid;
         grid = nullptr;
