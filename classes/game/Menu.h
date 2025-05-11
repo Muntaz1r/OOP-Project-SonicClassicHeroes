@@ -8,16 +8,17 @@
 using namespace sf;
 using namespace std;
 
-// Setting menu states using int variables
-const int STATE_MAIN = 0;
-const int STATE_OPTIONS = 1;
-const int STATE_NAME_INPUT = 2;
-const int STATE_LEADERBOARD = 3;
-const int STATE_EXIT = 4;
-const int STATE_SELECT_LEVEL = 5;
 
 class Menu {
 private:
+    // Setting menu states using int variables
+    const int STATE_MAIN = 0;
+    const int STATE_OPTIONS = 1;
+    const int STATE_NAME_INPUT = 2;
+    const int STATE_LEADERBOARD = 3;
+    const int STATE_EXIT = 4;
+    const int STATE_SELECT_LEVEL = 5;
+
     int screen_x, screen_y;
 
     RenderWindow& window;
