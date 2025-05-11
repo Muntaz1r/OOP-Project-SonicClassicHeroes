@@ -57,6 +57,7 @@ void Game::runGame() {
             }
             else if (currentState == GAME_STATE_PLAYING) {
                 if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+                    cout << "MENU: ESACPE PRESSSED" << endl;
                     if (level) {
                         delete level; // level destructor stops level music
                         level = nullptr;
