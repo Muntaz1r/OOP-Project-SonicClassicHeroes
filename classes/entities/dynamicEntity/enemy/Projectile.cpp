@@ -24,6 +24,10 @@ damage(damage), active(active), movingDown(down), movingRight(right) {
     projectileSounds->loadSound(0, "Data/sfx/hit.wav");
 }
 
+Projectile::~Projectile() {
+    delete projectileSounds;
+}
+
 void Projectile::update(float deltaTime, float minX, float maxX, int volume) {
     projectileVolume = volume;
     projectileSounds->setVolume(projectileVolume);
