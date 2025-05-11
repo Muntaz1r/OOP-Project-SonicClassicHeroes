@@ -15,6 +15,7 @@ private:
 public:
     Level1_Labyrinth();
     ~Level1_Labyrinth();
-
+    
+    void render(RenderWindow& window, float cameraOffsetX) override;//For exit portal
     void loadAssets(int volume) override;
 };

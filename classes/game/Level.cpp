@@ -5,6 +5,7 @@
 
 Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numCrabMeat)
 : width(width), numBatBrain(numBatBrain), numBeeBot(numBeeBot), numMotoBug(numMotoBug), numCrabMeat(numCrabMeat) {
+    srand(static_cast<unsigned int>(time(nullptr)));
     score = 0;
     completed = false;
     failed = false;
@@ -250,10 +251,11 @@ void Level::update(float deltaTime) {
         crabMeats[i]->checkCollisionWithPlayer(*player);
         crabMeats[i]->checkProjectilesHitPlayer(*player);
     }
+
+    spawnSpecialItems();
 }
 
 void Level::render(RenderWindow& window, float cameraOffsetX) {
-    srand(static_cast<unsigned int>(time(nullptr)));
     window.draw(bgSprite);
 
     for (int i = 0; i < height; i++) {
@@ -285,21 +287,7 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
             else if (cell == 'R') {
                 ringSprite.setPosition(drawX, drawY);
                 window.draw(ringSprite);
-            }else if (cell == 's') {
-                if(specialItemCount <= 2){
-                    specialItemCount++;
-                    int r = rand() % 100;
-                
-                    // 'l' has 1 in 500 chance -> values 0–2
-                    // 'u' has 1 in 1500 chance -> value 3
-                
-                    if (r < 3)        // 0,1,2 (3 values out of 1500)
-                        grid[i][j] = 'l'; // 1 in 500
-                    else if (r == 3)  // 1 value out of 1500
-                        grid[i][j] = 'u'; // 1 in 1500
-                }
-            }
-            else if (cell == 'l') {
+            }else if (cell == 'l') {
                 extraLifeSprite.setPosition(drawX, drawY);
                 window.draw(extraLifeSprite);
             }
@@ -307,7 +295,6 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
                 powerUpSprite.setPosition(drawX, drawY);
                 window.draw(powerUpSprite);    
             }
-            
         }
     }
 
@@ -315,9 +302,7 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
     portalSprite.setPosition(-5 - cameraOffsetX, 150); // entry portal
     window.draw(portalSprite);
 
-    portalSprite.setPosition(width*cellSize - 120 - cameraOffsetX, 450); // exit portal
-    window.draw(portalSprite);
-
+    
     player->render(window, cameraOffsetX);
 
     for (int i = 0; i < numBatBrain; i++) {
@@ -337,6 +322,57 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
     }
 
     
+}
+
+void Level::countSpecialItems() {
+    int count = 0;
+    for (int i = 0; i < height; i++)
+        for (int j = 0; j < width; j++)
+            if (grid[i][j] == 'l' || grid[i][j] == 'u')
+                count++;
+    specialItemCount = count;
+}
+void Level::spawnHelper(int i, int j){
+    if(specialItemCount < 2){
+        char cell = grid[i][j];
+        if(cell == 's'){
+            int r = rand() % 900000;
+            // 'l' has 1 in 900000 chance -> values 0
+            // 'u' has 1 in 900000 chance -> value 1
+            if (r == 0){        
+                grid[i][j] = 'l'; // 1 in 900000
+                specialItemCount++;
+            }
+            else if (r == 1){ 
+                grid[i][j] = 'u'; // 1 in 900000
+            }
+        }
+    }
+}
+
+void Level::spawnSpecialItems(){
+    countSpecialItems();
+    cout<<specialItemCount<<endl;
+    if(specialItemCount < 2){
+        int rStartI = rand()%height;
+        int rStartJ = rand()%width;
+        for (int i = rStartI; i < height; i++) {
+            for (int j = rStartJ; j < width; j++) {
+                spawnHelper(i, j);
+            }
+            for (int j = 0; j < rStartJ; j++) {
+                spawnHelper(i, j);
+            }
+        }
+        for (int i = 0; i < rStartI; i++) {
+            for (int j = rStartJ; j < width; j++) {
+                spawnHelper(i, j);
+            }
+            for (int j = 0; j < rStartJ; j++) {
+                spawnHelper(i, j);
+            }
+        }
+    }
 }
 
 bool Level::isLevelComplete() const {
@@ -533,7 +569,7 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
 bool Level::exitCheck(float cameraOffSetX){
     //Exit portal check
 
-    float portalX = width * cellSize - 120 - cameraOffSetX;
+    float portalX = width * cellSize - 200 - cameraOffSetX;
     static const float portalY = 450;
 
     float playerLeft   = player->getPosX() - cameraOffSetX;

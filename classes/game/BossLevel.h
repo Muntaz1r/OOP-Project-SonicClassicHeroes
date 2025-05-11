@@ -30,5 +30,8 @@ public:
     void loadAssets(int volume) override;
     void update(float deltaTime) override;
     void render(RenderWindow& window, float cameraOffsetX) override;
+    bool isLevelComplete() const override;
+    bool getFailed();
+    bool exitCheck(float cameraOffSetX) override;
 
 };

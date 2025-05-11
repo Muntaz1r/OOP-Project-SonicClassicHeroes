@@ -33,6 +33,7 @@ private:
     int screen_y;
 
     int currentState;
+   
 
     float cameraOffsetX; // used to store offset for horizontal scrolling
 

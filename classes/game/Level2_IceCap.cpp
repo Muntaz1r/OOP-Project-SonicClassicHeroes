@@ -82,3 +82,9 @@ void Level2_IceCap::loadAssets(int volume) {
         levelMusic.play();
     }
 }
+
+void Level2_IceCap::render(RenderWindow& window, float cameraOffsetX){
+    Level::render(window, cameraOffsetX);
+    portalSprite.setPosition(width*cellSize - 200 - cameraOffsetX, 450); // exit portal
+    window.draw(portalSprite);
+}

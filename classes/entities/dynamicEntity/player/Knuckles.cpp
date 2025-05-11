@@ -8,6 +8,7 @@ Knuckles::Knuckles(float px, float py, int h, int w, sf::Texture* texture,
 : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
     moving_right, acc_x, acc_y, friction, gravity, leader), powerUpTime(powerUpTime)
 {
+    powerUpTime = 15;
     if (!idleRightTexture.loadFromFile("Data/knuckles/0right_still.png")) {
         cout << "Failed to load knuckles/0right_still.png\n";
     }
@@ -124,6 +125,7 @@ void Knuckles::update(float deltaTime, int &score, int volume) {
 
 void Knuckles::powerUp() {
     if (!boosting) {
+        numPowerUps--;
         cout<<"knuckles power up\n";
         boosting = true;
         powerUpClock.restart();

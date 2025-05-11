@@ -16,5 +16,6 @@ public:
     Level3_DeathEgg();
     ~Level3_DeathEgg();
 
+    void render(RenderWindow& window, float cameraOffsetX) override;//For exit portal
     void loadAssets(int volume) override;
 };

@@ -85,3 +85,9 @@ void Level3_DeathEgg::loadAssets(int volume) {
         levelMusic.play();
     }
 }
+
+void Level3_DeathEgg::render(RenderWindow& window, float cameraOffsetX){
+    Level::render(window, cameraOffsetX);
+    portalSprite.setPosition(width*cellSize - 200 - cameraOffsetX, 450); // exit portal
+    window.draw(portalSprite);
+}

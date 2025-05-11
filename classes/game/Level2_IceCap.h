@@ -16,5 +16,6 @@ public:
     Level2_IceCap();
     ~Level2_IceCap();
 
+    void render(RenderWindow& window, float cameraOffsetX) override;
     void loadAssets(int volume) override;
 };

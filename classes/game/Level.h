@@ -121,6 +121,9 @@ public:
         MotoBug** motoBugs, int numMotoBugs,
         CrabMeat** crabMeats, int numCrabMeats
     );
+    void countSpecialItems();
+    void spawnHelper(int, int);
+    void spawnSpecialItems();
     virtual void saveLevelState() const;
     virtual ~Level();
 };

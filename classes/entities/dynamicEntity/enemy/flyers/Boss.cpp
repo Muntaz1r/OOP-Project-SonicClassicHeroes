@@ -136,8 +136,8 @@ void EggStinger::render(RenderWindow& window, float cameraOffsetX) {
 }
 
 void EggStinger::onDeath() {
-    cout << "Egg Stinger destroyed!" << endl;
 }
+
 
 bool EggStinger::isDropping() const { return dropping; }
 float EggStinger::getTargetX() const { return targetX; }

@@ -81,3 +81,16 @@ void BossLevel::render(RenderWindow& window, float cameraOffsetX) {
     Level::render(window, cameraOffsetX);
     eggStinger->render(window, cameraOffsetX);
 }
+
+bool BossLevel::exitCheck(float cameraOffSetX){
+    completed = !eggStinger->isAlive();
+    failed = (Player::getHP() == 0);
+    return completed || failed;
+}
+
+bool BossLevel::isLevelComplete() const{
+    return completed;
+}
+bool BossLevel::getFailed(){
+    return failed;
+}

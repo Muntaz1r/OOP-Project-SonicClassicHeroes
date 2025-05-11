@@ -2,7 +2,7 @@
 
 //Initialize static member
 int Player::hp = 3;
-int Player::numPowerUps = 3;
+int Player::numPowerUps = 0;
 
 //Constructor
 Player::Player(float px, float py, int h, int w, sf::Texture* texture,
@@ -221,7 +221,7 @@ void Player::update(float deltaTime, int &score, int volume) {
         velocity_y += gravity; 
     }
     // Updating invinciillity
-    if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration) {
+    if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration && !boosting) {
         invincible = false;
     }
     // if (pos_y >=  635) {
@@ -541,6 +541,7 @@ void Player::collisionHandle(float previousX, float previousY, int &score){
     if (collidesAbove('u') || collidesBelow('u') 
     || collidesRight('u') || collidesLeft('u') && leader){
         cout<<"Power up\n";
+        ++numPowerUps;
         //Left
         if (*collidingTiles.leftTop == 'u') {
             *collidingTiles.leftTop = 's';  // Set to 's' if it's collected

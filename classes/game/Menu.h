@@ -73,6 +73,7 @@ public:
     void resetGameStarted();
     string getPlayerName() const;
     int getSelectedLevel() const;
+    void setSelectedLevel(int value);
     int getVolume() const;
     bool isMutedStatus() const;
     bool getWantsToContinue() const;

@@ -78,3 +78,9 @@ void Level1_Labyrinth::loadAssets(int volume) {
         levelMusic.play();
     }
 }
+
+void Level1_Labyrinth::render(RenderWindow& window, float cameraOffsetX){
+    Level::render(window, cameraOffsetX);
+    portalSprite.setPosition(width*cellSize - 200 - cameraOffsetX, 450); // exit portal
+    window.draw(portalSprite);
+}
