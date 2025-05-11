@@ -188,6 +188,13 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
         }
     }
 
+    //Portal
+    portalSprite.setPosition(-10 - cameraOffsetX, 150); // entry portal
+    window.draw(portalSprite);
+
+    portalSprite.setPosition(width*cellSize - 40 - cameraOffsetX, 450); // exit portal
+    window.draw(portalSprite);
+
     player->render(window, cameraOffsetX);
 
     for (int i = 0; i < numBatBrain; i++) {
@@ -205,6 +212,8 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
     for (int i = 0; i < numCrabMeat; i++) {
         crabMeats[i]->render(window, cameraOffsetX);
     }
+
+    
 }
 
 bool Level::isLevelComplete() const {
@@ -229,7 +238,7 @@ int Level::getCellSize() const {
 }
 
 
-void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
+void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
     static sf::Sprite playerSprite;
     static sf::Sprite heartSprite;
     static bool uiInitialized = true;
@@ -345,7 +354,13 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) const {
         }
     }
     
-
+    //Power ups
+    powerUpSprite.setScale(0.08f, 0.08f);
+    for (int i = 0; i < Player::getNumPowerUps(); ++i) {
+        powerUpSprite.setPosition(adjustedX + 145 + iterate/1.7f + 40*i, adjustedY + 55 + iterate*1.8f);
+        window.draw(powerUpSprite);
+    }
+    powerUpSprite.setScale(0.13f, 0.13f);
 
     // Draw special ability ring if boosting
     if (player->getBoosting()) {

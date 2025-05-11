@@ -195,7 +195,7 @@ public:
     virtual int getCellSize() const;
     virtual int getScore() const;
     virtual sf::Clock getGameTime() const;
-    virtual void drawUI(sf::RenderWindow& window, float cameraOffset) const;
+    virtual void drawUI(sf::RenderWindow& window, float cameraOffset) ;
     virtual bool exitCheck(float cameraOffSetX);
     
     virtual ~Level() {

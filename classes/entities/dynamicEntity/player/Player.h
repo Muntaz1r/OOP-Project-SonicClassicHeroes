@@ -44,7 +44,7 @@ protected:
     bool fallingIntoVoid;
     bool hanging;
     bool hangingRight;
-    int numPowerUps;
+    static int numPowerUps;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -78,7 +78,6 @@ public:
             invalid = '\0';
             fallingIntoVoid = false;
             hanging = false;
-            numPowerUps = 0;
 
             playerSounds = new SoundManager();
         
@@ -104,6 +103,7 @@ public:
     bool getHanging() const { return hanging; }
     bool getHangingRight() const { return hangingRight; }
     virtual sf::Clock getBoostClock() {return sf::Clock();}
+    static int getNumPowerUps() { return numPowerUps; }
 
     // Setters
     void setMaxSpeed(float speed) { maxSpeed = speed; }

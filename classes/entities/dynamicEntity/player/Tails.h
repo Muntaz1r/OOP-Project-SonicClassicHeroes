@@ -94,9 +94,9 @@ public:
         Player::update(deltaTime, score, volume);
 
         if(boosting){
-            for (int i=0; i<2; ++i) followers[i]->setPosX(pos_x); // Align followers y
+            for (int i=0; i<2; ++i) followers[i]->setPosX(pos_x); // Align followers x
             
-            for (int i=0; i<2; ++i) followers[i]->setPosY(pos_y + 64*(i+1)); // Align followers
+            for (int i=0; i<2; ++i) followers[i]->setPosY(pos_y + 64*(i+1)); // Align followers y
         }
         
         // Stop boosting if boost time is done
