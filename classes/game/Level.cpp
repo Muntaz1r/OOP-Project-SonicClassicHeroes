@@ -189,10 +189,10 @@ void Level::render(RenderWindow& window, float cameraOffsetX) {
     }
 
     //Portal
-    portalSprite.setPosition(-10 - cameraOffsetX, 150); // entry portal
+    portalSprite.setPosition(-5 - cameraOffsetX, 150); // entry portal
     window.draw(portalSprite);
 
-    portalSprite.setPosition(width*cellSize - 40 - cameraOffsetX, 450); // exit portal
+    portalSprite.setPosition(width*cellSize - 120 - cameraOffsetX, 450); // exit portal
     window.draw(portalSprite);
 
     player->render(window, cameraOffsetX);
@@ -411,14 +411,14 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
 bool Level::exitCheck(float cameraOffSetX){
     //Exit portal check
 
-    float portalX = width * cellSize - 40 - cameraOffSetX;
+    float portalX = width * cellSize - 120 - cameraOffSetX;
     static const float portalY = 450;
 
     float playerLeft   = player->getPosX() - cameraOffSetX;
     float playerRight  = playerLeft + player->getWidth()/2;
     float playerTop    = player->getPosY();
     float playerBottom = playerTop + player->getHeight();
-    float portalLeft   = width * cellSize - 40 - cameraOffSetX + 25;
+    float portalLeft   = portalX + 25;
     float portalRight  = portalLeft + portalTex.getSize().x - 100;
     float portalTop    = 450 + 50;
     float portalBottom = portalTop + portalTex.getSize().y - 50;
