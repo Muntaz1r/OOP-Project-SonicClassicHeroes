@@ -139,7 +139,7 @@ void Game::runGame() {
                     scoreboard->saveScores(menu->getPlayerName(),level->getScore());
                     currentState = GAME_STATE_MENU;
                     menu->setCurrentState(0);
-                }else if (level->getGameTime() > 150){
+                }else if (level->getGameTime() > 180){
                     cout<<"You losst\n";
                     cout<<"Time limit exceeded\n";
                     scoreboard->saveScores(menu->getPlayerName(),level->getScore());
