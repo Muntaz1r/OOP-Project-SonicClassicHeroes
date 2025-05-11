@@ -181,6 +181,7 @@ void Menu::handleInput(Event& event) {
         }
 
         if (event.key.code == Keyboard::Escape) {
+            cout << "MENU: ESACPE PRESSSED" << endl;
             menuSounds->play(1);
             currentState = STATE_MAIN;
         }

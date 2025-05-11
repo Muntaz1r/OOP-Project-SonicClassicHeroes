@@ -97,36 +97,54 @@ Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numC
 }
 
 Level::~Level() {
-    for (int i = 0; i < height; i++) {
-        delete grid[i];
+    if (grid) {
+        for (int i = 0; i < height; i++) {
+            delete grid[i];
+        }
+        delete[] grid;
+        grid = nullptr;
     }
-    delete[] grid;
-
-    delete player->getFollower1();
-    delete player->getFollower2();
-    delete player;
-
-    for (int i = 0; i < numBatBrain; i++) {
-        delete batBrains[i];
+    
+    if (player) {
+        delete player->getFollower1();
+        delete player->getFollower2();
+        delete player;
+        player = nullptr;
     }
-    delete[] batBrains;
-
-    for (int i = 0; i < numBeeBot; i++) {
-        delete beeBots[i];
+    
+    if (batBrains) {
+        for (int i = 0; i < numBatBrain; i++) {
+            delete batBrains[i];
+        }
+        delete[] batBrains;
+        batBrains = nullptr;
     }
-    delete[] beeBots;
-
-    for (int i = 0; i < numMotoBug; i++) {
-        delete motoBugs[i];
+    
+    if (beeBots) {
+        for (int i = 0; i < numBeeBot; i++) {
+            delete beeBots[i];
+        }
+        delete[] beeBots;
+        beeBots = nullptr;
     }
-    delete[] motoBugs;
-
-    for (int i = 0; i < numCrabMeat; i++) {
-        delete crabMeats[i];
+    
+    if (motoBugs) {
+        for (int i = 0; i < numMotoBug; i++) {
+            delete motoBugs[i];
+        }
+        delete[] motoBugs;
+        motoBugs = nullptr;
     }
-    delete[] crabMeats;
-
-    delete levelSounds;
+    
+    if (crabMeats) {
+        for (int i = 0; i < numCrabMeat; i++) {
+            delete crabMeats[i];
+        }
+        delete[] crabMeats;
+        crabMeats = nullptr;
+    }
+    
+    if (levelSounds) {delete levelSounds; levelSounds = nullptr;}
 }
 
 bool Level::loadFromFile(const string& filePath) {

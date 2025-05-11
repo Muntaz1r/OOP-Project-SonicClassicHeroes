@@ -112,8 +112,8 @@ void EggStinger::update(float deltaTime, float playerX, int& score, int volume) 
         }
     }
     else if (waitingAtBottom) {
-        pos_y += (rand() % 5) - 2; // random number between -2 and 2 to emulate shake
-        pos_x += (rand() % 5) - 2;
+        // pos_y += (rand() % 5) - 2; // random number between -2 and 2 to emulate shake
+        // pos_x += (rand() % 5) - 2;
         if (waitClock.getElapsedTime().asSeconds() > 1.5f) {
             waitingAtBottom = false;
             goingUp = true;
