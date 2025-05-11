@@ -739,7 +739,7 @@ char Level::getCurrentPlayer() const {
 
 void Level::saveLevelState() const {
     cout << "LEVEL: SAVING" << endl;
-    string filePath = "Data/SaveGame.txt";
+    string filePath = "../Data/SaveGame.txt";
     SaveState::saveLevel(
         filePath,
         this->levelID,

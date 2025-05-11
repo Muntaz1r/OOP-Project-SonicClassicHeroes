@@ -45,4 +45,3 @@ add_custom_command(TARGET SonicClassicHeroes POST_BUILD
         ${PROJECT_SOURCE_DIR}/Data $<TARGET_FILE_DIR:SonicClassicHeroes>/Data
 )
 
-set(CMAKE_BUILD_TYPE Debug)
