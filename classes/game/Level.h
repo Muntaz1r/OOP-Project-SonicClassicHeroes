@@ -123,6 +123,7 @@ public:
     );
     int getLevelID() const;
     void setLevelID(int value);
+    void setScore(int score);
     void countSpecialItems();
     void spawnHelper(int, int);
     void spawnSpecialItems();

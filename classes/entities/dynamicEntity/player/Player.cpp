@@ -2,7 +2,7 @@
 
 //Initialize static member
 int Player::hp = 3;
-int Player::numPowerUps = 1;
+int Player::numPowerUps = 0;
 
 //Constructor
 Player::Player(float px, float py, int h, int w, sf::Texture* texture,
@@ -17,6 +17,7 @@ Player::Player(float px, float py, int h, int w, sf::Texture* texture,
         fallingIntoVoid = false;
         hanging = false;
         knucklesInvinc = false;
+        for (int i=0; i<2; ++i) followers[i]=nullptr;
 
         playerSounds = new SoundManager();
     

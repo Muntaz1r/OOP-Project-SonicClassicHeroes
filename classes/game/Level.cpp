@@ -10,7 +10,9 @@ Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numC
     completed = false;
     failed = false;
     specialItemCount = 0;
-
+    
+    Player::setHP(3);
+    Player::setNumPowerUps(0);
     grid = new char*[height];
     for (int i = 0; i < height; i++) {
         grid[i] = new char[width];
@@ -393,8 +395,14 @@ void Level::spawnSpecialItems(){
 }
 
 bool Level::isLevelComplete() const {
-    // add logic here
-    return false;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            char cell = grid[i][j];
+            if (cell == 'R')
+                return false;
+        }
+    }
+    return true;
 }
 
 float Level::getPlayerX() const {
@@ -747,4 +755,7 @@ int Level::getLevelID() const {
 }
 void Level::setLevelID(int value){
     levelID = value;
+}
+void Level::setScore(int score){
+    this->score = score;
 }

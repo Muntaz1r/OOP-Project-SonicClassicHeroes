@@ -67,6 +67,7 @@ public:
     void update();
     void draw();
 
+    void setCurrentState(int state);
     bool isLeaderboardRequested() const;
     void resetLeaderboardRequest();
     bool hasGameStarted() const;

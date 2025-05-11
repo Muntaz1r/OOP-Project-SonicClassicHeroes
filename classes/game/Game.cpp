@@ -133,20 +133,35 @@ void Game::runGame() {
         else if (currentState == GAME_STATE_PLAYING) {
             if (level != nullptr) {
                 level->update(deltaTime);
-
-                if(level->exitCheck(cameraOffsetX) /*&& level->isLevelComplete()*/){
+                if(Player::getHP() == 0){
+                    cout<<"You losst\n";
+                    scoreboard->saveScores(menu->getPlayerName(),level->getScore());
+                    currentState = GAME_STATE_MENU;
+                    menu->setCurrentState(0);
+                }
+                
+                if(level && level->exitCheck(cameraOffsetX) && level->isLevelComplete()){
                     int levelID = level->getLevelID();
+                    int prevScore = level->getScore();
                     delete level;
                     switch (levelID)
                     {
-                    case 1: level = new Level2_IceCap(); break;
-                    case 2: level = new Level3_DeathEgg(); break;
-                    case 3: level = new BossLevel(); break;
+                    case 1: level = new Level2_IceCap(); level->setScore(prevScore); break;
+                    case 2: level = new Level3_DeathEgg(); level->setScore(prevScore); break;
+                    case 3: level = new BossLevel(); level->setScore(prevScore); break;
                     case 4:
-                        if(level->isLevelComplete())
+                        if(level->isLevelComplete()){
                             cout<<"You won\n";
-                        else 
+                            scoreboard->saveScores(menu->getPlayerName(),prevScore);
+                            currentState = GAME_STATE_MENU;
+                            menu->setCurrentState(0);
+                        }
+                        else {
                             cout<<"You losst\n";
+                            currentState = GAME_STATE_MENU;
+                            menu->setCurrentState(0);
+                        }
+
                     default:
                         break;
                     }

@@ -309,3 +309,7 @@ bool Menu::getWantsToContinue() const {
 void Menu::resetWantsToContinue() {
     wantsToContinue = false;
 }
+
+void Menu::setCurrentState(int state){
+    currentState = state;
+}
