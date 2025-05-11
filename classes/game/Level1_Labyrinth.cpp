@@ -3,6 +3,7 @@
 #include <fstream>
 
 Level1_Labyrinth::Level1_Labyrinth() : Level(200, 1, 1, 1, 1) {
+    levelID = 1;
     // Load Textures
     if (!bgTex.loadFromFile("Data/bg1.png")) {
         cout << "Failed to load to bg1.png" << endl;
@@ -31,7 +32,7 @@ Level1_Labyrinth::Level1_Labyrinth() : Level(200, 1, 1, 1, 1) {
 }
 
 Level1_Labyrinth::~Level1_Labyrinth() {
-    //levelMusic.stop();
+    
 }
 
 void Level1_Labyrinth::initializeGrid() {

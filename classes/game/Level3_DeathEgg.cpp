@@ -3,6 +3,7 @@
 #include <fstream>
 
 Level3_DeathEgg::Level3_DeathEgg() : Level(300, 2, 2, 2, 4) {
+    levelID = 3;
     // Load Textures
     if (!bgTex.loadFromFile("Data/deathegg/bg1.png")) {
         cout << "Failed to load to bg1.png" << endl;

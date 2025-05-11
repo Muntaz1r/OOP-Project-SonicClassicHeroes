@@ -2,7 +2,8 @@
 #include <iostream>
 #include <fstream>
 
-BossLevel::BossLevel(): Level(19, 0, 0, 0, 0){
+BossLevel::BossLevel(): Level(19, 0, 0, 0, 0) {
+    levelID = 4;
     waitingAtBottom = false;
 
     if (!bgTex.loadFromFile("Data/eggstinger/bg.png")) {
@@ -22,6 +23,7 @@ BossLevel::BossLevel(): Level(19, 0, 0, 0, 0){
 }
 
 BossLevel::~BossLevel() {
+    delete eggStinger;
 }
 
 void BossLevel::initializeGrid() {

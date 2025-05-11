@@ -9,6 +9,7 @@
 #include "Level2_IceCap.h"
 #include "Level3_DeathEgg.h"
 #include "BossLevel.h"
+#include "SaveState.h"
 
 using namespace sf;
 using namespace std;
@@ -40,4 +41,5 @@ public:
     ~Game();
 
     void runGame();
+    void loadGameFromSave(int levelWidth, int levelHeight);
 };
