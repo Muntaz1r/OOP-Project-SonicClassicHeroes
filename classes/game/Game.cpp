@@ -125,6 +125,7 @@ void Game::runGame() {
                 if (level) {
                     delete level;
                 }
+                music.stop();
                 loadGameFromSave(width, 14);
                 currentState = GAME_STATE_PLAYING;
                 menu->resetWantsToContinue();
@@ -230,13 +231,15 @@ void Game::loadGameFromSave(int levelWidth, int levelHeight) {
     char currentChar;
     char** grid;
 
+    int maxWidth = 300;
+
     grid = new char*[levelHeight];
     for (int i = 0; i < levelHeight; i++) {
-        grid[i] = new char[levelWidth];
+        grid[i] = new char[maxWidth];
     }
 
     for (int i = 0; i < levelHeight; i++) {
-        for (int j = 0; j < levelWidth; j++) {
+        for (int j = 0; j < maxWidth; j++) {
             grid[i][j] = 's';
         }
     }
