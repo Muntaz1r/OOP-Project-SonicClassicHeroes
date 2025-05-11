@@ -45,6 +45,9 @@ protected:
     bool hanging;
     bool hangingRight;
     static int numPowerUps;
+    bool knucklesInvinc;
+    sf::Clock boostClock;
+    sf::Time boostTime;
 
     Texture idleRightTexture;
     Texture idleLeftTexture;
@@ -70,7 +73,7 @@ public:
         float vx = 0, float vy = 0, float terminal = 0, 
         float ms=0, bool onGround =true, bool invicible = false, bool movingRight = true,
         float acc_x =0, float acc_y=0, float friction = 0, float gravity = 0, 
-        bool leader = false);
+        bool leader = false, int boostTime=0);
 
     // Getters
     float getMaxSpeed() const;
@@ -86,7 +89,8 @@ public:
     bool getFallingIntoVoid() const;
     bool getHanging() const;
     bool getHangingRight() const;
-    virtual sf::Clock getBoostClock();
+    virtual sf::Clock getBoostClock() const;
+    virtual sf::Time getBoostTime() const;
     static int getNumPowerUps();
     static int getHP();
 

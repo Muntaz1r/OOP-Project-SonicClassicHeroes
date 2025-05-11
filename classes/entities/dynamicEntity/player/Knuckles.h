@@ -6,8 +6,7 @@ using namespace std;
 
 class Knuckles : public Player {
 protected:
-    sf::Clock powerUpClock;
-    int powerUpTime;
+    //None
 public:
     Knuckles(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
         float vx = 0, float vy = 0, float terminal = 0,
@@ -18,6 +17,7 @@ public:
     virtual void specialAbility() override;
 
     virtual void update(float deltaTime, int &score, int volume);
+    
 
     void powerUp() override;
     virtual ~Knuckles();

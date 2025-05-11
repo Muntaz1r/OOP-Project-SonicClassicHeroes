@@ -6,8 +6,6 @@ using namespace std;
 
 class Tails : public Player {
 protected:
-    sf::Clock boostClock;
-    int specialAbilityTime;
     float prevGravity;
 public:
     Tails(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,

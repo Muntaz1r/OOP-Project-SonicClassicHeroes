@@ -4,11 +4,11 @@ Knuckles::Knuckles(float px, float py, int h, int w, sf::Texture* texture,
     float vx, float vy, float terminal,
     float ms, bool onGround, bool invincible, bool moving_right,
     float acc_x, float acc_y, float friction, float gravity,
-    int powerUpTime, bool leader)
+    int boostTime, bool leader)
 : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
-    moving_right, acc_x, acc_y, friction, gravity, leader), powerUpTime(powerUpTime)
+    moving_right, acc_x, acc_y, friction, gravity, leader, boostTime)
 {
-    powerUpTime = 15;
+    this->boostTime = sf::seconds(15);
     if (!idleRightTexture.loadFromFile("Data/knuckles/0right_still.png")) {
         cout << "Failed to load knuckles/0right_still.png\n";
     }
@@ -116,10 +116,11 @@ void Knuckles::specialAbility() {
 
 void Knuckles::update(float deltaTime, int &score, int volume) {
     Player::update(deltaTime, score, volume);
-    if (boosting && powerUpClock.getElapsedTime().asSeconds() >= powerUpTime) {
+    if (boosting && boostClock.getElapsedTime()>= boostTime) {
         cout << "Knuckles power up expired.\n";
         boosting = false;
         invincible = false;
+        knucklesInvinc = false;
     }
 }
 
@@ -128,9 +129,12 @@ void Knuckles::powerUp() {
         numPowerUps--;
         cout<<"knuckles power up\n";
         boosting = true;
-        powerUpClock.restart();
+        boostClock.restart();
         invincible = true;
+        knucklesInvinc = true;
     }
 }
+
+
 
 Knuckles::~Knuckles(){}

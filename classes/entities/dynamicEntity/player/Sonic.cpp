@@ -4,10 +4,9 @@ Sonic::Sonic(float px, float py, int h, int w, sf::Texture* texture,
     float vx, float vy, float terminal,
     float ms, bool onGround, bool invincible, bool moving_right,
     float acc_x, float acc_y, float friction, float gravity,
-    int specialAbilityTime, bool leader)
+    int boostTime, bool leader)
   : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
-      moving_right, acc_x, acc_y, friction, gravity, leader) ,
-      specialAbilityTime(specialAbilityTime)
+      moving_right, acc_x, acc_y, friction, gravity, leader, boostTime)
 {
   originalAcc = acc_x;
   originalMaxSpeed = ms;
@@ -75,7 +74,6 @@ Sonic::Sonic(float px, float py, int h, int w, sf::Texture* texture,
 //Getters
 float Sonic::getBoostedAcc() const { return boostedAcc; }
 float Sonic::getBoostedMaxSpeed() const { return boostedMaxSpeed; }
-sf::Clock Sonic::getBoostClock() const {return boostClock;}
 
 void Sonic::specialAbility() {
     if (!boosting) {
@@ -99,19 +97,19 @@ void Sonic::update(float deltaTime, int &score, int volume) {
     Player::update(deltaTime, score, volume);
 
     // Stop boosting if boost time is done
-    if (boosting && boostClock.getElapsedTime().asSeconds() >= specialAbilityTime) {
+    if (boosting && boostClock.getElapsedTime() >= boostTime) {
         cout << "Sonic boost expired.\n";
         acc_x = originalAcc;
         maxSpeed = originalMaxSpeed;
         boosting = false;
-        if(specialAbilityTime > 7){ //If powerup just used up
-            specialAbilityTime = 7;
+        if(boostTime > sf::seconds(7)){ //If powerup just used up
+            boostTime = sf::seconds(7);
         }
     }
 }
 void Sonic::powerUp() {
     cout<<"Sonic powered up\n";
-    specialAbilityTime +=4;
+    boostTime +=sf::seconds(4);
     numPowerUps--;
 }
 

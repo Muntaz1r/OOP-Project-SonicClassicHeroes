@@ -134,12 +134,24 @@ void Game::runGame() {
             if (level != nullptr) {
                 level->update(deltaTime);
 
-                if (level->isLevelComplete()) {
-                    cout << "Level completed!" << endl;
-
-                    //currentState = GAME_STATE_MENU; // go back to menu for now
-
-                    //menu->resetGameStarted();
+                if(level->exitCheck(cameraOffsetX) /*&& level->isLevelComplete()*/){
+                    int levelID = level->getLevelID();
+                    delete level;
+                    switch (levelID)
+                    {
+                    case 1: level = new Level2_IceCap(); break;
+                    case 2: level = new Level3_DeathEgg(); break;
+                    case 3: level = new BossLevel(); break;
+                    case 4:
+                        if(level->isLevelComplete())
+                            cout<<"You won\n";
+                        else 
+                            cout<<"You losst\n";
+                    default:
+                        break;
+                    }
+                    width = level->getLevelWidthinTiles();
+                    level->loadAssets(menu->isMutedStatus() ? 0 : menu->getVolume());
                 }
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::F5) {
@@ -178,37 +190,7 @@ void Game::runGame() {
                 }
                 level->render(window, cameraOffsetX);
                 level->drawUI(window, cameraOffsetX);
-                if(level->exitCheck(cameraOffsetX) /*&& level->isLevelComplete()*/){
-                    delete level;
-                    int selectedLevel = menu->getSelectedLevel();
-                    levelCreated = false;
-                    switch (selectedLevel)
-                    {
-                    case 0:
-                        level = new Level2_IceCap();
-                        menu->setSelectedLevel(1);
-                        break;
-                    case 1:
-                        level = new Level3_DeathEgg();
-                        menu->setSelectedLevel(2);
-                        break;
-                    case 2:
-                        level = new BossLevel();
-                        menu->setSelectedLevel(3);
-                        break;
-                    case 3:
-                        if(level->isLevelComplete())
-                            cout<<"You won\n";
-                        else 
-                            cout<<"You lost\n";
-                    default:
-                        break;
-                    }
-                    levelCreated = true;
-                    width = level->getLevelWidthinTiles();
-
-                    level->loadAssets(menu->isMutedStatus() ? 0 : menu->getVolume());
-                }
+               
             }
         }
         else if (currentState == GAME_STATE_LEADERBOARD) {

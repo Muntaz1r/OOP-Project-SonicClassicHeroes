@@ -4,9 +4,9 @@ Tails::Tails(float px, float py, int h, int w, sf::Texture* texture,
     float vx, float vy, float terminal,
     float ms, bool onGround, bool invincible, bool moving_right,
     float acc_x, float acc_y, float friction, float gravity,
-    int specialAbilityTime, bool leader)
+    int boostTime, bool leader)
 : Player(px, py, h, w, texture, vx, vy, terminal, ms, onGround, invincible, 
-    moving_right, acc_x, acc_y, friction, gravity, leader) , specialAbilityTime(specialAbilityTime)
+    moving_right, acc_x, acc_y, friction, gravity, leader, boostTime)
 {
     if (!idleRightTexture.loadFromFile("Data/tails/0right_still.png")) {
         cout << "Failed to load tails/0right_still.png\n";
@@ -97,8 +97,8 @@ void Tails::update(float deltaTime, int &score, int volume) {
         for (int i=0; i<2; ++i) followers[i]->setVelocityY(followers[i]->getTerminalVelocity());
         boosting = false;
         onGround = false;
-        if(specialAbilityTime > 7){//If power up just used up
-            specialAbilityTime = 7;
+        if(boostTime > sf::seconds(7)){//If power up just used up
+            boostTime = sf::seconds(7);
         }
     }
 }
@@ -166,7 +166,7 @@ void Tails::moveLeft(){
 }
 void Tails::powerUp(){
     cout<<"tails power up\n";
-    specialAbilityTime +=4;
+    boostTime +=sf::seconds(4);
     numPowerUps--;
 }
 Tails::~Tails() {}

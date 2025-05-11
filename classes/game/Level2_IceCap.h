@@ -16,6 +16,6 @@ public:
     Level2_IceCap();
     ~Level2_IceCap();
 
-    void render(RenderWindow& window, float cameraOffsetX) override;
+    void render(RenderWindow& window, float cameraOffsetX) override;//For exit portal
     void loadAssets(int volume) override;
 };

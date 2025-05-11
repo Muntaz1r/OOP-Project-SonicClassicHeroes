@@ -9,19 +9,17 @@ protected:
     const float boostedMaxSpeed = 10;
     float originalAcc;
     float originalMaxSpeed;
-    sf::Clock boostClock;
-    int specialAbilityTime;
+    
 
 public:
     Sonic(float px = 0, float py = 0, int h = 0, int w = 0, sf::Texture* texture = nullptr,
           float vx = 0, float vy = 0, float terminal = 0,
           float ms = 0, bool onGround = true, bool invincible = false, bool moving_right = true,
           float acc_x = 0, float acc_y = 0,float friction = 0, float gravity = 0,
-          int specialAbilityTime = 7, bool leader = false);
+          int boostTime = 7, bool leader = false);
 
     float getBoostedAcc() const;
     float getBoostedMaxSpeed() const;
-    sf::Clock getBoostClock() const;
 
     virtual void specialAbility() override;
     

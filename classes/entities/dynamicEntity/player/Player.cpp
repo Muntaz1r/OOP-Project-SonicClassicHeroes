@@ -2,20 +2,21 @@
 
 //Initialize static member
 int Player::hp = 3;
-int Player::numPowerUps = 0;
+int Player::numPowerUps = 1;
 
 //Constructor
 Player::Player(float px, float py, int h, int w, sf::Texture* texture,
     float vx, float vy, float terminal,
     float ms, bool onGround, bool invicible, bool movingRight,
-    float acc_x, float acc_y, float friction, float gravity, bool leader)
+    float acc_x, float acc_y, float friction, float gravity, bool leader, int boostTime)
     : DynamicEntity(px, py, h, w, texture, vx, vy, terminal), 
     maxSpeed(ms), onGround(onGround), invincible(invicible), movingRight(movingRight)
-    , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader) {
+    , acc_x(acc_x), acc_y(acc_y), friction(friction), gravity(gravity), leader(leader), boostTime(sf::seconds(boostTime)) {
         boosting = false;
         invalid = '\0';
         fallingIntoVoid = false;
         hanging = false;
+        knucklesInvinc = false;
 
         playerSounds = new SoundManager();
     
@@ -39,7 +40,8 @@ bool Player::getBoosting() const{return boosting;}
 bool Player::getFallingIntoVoid() const{return fallingIntoVoid;}
 bool Player::getHanging() const { return hanging; }
 bool Player::getHangingRight() const { return hangingRight; }
-sf::Clock Player::getBoostClock() {return sf::Clock();}
+sf::Clock Player::getBoostClock() const {return boostClock;}
+sf::Time Player::getBoostTime() const {return boostTime;}
 
 //Static Getters
 int Player::getNumPowerUps() { return numPowerUps; }
@@ -188,7 +190,7 @@ void Player::flyDown(){} // Tails specific ftn
 
 //Damage mechanics
 void Player::takeDamage() {
-    if (!invincible && hp > 0) {
+    if (!invincible && hp > 0 && !knucklesInvinc && leader) {
         --hp;
         invincible = true;
         invincibilityClock.restart();
@@ -221,7 +223,7 @@ void Player::update(float deltaTime, int &score, int volume) {
         velocity_y += gravity; 
     }
     // Updating invinciillity
-    if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration && !boosting) {
+    if (invincible && invincibilityClock.getElapsedTime() >= invincibilityDuration && !knucklesInvinc) {
         invincible = false;
     }
     // if (pos_y >=  635) {
@@ -581,7 +583,7 @@ void Player::collisionHandle(float previousX, float previousY, int &score){
     if (pos_y >= previousY && collidesBelow('x')) {
         playerSounds->play(1);
         cout << "Spike hurt" << endl;
-            takeDamage();
+        takeDamage();
     }
 }
 

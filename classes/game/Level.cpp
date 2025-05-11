@@ -370,7 +370,6 @@ void Level::spawnHelper(int i, int j){
 
 void Level::spawnSpecialItems(){
     countSpecialItems();
-    cout<<specialItemCount<<endl;
     if(specialItemCount < 2){
         int rStartI = rand()%height;
         int rStartJ = rand()%width;
@@ -501,7 +500,6 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
 
     window.draw(playerSprite);
     
-
     // Desired display size for hearts (square )
     static const float heartTargetSize = 40.f;
     
@@ -565,9 +563,9 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
     int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
     int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
 
-    std::string timeText = 
-        (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
-        (seconds < 10 ? "0" : "") + std::to_string(seconds);
+    string timeText = 
+        (minutes < 10 ? "0" : "") + to_string(minutes) + ":" +
+        (seconds < 10 ? "0" : "") + to_string(seconds);
 
     // Create SFML Text objects
     sf::Text scoreText("Score: " + to_string(score), uiFont, 20);
@@ -575,13 +573,52 @@ void Level::drawUI(sf::RenderWindow& window, float cameraOffset) {
 
     // Position them in top-right
     scoreText.setFillColor(sf::Color::White);
-    timeDisplay.setFillColor(sf::Color::White);
+    if(elapsed >= sf::seconds(90) && static_cast<int>(elapsed.asSeconds())%2){//Flash red when time exceeds 1.5 min
+        timeDisplay.setFillColor(sf::Color::Red);
+    }else
+        timeDisplay.setFillColor(sf::Color::White);
 
     scoreText.setPosition(1200 - scoreText.getGlobalBounds().width - 10.f, 10.f);
     timeDisplay.setPosition(1200- timeDisplay.getGlobalBounds().width - 10.f, 35.f);
 
     window.draw(scoreText);
     window.draw(timeDisplay);
+
+    if (player->getBoosting()) {
+        sf::Time elapsedBoost = player->getBoostClock().getElapsedTime();
+        sf::Time remainingBoost = player->getBoostTime() - elapsedBoost;
+    
+        if (remainingBoost.asSeconds() < 0)
+            remainingBoost = sf::seconds(0);
+    
+        int boostSeconds = static_cast<int>(remainingBoost.asSeconds());
+    
+        std::string boostText = "Boost: " + std::to_string(boostSeconds) + "s";
+        sf::Text boostTimeDisplay(boostText, uiFont, 20);
+    
+        // Set boost color based on current player
+        switch (currentPlayer) {
+            case 'k':
+                boostTimeDisplay.setFillColor(sf::Color::Red);
+                break;
+            case 's':
+                boostTimeDisplay.setFillColor(sf::Color::Blue);
+                break;
+            case 't':
+                boostTimeDisplay.setFillColor(sf::Color::Yellow);
+                break;
+            default:
+                boostTimeDisplay.setFillColor(sf::Color::White); // fallback
+                break;
+        }
+    
+        // Position it below the hearts
+        float heartsBottomY = 140.f + iterate * 1.8f + heartTargetSize + 5.f;
+        boostTimeDisplay.setPosition(17.f + iterate / 1.7f, heartsBottomY);
+    
+        window.draw(boostTimeDisplay);
+    }
+
 }
 
 bool Level::exitCheck(float cameraOffSetX){
@@ -703,4 +740,11 @@ void Level::saveLevelState() const {
         motoBugs, numMotoBug,
         crabMeats, numCrabMeat
     );
+}
+
+int Level::getLevelID() const {
+    return levelID;
+}
+void Level::setLevelID(int value){
+    levelID = value;
 }

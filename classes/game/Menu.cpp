@@ -292,9 +292,7 @@ int Menu::getSelectedLevel() const {
     return selectedLevel; 
 }
 
-void Menu::setSelectedLevel(int value){
-    selectedLevel = value;
-}
+
 
 int Menu::getVolume() const {
     return volume;

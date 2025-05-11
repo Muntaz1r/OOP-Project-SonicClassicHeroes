@@ -121,6 +121,8 @@ public:
         MotoBug** motoBugs, int numMotoBugs,
         CrabMeat** crabMeats, int numCrabMeats
     );
+    int getLevelID() const;
+    void setLevelID(int value);
     void countSpecialItems();
     void spawnHelper(int, int);
     void spawnSpecialItems();
