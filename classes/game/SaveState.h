@@ -101,6 +101,7 @@ public:
     ) {
         ifstream myFile(filepath);
         if (!myFile.is_open()) {
+            cout << "Failed to open save file: " << filepath << endl;
             return false;
         }
 
@@ -123,7 +124,7 @@ public:
         float ex, ey, minX, maxX;
         int ehp, alive, right;
 
-        Texture* texture = new Texture; // placeholder
+        Texture* texture = new Texture(); // placeholder
 
         if (!texture->loadFromFile("Data/bee_botR.png")) {
             cout << "Failed to load enemy texture\n";
@@ -159,6 +160,8 @@ public:
         }
 
         myFile.close();
+
+        //if (texture) { delete texture; }
         return true;
     }
 };
