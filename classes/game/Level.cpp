@@ -13,6 +13,13 @@ Level::Level(int width, int numBatBrain, int numBeeBot, int numMotoBug, int numC
     
     Player::setHP(3);
     Player::setNumPowerUps(0);
+
+    grid = nullptr;
+    batBrains = nullptr;
+    beeBots = nullptr;
+    motoBugs = nullptr;
+    crabMeats = nullptr;
+
     grid = new char*[height];
     for (int i = 0; i < height; i++) {
         grid[i] = new char[width];
