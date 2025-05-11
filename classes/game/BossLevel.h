@@ -21,7 +21,7 @@ private:
 
     void initializeGrid();
 
-    const int groundY = 900 - 64;
+    // const int groundY = 900 - 64;
 
 public:
     BossLevel();
