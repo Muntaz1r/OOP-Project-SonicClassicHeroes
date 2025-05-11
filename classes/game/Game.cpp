@@ -248,7 +248,7 @@ void Game::loadGameFromSave(int levelWidth, int levelHeight) {
     CrabMeat** crabMeats = nullptr;
 
 
-    string filePath = "Data/SaveGame.txt";
+    string filePath = "../Data/SaveGame.txt";
 
     if (SaveState::loadLevel(filePath, levelID, timer, score, playerX, 
         playerY, velX, velY, hp, currentChar, width, height, grid,

@@ -2,7 +2,7 @@
 #include <fstream>
 
 Scoreboard::Scoreboard(int screen_x, int screen_y) : screen_x(screen_x), screen_y(screen_y) {
-    filePath = "Data/leaderboard.txt";
+    filePath = "../Data/leaderboard.txt";
     numScores = 0;
 
     font.loadFromFile("Data/Retro Gaming.ttf");
