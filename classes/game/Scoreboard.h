@@ -25,6 +25,13 @@ private:
     string filePath;
 
     int screen_x, screen_y;
+
+    int bgWidth;
+    int bgHeight;
+
+    // Background
+    Texture bgTexture;
+    Sprite bgSprite;
 public:
     Scoreboard(int screen_x, int screen_y);
 

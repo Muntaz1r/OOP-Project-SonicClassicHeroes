@@ -19,6 +19,17 @@ Scoreboard::Scoreboard(int screen_x, int screen_y) : screen_x(screen_x), screen_
         scoreTexts[i].setFillColor(Color::White);
     }
 
+    if (!bgTexture.loadFromFile("Data/sonic-menu-bg.jpg")) {
+        cout << "Failed to load background image" << endl;
+    }
+
+    bgWidth = 3400;
+    bgHeight = 2276;
+
+    bgSprite.setTexture(bgTexture);
+    bgSprite.setScale((float)screen_x / bgWidth, (float)screen_y / bgHeight);
+    bgSprite.setColor(Color(255, 255, 255, 50)); // lower obapacity
+
     loadScores();
 }
 
@@ -64,6 +75,7 @@ void Scoreboard::saveScores(const string name, int score) {
 }
 
 void Scoreboard::draw(RenderWindow& window) {
+    window.draw(bgSprite);
     window.draw(title);
 
     if (numScores == 0) {
