@@ -161,4 +161,4 @@ make
 
 ## 👨‍💻 Contributors
 
-This was developed as a **final project** for the Object-Oriented Programming (CS-1004) course at FAST NUCES, Islamabad.
+This was developed with Muhammad Saad as a **final project** for the Object-Oriented Programming.
